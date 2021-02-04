@@ -4,8 +4,8 @@ import { ICarRepository } from '../ICarRepository';
 export class FakeCarRepository implements ICarRepository {
   private cars: Car[] = [];
 
-  findById(id: string): Promise<Car | undefined> {
-    throw new Error('Method not implemented.');
+  async findById(id: string): Promise<Car | undefined> {
+    return this.cars.find(car => car.id === id);
   }
 
   async save(car: Car): Promise<Car> {
