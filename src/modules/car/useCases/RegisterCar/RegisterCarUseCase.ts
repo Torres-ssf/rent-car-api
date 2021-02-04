@@ -1,10 +1,15 @@
+import { inject, injectable } from 'tsyringe';
 import { v4 } from 'uuid';
 import { Car } from '../../models/Car';
 import { ICarRepository } from '../../repositories/ICarRepository';
 import { RegisterCarDTO } from './RegisterCarDTO';
 
+@injectable()
 export class RegisterCarUseCase {
-  constructor(private carRepository: ICarRepository) {}
+  constructor(
+    @inject('CarRepository')
+    private carRepository: ICarRepository,
+  ) {}
 
   async execute(registerCarDTO: RegisterCarDTO): Promise<Car> {
     const { name, brand, dailyValue } = registerCarDTO;
