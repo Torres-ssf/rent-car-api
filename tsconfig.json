@@ -1,13 +1,15 @@
 {
   "compilerOptions": {
-    "target": "es2017",                          
+    "target": "es2017",
     "module": "commonjs",
     "baseUrl": "./src",
     "esModuleInterop": true,
     "strictPropertyInitialization": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "strict": true,
     "allowJs": true,
-    "skipLibCheck": true,                     
-    "forceConsistentCasingInFileNames": true  
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   }
 }
