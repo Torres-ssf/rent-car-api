@@ -1,9 +1,21 @@
 export class Car {
   id: string;
 
-  name: string;
+  model: string;
 
   brand: string;
+
+  max_speed: number;
+
+  horse_power: number;
+
+  zero_to_one_hundred: number;
+
+  engine: 'gas' | 'hybrid' | 'eletric';
+
+  transmission: 'manual' | 'automatic';
+
+  passengers: number;
 
   daily_value: number;
 
