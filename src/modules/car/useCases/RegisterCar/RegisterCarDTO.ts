@@ -22,5 +22,5 @@ export class RegisterCarDTO {
 
   @IsPositive()
   @IsNumber()
-  dailyValue: number;
+  daily_value: number;
 }

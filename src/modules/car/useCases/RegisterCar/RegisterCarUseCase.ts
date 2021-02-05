@@ -12,7 +12,7 @@ export class RegisterCarUseCase {
   ) {}
 
   async execute(registerCarDTO: RegisterCarDTO): Promise<Car> {
-    const { name, brand, dailyValue } = registerCarDTO;
+    const { name, brand, daily_value } = registerCarDTO;
 
     const newCar = new Car();
 
@@ -22,9 +22,9 @@ export class RegisterCarUseCase {
       id: v4(),
       name,
       brand,
-      dailyValue,
-      createdAt: date,
-      updatedAt: date,
+      daily_value,
+      created_at: date,
+      updated_at: date,
     });
 
     return newCar;

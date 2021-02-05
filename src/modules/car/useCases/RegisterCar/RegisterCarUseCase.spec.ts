@@ -19,12 +19,12 @@ describe('RegisterCarUseCase', () => {
       registerCarUseCase.execute({
         name: 'v8',
         brand: 'Ferrari',
-        dailyValue: 800,
+        daily_value: 800,
       }),
     ).resolves.toMatchObject({
       name: 'v8',
       brand: 'Ferrari',
-      dailyValue: 800,
+      daily_value: 800,
     });
   });
 });
