@@ -49,4 +49,16 @@ describe('Car Register Endpoint', () => {
       'name must be shorter than or equal to 80 characters',
     );
   });
+
+  it('ensure that daily_value is a positive value', async () => {
+    const res = await request(app).post('/car').send({
+      name: 'V8',
+      brand: 'Ferrari',
+      daily_value: -900,
+    });
+
+    expect(res.status).toBe(400);
+    expect(res.body).toHaveProperty('message');
+    expect(res.body.message).toContain('daily_value must be a positive number');
+  });
 });
