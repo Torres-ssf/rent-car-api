@@ -5,9 +5,9 @@ export class Car {
 
   brand: string;
 
-  dailyValue: number;
+  daily_value: number;
 
-  createdAt: Date;
+  created_at: Date;
 
-  updatedAt: Date;
+  updated_at: Date;
 }
