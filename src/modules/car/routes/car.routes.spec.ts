@@ -8,7 +8,6 @@ describe('Car Register Endpoint', () => {
     const res = await request(app).post('/car').send({});
 
     expect(res.status).toBe(400);
-    expect(res.body).toHaveProperty('message');
     expect(res.body.message).toContain('name must be a string');
     expect(res.body.message).toContain('brand must be a string');
     expect(res.body.message).toContain('daily_value must be a positive number');
@@ -22,7 +21,6 @@ describe('Car Register Endpoint', () => {
     });
 
     expect(res.status).toBe(400);
-    expect(res.body).toHaveProperty('message');
     expect(res.body.message).toContain(
       'name must be longer than or equal to 3 characters',
     );
@@ -41,7 +39,6 @@ describe('Car Register Endpoint', () => {
     });
 
     expect(res.status).toBe(400);
-    expect(res.body).toHaveProperty('message');
     expect(res.body.message).toContain(
       'name must be shorter than or equal to 80 characters',
     );
@@ -58,7 +55,6 @@ describe('Car Register Endpoint', () => {
     });
 
     expect(res.status).toBe(400);
-    expect(res.body).toHaveProperty('message');
     expect(res.body.message).toContain('daily_value must be a positive number');
   });
 
@@ -72,5 +68,21 @@ describe('Car Register Endpoint', () => {
     expect(res.status).toBe(200);
     expect(res.body.name === 'Enzo').toBeTruthy();
     expect(res.body.brand === 'Ferrari').toBeTruthy();
+  });
+
+  it('ensures endpoint returns the recently registered car', async () => {
+    const res = await request(app).post('/car').send({
+      name: 'Enzo',
+      brand: 'Ferrari',
+      daily_value: 900,
+    });
+
+    expect(res.status).toBe(200);
+    expect(res.body.name === 'Enzo').toBeTruthy();
+    expect(res.body.brand === 'Ferrari').toBeTruthy();
+    expect(res.body.daily_value === 900).toBeTruthy();
+    expect(res.body).toHaveProperty('id');
+    expect(res.body).toHaveProperty('created_at');
+    expect(res.body).toHaveProperty('updated_at');
   });
 });
