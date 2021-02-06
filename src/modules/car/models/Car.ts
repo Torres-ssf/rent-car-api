@@ -1,3 +1,5 @@
+import { Engine, Transmission } from './enums';
+
 export class Car {
   id: string;
 
@@ -11,9 +13,9 @@ export class Car {
 
   zero_to_one_hundred: number;
 
-  engine: 'gas' | 'hybrid' | 'eletric';
+  engine: Engine;
 
-  transmission: 'manual' | 'automatic';
+  transmission: Transmission;
 
   passengers: number;
 
