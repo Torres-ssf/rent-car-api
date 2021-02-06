@@ -2,8 +2,21 @@ import 'reflect-metadata';
 
 import request from 'supertest';
 import { app } from '@shared/app';
+import { Engine, Transmission } from '../models/enums';
 
 describe('Car Register Endpoint', () => {
+  const carParams = {
+    model: 'F8',
+    brand: 'Ferrari',
+    max_speed: 340,
+    horse_power: 720,
+    zero_to_one_hundred: 2.9,
+    engine: Engine.Gas,
+    transmission: Transmission.Automatic,
+    passengers: 2,
+    daily_value: 900,
+  };
+
   it('ensures that model and brand have at least 2 chars length and max 80 chars length', async () => {
     const resMinLength = await request(app).post('/car').send({
       model: 'a',
@@ -38,8 +51,6 @@ describe('Car Register Endpoint', () => {
 
   it('ensures that max_speed, horse_power, zero_to_one_hundred, daily_value are positive values', async () => {
     const res = await request(app).post('/car').send({
-      model: 'V8',
-      brand: 'Ferrari',
       max_speed: -380,
       horse_power: -899,
       zero_to_one_hundred: -2.4,
@@ -55,17 +66,23 @@ describe('Car Register Endpoint', () => {
     expect(res.body.message).toContain('daily_value must be a positive number');
   });
 
-  // it('ensures that name and brand have no empty spaces at the start/end', async () => {
-  //   const res = await request(app).post('/car').send({
-  //     name: '          Enzo ',
-  //     brand: '  Ferrari    ',
-  //     daily_value: 900,
-  //   });
+  it('ensures all Car string properties have no empty spaces at the start/end', async () => {
+    const res = await request(app)
+      .post('/car')
+      .send({
+        ...carParams,
+        model: '          Enzo ',
+        brand: '  Ferrari    ',
+        engine: 'gas   ',
+        transmission: '   automatic    ',
+      });
 
-  //   expect(res.status).toBe(200);
-  //   expect(res.body.name === 'Enzo').toBeTruthy();
-  //   expect(res.body.brand === 'Ferrari').toBeTruthy();
-  // });
+    expect(res.status).toBe(200);
+    expect(res.body.model === 'Enzo').toBeTruthy();
+    expect(res.body.brand === 'Ferrari').toBeTruthy();
+    expect(res.body.engine === 'GAS').toBeTruthy();
+    expect(res.body.transmission === 'AUTOMATIC').toBeTruthy();
+  });
 
   // it('ensures endpoint returns the recently registered car', async () => {
   //   const res = await request(app).post('/car').send({
