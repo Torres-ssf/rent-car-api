@@ -84,6 +84,17 @@ describe('Car Register Endpoint', () => {
     expect(res.body.transmission === 'AUTOMATIC').toBeTruthy();
   });
 
+  it('ensures transmission value is one of the Transmission enum', async () => {
+    const res = await request(app).post('/car').send({
+      transmission: 'car t',
+    });
+
+    expect(res.status).toBe(400);
+    expect(res.body.message).toContain(
+      'engine must be one of Manual,Automatic',
+    );
+  });
+
   // it('ensures endpoint returns the recently registered car', async () => {
   //   const res = await request(app).post('/car').send({
   //     name: 'Enzo',
