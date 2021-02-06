@@ -1,3 +1,4 @@
+import { Car } from '@modules/car/models/Car';
 import { Engine, Transmission } from '@modules/car/models/enums';
 import 'reflect-metadata';
 
@@ -43,5 +44,13 @@ describe('RegisterCarUseCase', () => {
     expect(res).toHaveProperty('daily_value', 900);
     expect(res).toHaveProperty('created_at');
     expect(res).toHaveProperty('updated_at');
+  });
+
+  it('ensure new registered car is saved into the database', async () => {
+    const res = await registerCarUseCase.execute(carParams);
+
+    const carInDabase = (await carRepository.findById(res.id)) as Car;
+
+    expect(res).toMatchObject(carInDabase);
   });
 });
