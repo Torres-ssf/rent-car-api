@@ -12,7 +12,17 @@ export class RegisterCarUseCase {
   ) {}
 
   async execute(registerCarDTO: RegisterCarDTO): Promise<Car> {
-    const { name, brand, daily_value } = registerCarDTO;
+    const {
+      model,
+      brand,
+      engine,
+      horse_power,
+      max_speed,
+      transmission,
+      zero_to_one_hundred,
+      passengers,
+      daily_value,
+    } = registerCarDTO;
 
     const newCar = new Car();
 
@@ -20,9 +30,15 @@ export class RegisterCarUseCase {
 
     Object.assign(newCar, {
       id: v4(),
-      name,
+      model,
       brand,
       daily_value,
+      engine,
+      horse_power,
+      max_speed,
+      transmission,
+      zero_to_one_hundred,
+      passengers,
       created_at: date,
       updated_at: date,
     });
