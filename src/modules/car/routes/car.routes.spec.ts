@@ -95,6 +95,17 @@ describe('Car Register Endpoint', () => {
     );
   });
 
+  it('ensures engine value is one of the Engine enum', async () => {
+    const res = await request(app).post('/car').send({
+      transmission: 'uranium',
+    });
+
+    expect(res.status).toBe(400);
+    expect(res.body.message).toContain(
+      'engine must be one of Gas,Hybrid,Eletric',
+    );
+  });
+
   // it('ensures endpoint returns the recently registered car', async () => {
   //   const res = await request(app).post('/car').send({
   //     name: 'Enzo',
