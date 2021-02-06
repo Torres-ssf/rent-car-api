@@ -97,7 +97,7 @@ describe('Car Register Endpoint', () => {
 
   it('ensures engine value is one of the Engine enum', async () => {
     const res = await request(app).post('/car').send({
-      transmission: 'uranium',
+      engine: 'uranium',
     });
 
     expect(res.status).toBe(400);
@@ -106,19 +106,18 @@ describe('Car Register Endpoint', () => {
     );
   });
 
-  // it('ensures endpoint returns the recently registered car', async () => {
-  //   const res = await request(app).post('/car').send({
-  //     name: 'Enzo',
-  //     brand: 'Ferrari',
-  //     daily_value: 900,
-  //   });
+  it('ensures passengers value is min 2 and max 9', async () => {
+    const res1 = await request(app).post('/car').send({
+      passengers: 1,
+    });
 
-  //   expect(res.status).toBe(200);
-  //   expect(res.body.name === 'Enzo').toBeTruthy();
-  //   expect(res.body.brand === 'Ferrari').toBeTruthy();
-  //   expect(res.body.daily_value === 900).toBeTruthy();
-  //   expect(res.body).toHaveProperty('id');
-  //   expect(res.body).toHaveProperty('created_at');
-  //   expect(res.body).toHaveProperty('updated_at');
-  // });
+    const res2 = await request(app).post('/car').send({
+      passengers: 10,
+    });
+
+    expect(res1.body.message).toContain('passengers must not be less than 2');
+    expect(res2.body.message).toContain(
+      'passengers must not be greater than 9',
+    );
+  });
 });
