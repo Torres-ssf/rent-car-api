@@ -43,6 +43,6 @@ export class RegisterCarUseCase {
       updated_at: date,
     });
 
-    return newCar;
+    return this.carRepository.save(newCar);
   }
 }
