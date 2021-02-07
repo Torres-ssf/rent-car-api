@@ -1,4 +1,4 @@
-import { updateShortsterPipe } from '@modules/car/pipes/updateCar.pipe';
+import { updateCarPipe } from '@modules/car/pipes/updateCar.pipe';
 import { AppError } from '@shared/errors/AppError';
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
@@ -9,7 +9,7 @@ export class UpdateCarController {
     try {
       const { id } = request.params;
 
-      const registerCarDTO = await updateShortsterPipe(request.body);
+      const registerCarDTO = await updateCarPipe(request.body);
 
       const registerCarUseCase = container.resolve(UpdateCarUseCase);
 
