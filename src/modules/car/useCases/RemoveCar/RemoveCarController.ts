@@ -12,7 +12,7 @@ export class RemoveCarController {
 
       await removeCarUseCase.execute(id);
 
-      return response.send('hi');
+      return response.status(204);
     } catch (err) {
       throw new AppError(
         err.message || 'error occurred while trying to delete car registry',
