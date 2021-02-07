@@ -13,7 +13,9 @@ export class FakeCarRepository implements ICarRepository {
     return car;
   }
 
-  remove(id: string): Promise<void> {
-    throw new Error('Method not implemented.');
+  async remove(id: string): Promise<void> {
+    const carIndex = this.cars.findIndex(car => car.id === id);
+
+    this.cars.splice(carIndex, 1);
   }
 }
