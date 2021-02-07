@@ -8,6 +8,10 @@ export class FakeCarRepository implements ICarRepository {
     return this.cars.find(car => car.id === id);
   }
 
+  async list(): Promise<Car[]> {
+    return this.cars;
+  }
+
   async save(car: Car): Promise<Car> {
     this.cars.push(car);
     return car;
