@@ -2,12 +2,12 @@ import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import { AppError } from '@shared/errors/AppError';
 import { RegisterCarUseCase } from './RegisterCarUseCase';
-import { createShortsterPipe } from '../../pipes/registerCar.pipe';
+import { registerCarPipe } from '../../pipes/registerCar.pipe';
 
 export class RegisterCarController {
   async handle(request: Request, response: Response): Promise<Response> {
     try {
-      const registerCarDTO = await createShortsterPipe(request.body);
+      const registerCarDTO = await registerCarPipe(request.body);
 
       const registerCarUseCase = container.resolve(RegisterCarUseCase);
 

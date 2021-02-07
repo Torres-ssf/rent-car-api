@@ -4,7 +4,7 @@ import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 import { RegisterCarDTO } from '../useCases/RegisterCar/RegisterCarDTO';
 
-export const createShortsterPipe = async (
+export const registerCarPipe = async (
   data: RegisterCarDTO,
 ): Promise<RegisterCarDTO> => {
   const registerCarDTO = plainToClass(RegisterCarDTO, data);
