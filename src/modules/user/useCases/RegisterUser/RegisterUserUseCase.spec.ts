@@ -15,6 +15,8 @@ describe('RegisterUserUseCase', () => {
   };
 
   beforeEach(() => {
+    jest.clearAllMocks();
+
     userRepository = new FakeUserRepository();
 
     registerUserUseCase = new RegisterUserUseCase(userRepository);
@@ -31,5 +33,17 @@ describe('RegisterUserUseCase', () => {
     expect(createdUser).toHaveProperty('admin', false);
     expect(createdUser).toHaveProperty('created_at');
     expect(createdUser).toHaveProperty('updated_at');
+  });
+
+  it('should be able to verify if given email is already in use', async () => {
+    await registerUserUseCase.execute(userParams);
+
+    await expect(
+      registerUserUseCase.execute({
+        name: 'Paul',
+        email: userParams.email,
+        password: 'a.gdfssSfsa9',
+      }),
+    ).rejects.toHaveProperty('message', 'Email already taken');
   });
 });
