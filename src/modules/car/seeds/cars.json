@@ -1,0 +1,57 @@
+[
+  {
+    "model": "F8",
+    "brand": "Ferrari",
+    "max_speed": 340,
+    "horse_power": 720,
+    "zero_to_one_hundred": 2.9,
+    "engine": "gas",
+    "transmission": "automatic",
+    "passengers": 2,
+    "daily_value": 800
+  },
+  {
+    "model": "Aventador",
+    "brand": "Lamborghini",
+    "max_speed": 351,
+    "horse_power": 770  ,
+    "zero_to_one_hundred": 2.8,
+    "engine": "gas",
+    "transmission": "automatic",
+    "passengers": 2,
+    "daily_value": 900
+  },
+  {
+    "model": "Taycan Turbo S",
+    "brand": "Porsche",
+    "max_speed": 260,
+    "horse_power": 751,
+    "zero_to_one_hundred": 2.8,
+    "engine": "electric",
+    "transmission": "automatic",
+    "passengers": 4,
+    "daily_value": 800
+  },
+  {
+    "model": "Acura NSX",
+    "brand": "Honda",
+    "max_speed": 260,
+    "horse_power": 573,
+    "zero_to_one_hundred": 3.3,
+    "engine": "hybrid",
+    "transmission": "automatic",
+    "passengers": 4,
+    "daily_value": 800
+  },
+  {
+    "model": "Mustang Mach-E",
+    "brand": "Ford",
+    "max_speed": 200,
+    "horse_power": 480,
+    "zero_to_one_hundred": 3.5,
+    "engine": "electric",
+    "transmission": "automatic",
+    "passengers": 5,
+    "daily_value": 300
+  }
+]
