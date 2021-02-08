@@ -1,7 +1,7 @@
 import { User } from '../../model/User';
-import { IUsersRepository } from '../IUserRepository';
+import { IUserRepository } from '../IUserRepository';
 
-export class FakeUsersRepository implements IUsersRepository {
+export class FakeUserRepository implements IUserRepository {
   private users: User[] = [];
 
   async findById(id: string): Promise<User | undefined> {

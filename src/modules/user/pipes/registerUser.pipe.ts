@@ -2,14 +2,14 @@ import { AppError } from '@shared/errors/AppError';
 import { extractValidationErrors } from '@shared/utils/formatValidationError';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
-import { UpdateCarDTO } from '../useCases/UpdateCar/UpdateCarDTO';
+import { RegisterUserDTO } from '../useCases/RegisterUser/RegisterUserDTO';
 
-export const updateCarPipe = async (
-  data: UpdateCarDTO,
-): Promise<UpdateCarDTO> => {
-  const updateCarDTO = plainToClass(UpdateCarDTO, data);
+export const registerUserPipe = async (
+  data: RegisterUserDTO,
+): Promise<RegisterUserDTO> => {
+  const registerUserDTO = plainToClass(RegisterUserDTO, data);
 
-  const paramErrors = await validate(updateCarDTO);
+  const paramErrors = await validate(registerUserDTO);
 
   if (paramErrors.length) {
     const errorMessages = extractValidationErrors(paramErrors);
@@ -17,5 +17,5 @@ export const updateCarPipe = async (
     throw new AppError(errorMessages);
   }
 
-  return updateCarDTO;
+  return registerUserDTO;
 };
