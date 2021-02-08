@@ -55,4 +55,28 @@ describe('User Register Endpoint', () => {
     expect(res2.status).toBe(400);
     expect(res2.body.message).toContain('email must be an email');
   });
+
+  it('ensure password has at least 8 chars long and 20 chars max', async () => {
+    const res1 = await request(app).post('/user').send({
+      name: userParams.name,
+      email: userParams.email,
+      password: '1234567',
+    });
+
+    const res2 = await request(app).post('/user').send({
+      name: userParams.name,
+      email: userParams.email,
+      password: '012345678901234567890',
+    });
+
+    expect(res1.status).toBe(400);
+    expect(res1.body.message).toContain(
+      'password must be longer than or equal to 8 characters',
+    );
+
+    expect(res2.status).toBe(400);
+    expect(res2.body.message).toContain(
+      'password must be shorter than or equal to 20 characters',
+    );
+  });
 });
