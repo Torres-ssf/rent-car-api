@@ -36,7 +36,7 @@ describe('User Register Endpoint', () => {
     );
   });
 
-  it('ensure email has email syntax', async () => {
+  it('ensures email has email syntax', async () => {
     const res1 = await request(app).post('/user').send({
       name: userParams.name,
       email: 'paul',
@@ -56,7 +56,7 @@ describe('User Register Endpoint', () => {
     expect(res2.body.message).toContain('email must be an email');
   });
 
-  it('ensure email is not case sensitive', async () => {
+  it('ensures email is not case sensitive', async () => {
     const res1 = await request(app).post('/user').send({
       name: userParams.name,
       email: 'PAUL@email.com',
@@ -85,7 +85,7 @@ describe('User Register Endpoint', () => {
     expect(res3.body.message).toContain('Email already taken');
   });
 
-  it('ensure password has at least 8 chars long and 20 chars max', async () => {
+  it('ensures password has at least 8 chars long and 20 chars max', async () => {
     const res1 = await request(app).post('/user').send({
       name: userParams.name,
       email: userParams.email,
@@ -109,7 +109,7 @@ describe('User Register Endpoint', () => {
     );
   });
 
-  it('ensure password has at least 1 number, 1 lower and 1 upper case letters', async () => {
+  it('ensures password has at least 1 number, 1 lower and 1 upper case letters', async () => {
     const res1 = await request(app).post('/user').send({
       name: userParams.name,
       email: userParams.email,
@@ -150,5 +150,17 @@ describe('User Register Endpoint', () => {
     );
 
     expect(res4.status).toBe(200);
+  });
+
+  it('ensures fields have no empty spaces at the start or the end', async () => {
+    const res = await request(app).post('/user').send({
+      name: '     No Empty Space     ',
+      email: '    nospace@email.com     ',
+      password: userParams.password,
+    });
+
+    expect(res.status).toBe(200);
+    expect(res.body.name).toBe('No Empty Space');
+    expect(res.body.email).toBe('nospace@email.com');
   });
 });
