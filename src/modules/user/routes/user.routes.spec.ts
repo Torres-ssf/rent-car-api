@@ -36,7 +36,7 @@ describe('User Register Endpoint', () => {
     );
   });
 
-  it('ensure that email is a real email', async () => {
+  it('ensure email has email syntax', async () => {
     const res1 = await request(app).post('/user').send({
       name: userParams.name,
       email: 'paul',
@@ -54,6 +54,35 @@ describe('User Register Endpoint', () => {
 
     expect(res2.status).toBe(400);
     expect(res2.body.message).toContain('email must be an email');
+  });
+
+  it('ensure email is not case sensitive', async () => {
+    const res1 = await request(app).post('/user').send({
+      name: userParams.name,
+      email: 'PAUL@email.com',
+      password: userParams.password,
+    });
+
+    const res2 = await request(app).post('/user').send({
+      name: userParams.name,
+      email: 'PAUL@email.com',
+      password: userParams.password,
+    });
+
+    const res3 = await request(app).post('/user').send({
+      name: userParams.name,
+      email: 'PAul@email.com',
+      password: userParams.password,
+    });
+
+    expect(res1.status).toBe(200);
+    expect(res1.body.email).toBe('paul@email.com');
+
+    expect(res2.status).toBe(400);
+    expect(res2.body.message).toContain('Email already taken');
+
+    expect(res3.status).toBe(400);
+    expect(res3.body.message).toContain('Email already taken');
   });
 
   it('ensure password has at least 8 chars long and 20 chars max', async () => {
@@ -101,7 +130,7 @@ describe('User Register Endpoint', () => {
 
     const res4 = await request(app).post('/user').send({
       name: userParams.name,
-      email: userParams.email,
+      email: 'david@email.com ',
       password: userParams.password,
     });
 
