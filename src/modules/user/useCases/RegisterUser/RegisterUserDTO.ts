@@ -21,9 +21,9 @@ export class RegisterUserDTO {
   @MinLength(8)
   @MaxLength(20)
   @Transform(({ value }) => value.trim())
-  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/, {
     message:
-      'Password should have at least one number, one symbol, one lower case, and one upper case',
+      'Password should have at least one number, one lower letter, and one upper letter',
   })
   password: string;
 }
