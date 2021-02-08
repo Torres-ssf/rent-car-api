@@ -15,7 +15,7 @@ export class RegisterUserDTO {
   name: string;
 
   @IsEmail()
-  @Transform(({ value }) => value.trim())
+  @Transform(({ value }) => value.trim().toLowerCase())
   email: string;
 
   @MinLength(8)
