@@ -163,4 +163,16 @@ describe('User Register Endpoint', () => {
     expect(res.body.name).toBe('No Empty Space');
     expect(res.body.email).toBe('nospace@email.com');
   });
+
+  it('ensures user is being properly created', async () => {
+    const res = await request(app).post('/user').send({
+      name: 'Sergio Torres',
+      email: 'sergio@email.com',
+      password: 'rtyFSf123',
+    });
+
+    expect(res.status).toBe(200);
+    expect(res.body.name).toBe('Sergio Torres');
+    expect(res.body.email).toBe('sergio@email.com');
+  });
 });
