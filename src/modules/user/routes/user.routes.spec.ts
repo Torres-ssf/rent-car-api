@@ -175,4 +175,14 @@ describe('User Register Endpoint', () => {
     expect(res.body.name).toBe('Sergio Torres');
     expect(res.body.email).toBe('sergio@email.com');
   });
+
+  it('ensures returned user object has no password property', async () => {
+    const res = await request(app).post('/user').send({
+      name: 'Brian',
+      email: 'brian@email.com',
+      password: 'rtyFSf123',
+    });
+
+    expect(res.body.password).toBeUndefined();
+  });
 });
