@@ -11,7 +11,7 @@ describe('User Register Endpoint', () => {
     password: '.fdsSs932',
   };
 
-  it('ensures that name have at least 3 chars length and max 80 chars length', async () => {
+  it('ensures name have at least 3 chars length and max 80 chars length', async () => {
     const res1 = await request(app).post('/user').send({
       name: 'yo',
       email: userParams.email,
@@ -34,5 +34,25 @@ describe('User Register Endpoint', () => {
     expect(res2.body.message).toContain(
       'name must be shorter than or equal to 80 characters',
     );
+  });
+
+  it('ensure that email is a real email', async () => {
+    const res1 = await request(app).post('/user').send({
+      name: userParams.name,
+      email: 'paul',
+      password: userParams.password,
+    });
+
+    const res2 = await request(app).post('/user').send({
+      name: userParams.name,
+      email: 'paul@email',
+      password: userParams.password,
+    });
+
+    expect(res1.status).toBe(400);
+    expect(res1.body.message).toContain('email must be an email');
+
+    expect(res2.status).toBe(400);
+    expect(res2.body.message).toContain('email must be an email');
   });
 });
