@@ -8,7 +8,7 @@ describe('User Register Endpoint', () => {
   const userParams = {
     name: 'Paul Airon',
     email: 'paul@email.com',
-    password: '.fdsSs932',
+    password: 'fdsSs932',
   };
 
   it('ensures name have at least 3 chars length and max 80 chars length', async () => {
@@ -78,5 +78,48 @@ describe('User Register Endpoint', () => {
     expect(res2.body.message).toContain(
       'password must be shorter than or equal to 20 characters',
     );
+  });
+
+  it('ensure password has at least 1 number, 1 lower and 1 upper case letters', async () => {
+    const res1 = await request(app).post('/user').send({
+      name: userParams.name,
+      email: userParams.email,
+      password: 'asASfdsf',
+    });
+
+    const res2 = await request(app).post('/user').send({
+      name: userParams.name,
+      email: userParams.email,
+      password: 'asas1212',
+    });
+
+    const res3 = await request(app).post('/user').send({
+      name: userParams.name,
+      email: userParams.email,
+      password: 'ASAS1212',
+    });
+
+    const res4 = await request(app).post('/user').send({
+      name: userParams.name,
+      email: userParams.email,
+      password: userParams.password,
+    });
+
+    expect(res1.status).toBe(400);
+    expect(res1.body.message).toContain(
+      'Password should have at least one number, one lower letter, and one upper letter',
+    );
+
+    expect(res2.status).toBe(400);
+    expect(res2.body.message).toContain(
+      'Password should have at least one number, one lower letter, and one upper letter',
+    );
+
+    expect(res3.status).toBe(400);
+    expect(res3.body.message).toContain(
+      'Password should have at least one number, one lower letter, and one upper letter',
+    );
+
+    expect(res4.status).toBe(200);
   });
 });
