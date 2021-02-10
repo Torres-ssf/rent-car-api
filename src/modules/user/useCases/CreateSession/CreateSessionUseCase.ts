@@ -1,8 +1,16 @@
 import { inject, injectable } from 'tsyringe';
+import jwt from 'jsonwebtoken';
+import auth from '@config/auth';
 import { AppError } from '@shared/errors/AppError';
+import { User } from '@modules/user/model/User';
 import { IHashProvider } from '../../providers/HashProvider/models/IHashProvider';
 import { IUserRepository } from '../../repositories/IUserRepository';
 import { CreateSessionDTO } from './CreateSessionDTO';
+
+interface IResponse {
+  token: string;
+  user: User;
+}
 
 @injectable()
 export class CreateSessionUseCase {
@@ -13,7 +21,7 @@ export class CreateSessionUseCase {
     private hashProvider: IHashProvider,
   ) {}
 
-  async execute(createSession: CreateSessionDTO): Promise<void> {
+  async execute(createSession: CreateSessionDTO): Promise<IResponse> {
     const { email, password } = createSession;
 
     const user = await this.usersRepository.findByEmail(email);
@@ -30,5 +38,13 @@ export class CreateSessionUseCase {
     if (!passwordMatch) {
       throw new AppError('wrong email/password combination', 403);
     }
+
+    const { secret, expiresIn } = auth.jwt;
+
+    const token = jwt.sign({ id: user.id }, secret, {
+      expiresIn,
+    });
+
+    return { token, user };
   }
 }
