@@ -91,4 +91,25 @@ describe('Create Session Endpoint', () => {
       'Password should have at least one number, one lower letter, one upper letter and no empty spaces',
     );
   });
+
+  it('should check if session is being properly created', async () => {
+    const resSignUp = await request(app).post('/user').send({
+      name: 'Paul',
+      email: userParams.email,
+      password: userParams.password,
+    });
+
+    const {
+      body: { token, user },
+    } = await request(app).post('/session/signin').send({
+      email: userParams.email,
+      password: userParams.password,
+    });
+
+    expect(token).not.toBeUndefined();
+    expect(typeof token).toBe('string');
+    expect(token.length).not.toBe(0);
+
+    expect(user).toMatchObject(resSignUp.body);
+  });
 });
