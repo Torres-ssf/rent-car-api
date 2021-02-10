@@ -1,6 +1,7 @@
 import 'reflect-metadata';
-
+import { verify } from 'jsonwebtoken';
 import { AppError } from '@shared/errors/AppError';
+import auth from '@config/auth';
 import { User } from '../../model/User';
 import { FakeHashProvider } from '../../providers/HashProvider/fakes/FakeHashProvider';
 import { FakeUserRepository } from '../../repositories/fakes/FakeUserRepository';
@@ -79,5 +80,30 @@ describe('CreateSessionUseCase', () => {
         password: 'wrong-password',
       }),
     ).rejects.toBeInstanceOf(AppError);
+  });
+
+  it('should a jwt token and the user info', async () => {
+    const newUser = new User();
+
+    const userParams = usersSeed[0];
+
+    Object.assign(newUser, {
+      ...userParams,
+      password: await hashProvider.generateHash(userParams.password),
+    });
+
+    await userRepository.save(newUser);
+
+    const { token, user } = await createSessionUseCase.execute({
+      email: newUser.email,
+      password: userParams.password,
+    });
+
+    const jwtVerified = verify(token, auth.jwt.secret);
+
+    expect(token).toBeTruthy();
+    expect(typeof token).toBe('string');
+    expect(user).toMatchObject(newUser);
+    expect(jwtVerified).toHaveProperty('id', newUser.id);
   });
 });
