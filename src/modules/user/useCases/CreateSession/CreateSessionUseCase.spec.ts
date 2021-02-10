@@ -60,4 +60,24 @@ describe('CreateSessionUseCase', () => {
       hashed: user.password,
     });
   });
+
+  it('should return an error if given password does not match with user password', async () => {
+    const user = new User();
+
+    const userParams = usersSeed[0];
+
+    Object.assign(user, {
+      ...userParams,
+      password: await hashProvider.generateHash(userParams.password),
+    });
+
+    await userRepository.save(user);
+
+    await expect(
+      createSessionUseCase.execute({
+        email: user.email,
+        password: 'wrong-password',
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
 });
