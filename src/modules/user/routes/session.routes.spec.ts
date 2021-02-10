@@ -112,4 +112,15 @@ describe('Create Session Endpoint', () => {
 
     expect(user).toMatchObject(resSignUp.body);
   });
+
+  it('should return user object without password property', async () => {
+    const {
+      body: { user },
+    } = await request(app).post('/session/signin').send({
+      email: userParams.email,
+      password: userParams.password,
+    });
+
+    expect(user.password).toBeUndefined();
+  });
 });
