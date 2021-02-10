@@ -2,11 +2,14 @@ import 'reflect-metadata';
 
 import { FakeUserRepository } from '../../repositories/fakes/FakeUserRepository';
 import { RegisterUserUseCase } from './RegisterUserUseCase';
+import { FakeHashProvider } from '../../providers/HashProvider/fakes/FakeHashProvider';
 
 describe('RegisterUserUseCase', () => {
   let registerUserUseCase: RegisterUserUseCase;
 
   let userRepository: FakeUserRepository;
+
+  let hashProvoider: FakeHashProvider;
 
   const userParams = {
     name: 'Paul Airon',
@@ -15,11 +18,14 @@ describe('RegisterUserUseCase', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
-
     userRepository = new FakeUserRepository();
 
-    registerUserUseCase = new RegisterUserUseCase(userRepository);
+    hashProvoider = new FakeHashProvider();
+
+    registerUserUseCase = new RegisterUserUseCase(
+      userRepository,
+      hashProvoider,
+    );
   });
 
   it('should be able to register a new user', async () => {
@@ -45,5 +51,18 @@ describe('RegisterUserUseCase', () => {
         password: 'a.gdfssSfsa9',
       }),
     ).rejects.toHaveProperty('message', 'Email already taken');
+  });
+
+  it('should hash password before assing to user object', async () => {
+    const spy = jest.spyOn(hashProvoider, 'generateHash');
+
+    const res = await registerUserUseCase.execute({
+      name: 'Paul',
+      email: userParams.email,
+      password: 'unhashedPass10',
+    });
+
+    expect(spy).toHaveBeenCalledWith('unhashedPass10');
+    expect(res.password !== userParams.password).toBeTruthy();
   });
 });
