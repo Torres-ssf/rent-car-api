@@ -15,7 +15,7 @@ interface IResponse {
 @injectable()
 export class CreateSessionUseCase {
   constructor(
-    @inject('UsersRepository')
+    @inject('UserRepository')
     private usersRepository: IUserRepository,
     @inject('HashProvider')
     private hashProvider: IHashProvider,
