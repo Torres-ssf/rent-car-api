@@ -8,10 +8,9 @@ export class CreateSessionDTO {
 
   @MinLength(8)
   @MaxLength(20)
-  @Transform(({ value }) => value.trim())
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/, {
+  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})\S*$/, {
     message:
-      'Password should have at least one number, one lower letter, and one upper letter',
+      'Password should have at least one number, one lower letter, one upper letter and no empty spaces',
   })
   password: string;
 }
