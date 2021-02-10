@@ -25,7 +25,7 @@ export class RegisterUserUseCase {
       throw new AppError('Email already taken');
     }
 
-    const hashedPassword = this.hashProvider.generateHash(password);
+    const hashedPassword = await this.hashProvider.generateHash(password);
 
     const user = new User();
 
