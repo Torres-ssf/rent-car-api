@@ -21,5 +21,14 @@ export class CreateSessionUseCase {
     if (!user) {
       throw new AppError('wrong email/password combination', 403);
     }
+
+    const passwordMatch = await this.hashProvider.compare({
+      hashed: user.password,
+      payload: password,
+    });
+
+    if (!passwordMatch) {
+      throw new AppError('wrong email/password combination', 403);
+    }
   }
 }
