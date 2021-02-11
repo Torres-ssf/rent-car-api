@@ -1,12 +1,14 @@
 import { getHours, isBefore, isSameDay } from 'date-fns';
 import { ICarRepository } from '@modules/car/repositories/ICarRepository';
 import { AppError } from '@shared/errors/AppError';
+import { IUserRepository } from '@modules/user/repositories/IUserRepository';
 import { Rental } from '../models/Rental';
 import { IRentalRepository } from '../repositories/IRentalRepository';
 import { RentCarDTO } from './RentCarDTO';
 
 export class RentCarUseCase {
   constructor(
+    private userRepository: IUserRepository,
     private carRepository: ICarRepository,
     private rentalRepository: IRentalRepository,
   ) {}
@@ -47,6 +49,12 @@ export class RentCarUseCase {
           `rent store is close right now, try schedule a rent for tomorrow`,
         );
       }
+    }
+
+    const user = await this.userRepository.findById(client_id);
+
+    if (!user) {
+      throw new AppError('no user was found for the given id');
     }
 
     return new Rental();
