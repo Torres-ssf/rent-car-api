@@ -35,6 +35,10 @@ export class RentCarUseCase {
       throw new AppError(`the end date can't be before the starting date`);
     }
 
+    if (isSameDay(start_date, end_date)) {
+      throw new AppError(`car rent period needs to be at least 1 day`);
+    }
+
     return new Rental();
   }
 }
