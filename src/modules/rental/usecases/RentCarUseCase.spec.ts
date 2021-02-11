@@ -46,4 +46,20 @@ describe('ListCarUseCase', () => {
       "the end date can't be before the starting date",
     );
   });
+
+  it('should not be possible for start date and end date be on the same day', async () => {
+    MockDate.set('2021-01-10');
+
+    await expect(
+      rentCarUseCase.execute({
+        car_id: '1',
+        client_id: '1',
+        start_date: new Date(2021, 1, 12),
+        end_date: new Date(2021, 1, 12),
+      }),
+    ).rejects.toHaveProperty(
+      'message',
+      'car rent period needs to be at least 1 day',
+    );
+  });
 });
