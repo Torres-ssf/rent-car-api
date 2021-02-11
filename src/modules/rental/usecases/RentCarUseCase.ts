@@ -1,4 +1,4 @@
-import { isBefore, isSameDay } from 'date-fns';
+import { getHours, isBefore, isSameDay } from 'date-fns';
 import { ICarRepository } from '@modules/car/repositories/ICarRepository';
 import { AppError } from '@shared/errors/AppError';
 import { Rental } from '../models/Rental';
@@ -37,6 +37,16 @@ export class RentCarUseCase {
 
     if (isSameDay(start_date, end_date)) {
       throw new AppError(`car rent period needs to be at least 1 day`);
+    }
+
+    if (isSameDay(start_date, Date.now())) {
+      const hour = getHours(Date.now());
+
+      if (hour >= 20) {
+        throw new AppError(
+          `rent store is close right now, try schedule a rent for tomorrow`,
+        );
+      }
     }
 
     return new Rental();
