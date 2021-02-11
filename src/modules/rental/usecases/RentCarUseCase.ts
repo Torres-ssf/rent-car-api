@@ -1,4 +1,4 @@
-import { isBefore, isAfter, getHours } from 'date-fns';
+import { isBefore, isSameDay } from 'date-fns';
 import { ICarRepository } from '@modules/car/repositories/ICarRepository';
 import { AppError } from '@shared/errors/AppError';
 import { Rental } from '../models/Rental';
@@ -28,7 +28,11 @@ export class RentCarUseCase {
     const { car_id, client_id, start_date, end_date } = rentCarDTO;
 
     if (isBefore(start_date, new Date())) {
-      throw new AppError(`you can't rent a car for a past date`);
+      throw new AppError(`you can't rent a car on a past date`);
+    }
+
+    if (isBefore(end_date, start_date)) {
+      throw new AppError(`the end date can't be before the starting date`);
     }
 
     return new Rental();
