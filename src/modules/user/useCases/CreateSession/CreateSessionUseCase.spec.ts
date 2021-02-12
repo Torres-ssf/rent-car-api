@@ -6,7 +6,7 @@ import { User } from '../../model/User';
 import { FakeHashProvider } from '../../providers/HashProvider/fakes/FakeHashProvider';
 import { FakeUserRepository } from '../../repositories/fakes/FakeUserRepository';
 import { CreateSessionUseCase } from './CreateSessionUseCase';
-import usersSeed from '../../seeds/usersParams.json';
+import usersSeed from '../../seeds/users.json';
 
 describe('CreateSessionUseCase', () => {
   let createSessionUseCase: CreateSessionUseCase;
