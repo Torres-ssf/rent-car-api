@@ -1,8 +1,9 @@
 import 'reflect-metadata';
-import MockDate from 'mockdate';
 
 import { FakeCarRepository } from '@modules/car/repositories/fakes/FakeCarRepository';
 import { FakeUserRepository } from '@modules/user/repositories/fakes/FakeUserRepository';
+import usersSeed from '@modules/user/seeds/users.json';
+import { User } from '@modules/user/model/User';
 import { RentCarUseCase } from './RentCarUseCase';
 import { FakeRentalRepository } from '../repositories/fakes/FakeRentalRepository';
 
@@ -54,8 +55,6 @@ describe('ListCarUseCase', () => {
       'message',
       "the end date can't be before the starting date",
     );
-
-    MockDate.reset();
   });
 
   it('should not be possible for start date and end date be on the same day', async () => {
@@ -72,8 +71,6 @@ describe('ListCarUseCase', () => {
       'message',
       'car rent period needs to be at least 1 day',
     );
-
-    MockDate.reset();
   });
 
   it('should not be possible to rent a car for the same day after 6pm', async () => {
@@ -103,5 +100,26 @@ describe('ListCarUseCase', () => {
         end_date: new Date(2021, 1, 14),
       }),
     ).rejects.toHaveProperty('message', 'no user was found for the given id');
+  });
+
+  it('should verify if car exists for the given id', async () => {
+    global.Date.now = jest.fn(() => new Date(2021, 1, 11).getTime());
+
+    const user = usersSeed[0];
+
+    await userRepository.save(
+      Object.assign(new User(), {
+        ...user,
+      }),
+    );
+
+    await expect(
+      rentCarUseCase.execute({
+        car_id: 'nonExistentCarId',
+        client_id: user.id,
+        start_date: new Date(2021, 1, 12),
+        end_date: new Date(2021, 1, 14),
+      }),
+    ).rejects.toHaveProperty('message', 'no car was found for the given id');
   });
 });
