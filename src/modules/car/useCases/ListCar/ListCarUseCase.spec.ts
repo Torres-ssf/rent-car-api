@@ -4,14 +4,11 @@ import { Engine, Transmission } from '@modules/car/models/enums';
 import { FakeCarRepository } from '@modules/car/repositories/fakes/FakeCarRepository';
 import { Car } from '@modules/car/models/Car';
 import { ListCarUseCase } from './ListCarUseCase';
-import { RegisterCarUseCase } from '../RegisterCar/RegisterCarUseCase';
 
 import carsSeed from '../../seeds/cars.json';
 
 describe('ListCarUseCase', () => {
   let listCarUseCase: ListCarUseCase;
-
-  let registerCarUseCase: RegisterCarUseCase;
 
   let carRepository: FakeCarRepository;
 
@@ -19,8 +16,6 @@ describe('ListCarUseCase', () => {
     carRepository = new FakeCarRepository();
 
     listCarUseCase = new ListCarUseCase(carRepository);
-
-    registerCarUseCase = new RegisterCarUseCase(carRepository);
   });
 
   it('ensures all cars from the database are listed', async () => {
@@ -34,8 +29,12 @@ describe('ListCarUseCase', () => {
       const engine = car.engine as Engine;
       const transmission = car.transmission as Transmission;
 
+      const newCar = new Car();
+
       promiseArr.push(
-        registerCarUseCase.execute({ ...car, engine, transmission }),
+        carRepository.save(
+          Object.assign(newCar, { ...car, engine, transmission }),
+        ),
       );
     }
 
