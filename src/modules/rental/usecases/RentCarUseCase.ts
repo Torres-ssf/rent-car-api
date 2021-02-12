@@ -21,15 +21,16 @@ export class RentCarUseCase {
 
     - If the car id exists.
 
+    - If the user exists.
+
     - If the car is available in the given period
 
-    - If the user exists.
   */
 
   async execute(rentCarDTO: RentCarDTO): Promise<Rental> {
     const { car_id, client_id, start_date, end_date } = rentCarDTO;
 
-    if (isBefore(start_date, new Date())) {
+    if (isBefore(start_date, Date.now())) {
       throw new AppError(`you can't rent a car on a past date`);
     }
 
@@ -55,6 +56,12 @@ export class RentCarUseCase {
 
     if (!user) {
       throw new AppError('no user was found for the given id');
+    }
+
+    const car = await this.carRepository.findById(car_id);
+
+    if (!car) {
+      throw new AppError('no car was found for the given id');
     }
 
     return new Rental();
