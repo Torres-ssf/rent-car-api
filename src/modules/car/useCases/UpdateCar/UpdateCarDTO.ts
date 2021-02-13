@@ -1,6 +1,6 @@
 import { Engine, Transmission } from '@modules/car/models/enums';
 import { IsOptional } from 'class-validator';
-import { CarDTO } from '../../DTOs/CarDTO';
+import { CarDTO } from '../../dtos/CarDTO';
 
 export class UpdateCarDTO extends CarDTO {
   @IsOptional()

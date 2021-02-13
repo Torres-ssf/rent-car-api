@@ -1,4 +1,4 @@
-import { CarDTO } from '@modules/car/DTOs/CarDTO';
+import { CarDTO } from '@modules/car/dtos/CarDTO';
 
 import { Transmission, Engine } from '../../models/enums';
 
