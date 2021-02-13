@@ -3,9 +3,12 @@ import 'reflect-metadata';
 import { FakeCarRepository } from '@modules/car/repositories/fakes/FakeCarRepository';
 import { FakeUserRepository } from '@modules/user/repositories/fakes/FakeUserRepository';
 import usersSeed from '@modules/user/seeds/users.json';
+import carsSeed from '@modules/car/seeds/cars.json';
 import { User } from '@modules/user/model/User';
+import { Car } from '@modules/car/models/Car';
 import { RentCarUseCase } from './RentCarUseCase';
 import { FakeRentalRepository } from '../repositories/fakes/FakeRentalRepository';
+import { Rental } from '../models/Rental';
 
 describe('ListCarUseCase', () => {
   let rentCarUseCase: RentCarUseCase;
@@ -121,5 +124,71 @@ describe('ListCarUseCase', () => {
         end_date: new Date(2021, 1, 14),
       }),
     ).rejects.toHaveProperty('message', 'no car was found for the given id');
+  });
+
+  it('should verify if date conflict with an existent contract', async () => {
+    global.Date.now = jest.fn(() => new Date(2021, 1, 11).getTime());
+
+    const car = carsSeed[0];
+
+    await carRepository.save(
+      Object.assign(new Car(), {
+        ...car,
+      }),
+    );
+
+    const user = usersSeed[0];
+
+    await userRepository.save(
+      Object.assign(new User(), {
+        ...user,
+      }),
+    );
+
+    rentalRepository.rentals.push(
+      Object.assign(new Rental(), {
+        car_id: car.id,
+        client_id: user.id,
+        start_date: new Date(2021, 1, 12),
+        end_date: new Date(2021, 1, 15),
+        created_at: new Date(2021, 1, 8),
+        updated_at: new Date(2021, 1, 8),
+      }),
+    );
+
+    rentalRepository.rentals.push(
+      Object.assign(new Rental(), {
+        car_id: car.id,
+        client_id: user.id,
+        start_date: new Date(2021, 1, 21),
+        end_date: new Date(2021, 1, 24),
+        created_at: new Date(2021, 1, 8),
+        updated_at: new Date(2021, 1, 8),
+      }),
+    );
+
+    await expect(
+      rentCarUseCase.execute({
+        car_id: car.id,
+        client_id: user.id,
+        start_date: new Date(2021, 1, 15),
+        end_date: new Date(2021, 1, 20),
+      }),
+    ).rejects.toHaveProperty(
+      'message',
+      'car rental period conflicts with other existent rental',
+    );
+
+    await expect(
+      rentCarUseCase.execute({
+        car_id: car.id,
+        client_id: user.id,
+        start_date: new Date(2021, 1, 16),
+        end_date: new Date(2021, 1, 22),
+      }),
+    ).rejects.toHaveProperty(
+      'message',
+      'car rental period conflicts with other existent rental',
+    );
   });
 });
