@@ -64,6 +64,16 @@ export class RentCarUseCase {
       throw new AppError('no car was found for the given id');
     }
 
+    const rentalExists = await this.rentalRepository.findByCarIdAndDate({
+      car_id,
+      start_date,
+      end_date,
+    });
+
+    if (rentalExists.length) {
+      throw new Error('car rental period conflicts with other existent rental');
+    }
+
     return new Rental();
   }
 }
