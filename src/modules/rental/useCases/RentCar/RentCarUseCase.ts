@@ -3,8 +3,8 @@ import { ICarRepository } from '@modules/car/repositories/ICarRepository';
 import { AppError } from '@shared/errors/AppError';
 import { IUserRepository } from '@modules/user/repositories/IUserRepository';
 import { inject, injectable } from 'tsyringe';
-import { Rental } from '../models/Rental';
-import { IRentalRepository } from '../repositories/IRentalRepository';
+import { Rental } from '../../models/Rental';
+import { IRentalRepository } from '../../repositories/IRentalRepository';
 import { RentCarDTO } from './RentCarDTO';
 
 @injectable()

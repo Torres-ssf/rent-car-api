@@ -7,8 +7,8 @@ import carsSeed from '@modules/car/seeds/cars.json';
 import { User } from '@modules/user/model/User';
 import { Car } from '@modules/car/models/Car';
 import { RentCarUseCase } from './RentCarUseCase';
-import { FakeRentalRepository } from '../repositories/fakes/FakeRentalRepository';
-import { Rental } from '../models/Rental';
+import { FakeRentalRepository } from '../../repositories/fakes/FakeRentalRepository';
+import { Rental } from '../../models/Rental';
 
 describe('ListCarUseCase', () => {
   let rentCarUseCase: RentCarUseCase;
