@@ -1,5 +1,6 @@
 [
   {
+    "id": "7d5e6ecd-1c27-4e4f-af1e-552c4840f881",
     "model": "F8",
     "brand": "Ferrari",
     "max_speed": 340,
@@ -8,9 +9,12 @@
     "engine": "gas",
     "transmission": "automatic",
     "passengers": 2,
-    "daily_value": 800
+    "daily_value": 800,
+    "created_at": "2021-02-11T17:41:29.810Z",
+    "updated_at": "2021-02-11T17:41:29.810Z"
   },
   {
+    "id": "f1013b1a-da3d-42ec-833e-9541e8b3b6a9",
     "model": "Aventador",
     "brand": "Lamborghini",
     "max_speed": 351,
@@ -19,9 +23,12 @@
     "engine": "gas",
     "transmission": "automatic",
     "passengers": 2,
-    "daily_value": 900
+    "daily_value": 900,
+    "created_at": "2021-02-11T17:41:29.810Z",
+    "updated_at": "2021-02-11T17:41:29.810Z"
   },
   {
+    "id": "544a3551-fee3-4fa1-bb5b-0d6a00ec9be9",
     "model": "Taycan Turbo S",
     "brand": "Porsche",
     "max_speed": 260,
@@ -30,9 +37,12 @@
     "engine": "electric",
     "transmission": "automatic",
     "passengers": 4,
-    "daily_value": 800
+    "daily_value": 800,
+    "created_at": "2021-02-11T17:41:29.810Z",
+    "updated_at": "2021-02-11T17:41:29.810Z"
   },
   {
+    "id": "08995bc9-7750-4287-9da0-ff9954c27eb0",
     "model": "Acura NSX",
     "brand": "Honda",
     "max_speed": 260,
@@ -41,9 +51,12 @@
     "engine": "hybrid",
     "transmission": "automatic",
     "passengers": 4,
-    "daily_value": 800
+    "daily_value": 800,
+    "created_at": "2021-02-11T17:41:29.810Z",
+    "updated_at": "2021-02-11T17:41:29.810Z"
   },
   {
+    "id": "597f43bc-e55f-4eda-b3ab-f7f7f8c1279a",
     "model": "Mustang Mach-E",
     "brand": "Ford",
     "max_speed": 200,
@@ -52,6 +65,8 @@
     "engine": "electric",
     "transmission": "automatic",
     "passengers": 5,
-    "daily_value": 300
+    "daily_value": 300,
+    "created_at": "2021-02-11T17:41:29.810Z",
+    "updated_at": "2021-02-11T17:41:29.810Z"
   }
 ]
