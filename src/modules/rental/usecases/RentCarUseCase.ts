@@ -13,20 +13,6 @@ export class RentCarUseCase {
     private rentalRepository: IRentalRepository,
   ) {}
 
-  /*
-    To rent a car I should verify
-    - If the start date is not on the past (after 6 pm should not be possible for the current day)
-
-    - If the end date is at least one day after the start date.
-
-    - If the car id exists.
-
-    - If the user exists.
-
-    - If the car is available in the given period
-
-  */
-
   async execute(rentCarDTO: RentCarDTO): Promise<Rental> {
     const { car_id, client_id, start_date, end_date } = rentCarDTO;
 
@@ -74,6 +60,15 @@ export class RentCarUseCase {
       throw new Error('car rental period conflicts with other existent rental');
     }
 
-    return new Rental();
+    const rental = Object.assign(new Rental(), {
+      car_id,
+      client_id,
+      start_date,
+      end_date,
+      created_at: Date.now(),
+      updated_at: Date.now(),
+    });
+
+    return this.rentalRepository.save(rental);
   }
 }
