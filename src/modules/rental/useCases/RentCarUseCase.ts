@@ -2,14 +2,19 @@ import { getHours, isBefore, isSameDay } from 'date-fns';
 import { ICarRepository } from '@modules/car/repositories/ICarRepository';
 import { AppError } from '@shared/errors/AppError';
 import { IUserRepository } from '@modules/user/repositories/IUserRepository';
+import { inject, injectable } from 'tsyringe';
 import { Rental } from '../models/Rental';
 import { IRentalRepository } from '../repositories/IRentalRepository';
 import { RentCarDTO } from './RentCarDTO';
 
+@injectable()
 export class RentCarUseCase {
   constructor(
+    @inject('UserRepository')
     private userRepository: IUserRepository,
+    @inject('CarRepository')
     private carRepository: ICarRepository,
+    @inject('RentalRepository')
     private rentalRepository: IRentalRepository,
   ) {}
 
