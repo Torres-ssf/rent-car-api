@@ -191,4 +191,33 @@ describe('ListCarUseCase', () => {
       'car rental period conflicts with other existent rental',
     );
   });
+
+  it('should be possible to create a rental data', async () => {
+    global.Date.now = jest.fn(() => new Date(2021, 1, 11).getTime());
+
+    const car = carsSeed[0];
+
+    await carRepository.save(
+      Object.assign(new Car(), {
+        ...car,
+      }),
+    );
+
+    const user = usersSeed[0];
+
+    await userRepository.save(
+      Object.assign(new User(), {
+        ...user,
+      }),
+    );
+
+    await expect(
+      rentCarUseCase.execute({
+        car_id: car.id,
+        client_id: user.id,
+        start_date: new Date(2021, 1, 12),
+        end_date: new Date(2021, 1, 14),
+      }),
+    ).resolves.toBeTruthy();
+  });
 });
