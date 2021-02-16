@@ -19,6 +19,10 @@ export class ListAvailableCarsUseCase {
       throw new AppError("start date can't be a past date");
     }
 
+    if (isBefore(end_date, start_date)) {
+      throw new AppError("the end date can't be before the start date");
+    }
+
     return [];
   }
 }
