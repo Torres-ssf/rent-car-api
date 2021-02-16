@@ -1,3 +1,4 @@
+import { ListAvailableCarsDTO } from '@modules/car/dtos/ListAvailableCarsDTO';
 import { Car } from 'modules/car/models/Car';
 import { ICarRepository } from '../ICarRepository';
 
@@ -9,6 +10,10 @@ export class FakeCarRepository implements ICarRepository {
   }
 
   async list(): Promise<Car[]> {
+    return this.cars;
+  }
+
+  async listAvailableCars(data: ListAvailableCarsDTO): Promise<Car[]> {
     return this.cars;
   }
 
