@@ -23,6 +23,10 @@ export class ListAvailableCarsUseCase {
       throw new AppError("the end date can't be before the start date");
     }
 
+    if (isSameDay(start_date, end_date)) {
+      throw new AppError("start date and end date can't be at the same day");
+    }
+
     return [];
   }
 }
