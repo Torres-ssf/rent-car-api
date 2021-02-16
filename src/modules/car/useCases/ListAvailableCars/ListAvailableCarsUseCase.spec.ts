@@ -36,4 +36,18 @@ describe('ListCarUseCase', () => {
       "the end date can't be before the start date",
     );
   });
+
+  it('should verify if end_date does not come before start_date', async () => {
+    global.Date.now = jest.fn(() => new Date(2021, 1, 10).getTime());
+
+    await expect(
+      listAvailableCarsUseCase.execute({
+        start_date: new Date(2021, 2, 10),
+        end_date: new Date(2021, 2, 10),
+      }),
+    ).rejects.toHaveProperty(
+      'message',
+      "start date and end date can't be at the same day",
+    );
+  });
 });
