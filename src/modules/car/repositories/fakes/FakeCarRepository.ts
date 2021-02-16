@@ -18,7 +18,14 @@ export class FakeCarRepository implements ICarRepository {
   }
 
   async save(car: Car): Promise<Car> {
-    this.cars.push(car);
+    const carIndex = this.cars.findIndex(item => item.id === car.id);
+
+    if (carIndex < 0) {
+      this.cars.push(car);
+    } else {
+      this.cars[carIndex] = car;
+    }
+
     return car;
   }
 
