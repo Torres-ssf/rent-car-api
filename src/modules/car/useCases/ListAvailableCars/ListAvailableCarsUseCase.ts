@@ -27,6 +27,6 @@ export class ListAvailableCarsUseCase {
       throw new AppError("start date and end date can't be at the same day");
     }
 
-    return [];
+    return this.carRepository.listAvailableCars(listCarAvailabilityDTO);
   }
 }
