@@ -8,7 +8,7 @@ import { ListAvailableCarsDTO } from '../../dtos/ListAvailableCarsDTO';
 @injectable()
 export class ListAvailableCarsUseCase {
   constructor(
-    @inject('RentalRepository')
+    @inject('CarRepository')
     private carRepository: ICarRepository,
   ) {}
 
