@@ -4,7 +4,7 @@ import { FakeCarRepository } from '@modules/car/repositories/fakes/FakeCarReposi
 import { FakeUserRepository } from '@modules/user/repositories/fakes/FakeUserRepository';
 import usersSeed from '@modules/user/seeds/users.json';
 import carsSeed from '@modules/car/seeds/cars.json';
-import { User } from '@modules/user/model/User';
+import { User } from '@modules/user/models/User';
 import { Car } from '@modules/car/models/Car';
 import { RentCarUseCase } from './RentCarUseCase';
 import { FakeRentalRepository } from '../../repositories/fakes/FakeRentalRepository';

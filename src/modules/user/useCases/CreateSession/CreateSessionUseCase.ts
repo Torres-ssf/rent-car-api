@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe';
 import jwt from 'jsonwebtoken';
 import auth from '@config/auth';
 import { AppError } from '@shared/errors/AppError';
-import { User } from '@modules/user/model/User';
+import { User } from '@modules/user/models/User';
 import { IHashProvider } from '../../providers/HashProvider/models/IHashProvider';
 import { IUserRepository } from '../../repositories/IUserRepository';
 import { CreateSessionDTO } from './CreateSessionDTO';
