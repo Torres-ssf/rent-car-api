@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import { AppError } from '@shared/errors/AppError';
 import { RentCarUseCase } from './RentCarUseCase';
-import { rentCarPipe } from '../pipes/rentCar.pipe';
+import { rentCarPipe } from '../../pipes/rentCar.pipe';
 
 export class RentCarController {
   async handle(request: Request, response: Response): Promise<Response> {
