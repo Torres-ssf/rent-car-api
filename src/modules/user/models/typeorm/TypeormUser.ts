@@ -3,11 +3,13 @@ import {
   CreateDateColumn,
   Entity,
   PrimaryColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from '../User';
 
 @Entity('user')
+@Unique(['email'])
 export class TypeormUser extends User {
   @PrimaryColumn()
   id: string;
