@@ -3,4 +3,5 @@ dist
 coverage
 ormconfig.json
 yarn-error.log
+.vscode
 .env
