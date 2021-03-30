@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import { dataValidation } from '@shared/utils/dataValidation';
 import { CreateSessionUseCase } from './CreateSessionUseCase';
-import { CreateSessionDTO } from '../../DTOs/CreateSessionDTO';
+import { CreateSessionDTO } from '../../dtos/CreateSessionDTO';
 
 export class CreateSessionController {
   async handle(request: Request, response: Response): Promise<Response> {

@@ -2,7 +2,7 @@ import { AppError } from '@shared/errors/AppError';
 import { dataValidation } from '@shared/utils/dataValidation';
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
-import { RegisterUserDTO } from '../../DTOs/RegisterUserDTO';
+import { RegisterUserDTO } from '../../dtos/RegisterUserDTO';
 import { RegisterUserUseCase } from './RegisterUserUseCase';
 
 export class RegisterUserController {
