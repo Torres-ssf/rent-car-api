@@ -1,4 +1,4 @@
-import { Engine, Transmission } from '@modules/car/models/enums';
+import { Engine, Transmission } from '@modules/car/enums';
 import { IsOptional } from 'class-validator';
 import { CarDTO } from '../../dtos/CarDTO';
 

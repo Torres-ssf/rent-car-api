@@ -8,7 +8,7 @@ import {
   MinLength,
 } from 'class-validator';
 
-import { Engine, Transmission } from '@modules/car/models/enums';
+import { Engine, Transmission } from '@modules/car/enums';
 import { Transform } from 'class-transformer';
 import { parseISO } from 'date-fns';
 

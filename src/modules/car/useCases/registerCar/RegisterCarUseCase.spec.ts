@@ -1,5 +1,5 @@
 import { Car } from '@modules/car/models/Car';
-import { Engine, Transmission } from '@modules/car/models/enums';
+import { Engine, Transmission } from '@modules/car/enums';
 import 'reflect-metadata';
 
 import { FakeCarRepository } from '../../repositories/fakes/FakeCarRepository';

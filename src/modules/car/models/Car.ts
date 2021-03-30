@@ -1,4 +1,4 @@
-import { Engine, Transmission } from './enums';
+import { Engine, Transmission } from '../enums';
 
 export class Car {
   id: string;

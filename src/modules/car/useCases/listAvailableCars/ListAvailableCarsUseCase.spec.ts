@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 
 import { FakeCarRepository } from '@modules/car/repositories/fakes/FakeCarRepository';
-import { Engine, Transmission } from '@modules/car/models/enums';
+import { Engine, Transmission } from '@modules/car/enums';
 import { Car } from '@modules/car/models/Car';
 import { ListAvailableCarsUseCase } from './ListAvailableCarsUseCase';
 import carSeed from '../../seeds/cars.json';
