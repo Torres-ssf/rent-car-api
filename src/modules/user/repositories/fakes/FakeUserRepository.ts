@@ -1,4 +1,4 @@
-import { User } from '../../model/User';
+import { User } from '../../models/User';
 import { IUserRepository } from '../IUserRepository';
 
 export class FakeUserRepository implements IUserRepository {

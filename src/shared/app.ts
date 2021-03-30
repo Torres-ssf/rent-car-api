@@ -4,6 +4,8 @@ import 'express-async-errors';
 
 import express from 'express';
 
+import './database/index';
+
 import './container';
 
 import { errorHandlingMiddleware } from './middlewares/errorHandleMiddleware';

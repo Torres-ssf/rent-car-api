@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { verify } from 'jsonwebtoken';
 import { AppError } from '@shared/errors/AppError';
 import auth from '@config/auth';
-import { User } from '../../model/User';
+import { User } from '../../models/User';
 import { FakeHashProvider } from '../../providers/HashProvider/fakes/FakeHashProvider';
 import { FakeUserRepository } from '../../repositories/fakes/FakeUserRepository';
 import { CreateSessionUseCase } from './CreateSessionUseCase';
