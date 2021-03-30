@@ -5,7 +5,7 @@ import { v4 } from 'uuid';
 import { IHashProvider } from '@modules/user/providers/HashProvider/models/IHashProvider';
 import { User } from '../../models/User';
 import { IUserRepository } from '../../repositories/IUserRepository';
-import { RegisterUserDTO } from './RegisterUserDTO';
+import { RegisterUserDTO } from '../../DTOs/RegisterUserDTO';
 
 @injectable()
 export class RegisterUserUseCase {

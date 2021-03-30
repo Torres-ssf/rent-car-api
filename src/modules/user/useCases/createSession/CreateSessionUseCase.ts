@@ -5,7 +5,7 @@ import { AppError } from '@shared/errors/AppError';
 import { User } from '@modules/user/models/User';
 import { IHashProvider } from '../../providers/HashProvider/models/IHashProvider';
 import { IUserRepository } from '../../repositories/IUserRepository';
-import { CreateSessionDTO } from './CreateSessionDTO';
+import { CreateSessionDTO } from '../../DTOs/CreateSessionDTO';
 
 interface IResponse {
   token: string;
