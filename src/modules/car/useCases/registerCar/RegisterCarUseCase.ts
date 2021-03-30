@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe';
 import { v4 } from 'uuid';
 import { Car } from '../../models/Car';
 import { ICarRepository } from '../../repositories/ICarRepository';
-import { RegisterCarDTO } from './RegisterCarDTO';
+import { RegisterCarDTO } from '../../dtos/RegisterCarDTO';
 
 @injectable()
 export class RegisterCarUseCase {

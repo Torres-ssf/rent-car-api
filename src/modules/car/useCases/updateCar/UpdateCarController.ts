@@ -2,7 +2,7 @@ import { AppError } from '@shared/errors/AppError';
 import { dataValidation } from '@shared/utils/dataValidation';
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
-import { RegisterCarDTO } from '../registerCar/RegisterCarDTO';
+import { UpdateCarDTO } from '../../dtos/UpdateCarDTO';
 import { UpdateCarUseCase } from './UpdateCarUseCase';
 
 export class UpdateCarController {
@@ -10,7 +10,7 @@ export class UpdateCarController {
     try {
       const { id } = request.params;
 
-      const registerCarDTO = await dataValidation(RegisterCarDTO, request.body);
+      const registerCarDTO = await dataValidation(UpdateCarDTO, request.body);
 
       const registerCarUseCase = container.resolve(UpdateCarUseCase);
 

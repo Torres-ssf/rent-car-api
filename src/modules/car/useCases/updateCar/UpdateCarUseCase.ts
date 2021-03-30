@@ -2,7 +2,7 @@ import { AppError } from '@shared/errors/AppError';
 import { inject, injectable } from 'tsyringe';
 import { Car } from '../../models/Car';
 import { ICarRepository } from '../../repositories/ICarRepository';
-import { UpdateCarDTO } from './UpdateCarDTO';
+import { UpdateCarDTO } from '../../dtos/UpdateCarDTO';
 
 @injectable()
 export class UpdateCarUseCase {

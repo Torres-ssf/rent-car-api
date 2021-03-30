@@ -1,6 +1,6 @@
 import { CarDTO } from '@modules/car/dtos/CarDTO';
 
-import { Transmission, Engine } from '../../enums';
+import { Transmission, Engine } from '../enums';
 
 export class RegisterCarDTO extends CarDTO {
   model: string;
