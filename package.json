@@ -6,6 +6,7 @@
   "scripts": {
     "start:dev": "tsnd --inspect -r tsconfig-paths/register --transpile-only --respawn --ignore-watch node_modules src/shared/server.ts",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+    "typeorm:docker": "docker exec -it rent_api yarn typeorm",
     "test": "NODE_ENV=test jest --detectOpenHandles"
   },
   "dependencies": {

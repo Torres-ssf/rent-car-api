@@ -1,11 +1,11 @@
 {
   "name": "default",
   "type": "postgres",
-  "host": "localhost",
+  "host": "db_postgres",
   "port": 5432,
-  "username": "username",
-  "password": "password",
-  "database": "rent_db",
+  "username": "docker",
+  "password": "docker",
+  "database": "rent_api_db",
   "entities": [
     "./src/modules/**/models/typeorm/*.ts"
   ],
