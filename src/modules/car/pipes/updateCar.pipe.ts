@@ -2,7 +2,7 @@ import { AppError } from '@shared/errors/AppError';
 import { extractValidationErrors } from '@shared/utils/formatValidationError';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
-import { UpdateCarDTO } from '../useCases/UpdateCar/UpdateCarDTO';
+import { UpdateCarDTO } from '../useCases/updateCar/UpdateCarDTO';
 
 export const updateCarPipe = async (
   data: UpdateCarDTO,

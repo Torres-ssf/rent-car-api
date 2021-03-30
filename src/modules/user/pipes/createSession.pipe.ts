@@ -2,7 +2,7 @@ import { AppError } from '@shared/errors/AppError';
 import { extractValidationErrors } from '@shared/utils/formatValidationError';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
-import { CreateSessionDTO } from '../useCases/CreateSession/CreateSessionDTO';
+import { CreateSessionDTO } from '../useCases/createSession/CreateSessionDTO';
 
 export const createSessionPipe = async (
   data: CreateSessionDTO,

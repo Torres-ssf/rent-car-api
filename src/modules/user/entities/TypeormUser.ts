@@ -6,7 +6,7 @@ import {
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
-import { User } from '../User';
+import { User } from '../models/User';
 
 @Entity('user')
 @Unique(['email'])

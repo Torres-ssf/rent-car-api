@@ -2,7 +2,7 @@ import { AppError } from '@shared/errors/AppError';
 import { extractValidationErrors } from '@shared/utils/formatValidationError';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
-import { RegisterUserDTO } from '../useCases/RegisterUser/RegisterUserDTO';
+import { RegisterUserDTO } from '../useCases/registerUser/RegisterUserDTO';
 
 export const registerUserPipe = async (
   data: RegisterUserDTO,

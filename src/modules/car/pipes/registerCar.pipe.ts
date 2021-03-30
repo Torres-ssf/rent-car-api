@@ -2,7 +2,7 @@ import { AppError } from '@shared/errors/AppError';
 import { extractValidationErrors } from '@shared/utils/formatValidationError';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
-import { RegisterCarDTO } from '../useCases/RegisterCar/RegisterCarDTO';
+import { RegisterCarDTO } from '../useCases/registerCar/RegisterCarDTO';
 
 export const registerCarPipe = async (
   data: RegisterCarDTO,

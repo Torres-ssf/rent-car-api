@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { ListAvailableCarsController } from '../useCases/ListAvailableCars/ListAvailableCarsController';
-import { ListCarController } from '../useCases/ListCar/ListCarController';
-import { RegisterCarController } from '../useCases/RegisterCar/RegisterCarController';
-import { RemoveCarController } from '../useCases/RemoveCar/RemoveCarController';
-import { UpdateCarController } from '../useCases/UpdateCar/UpdateCarController';
+import { ListAvailableCarsController } from '../useCases/listAvailableCars/ListAvailableCarsController';
+import { ListCarController } from '../useCases/listCar/ListCarController';
+import { RegisterCarController } from '../useCases/registerCar/RegisterCarController';
+import { RemoveCarController } from '../useCases/removeCar/RemoveCarController';
+import { UpdateCarController } from '../useCases/updateCar/UpdateCarController';
 
 const listCarController = new ListCarController();
 const listAvailableCarsController = new ListAvailableCarsController();

@@ -3,7 +3,7 @@ import 'reflect-metadata';
 import { Engine, Transmission } from '@modules/car/models/enums';
 import { FakeCarRepository } from '@modules/car/repositories/fakes/FakeCarRepository';
 import { RemoveCarUseCase } from './RemoveCarUseCase';
-import { RegisterCarUseCase } from '../RegisterCar/RegisterCarUseCase';
+import { RegisterCarUseCase } from '../registerCar/RegisterCarUseCase';
 
 describe('RemoveCarUseCase', () => {
   let removeCarUseCase: RemoveCarUseCase;
