@@ -1,13 +1,14 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import { AppError } from '@shared/errors/AppError';
+import { dataValidation } from '@shared/utils/dataValidation';
 import { RegisterCarUseCase } from './RegisterCarUseCase';
-import { registerCarPipe } from '../../pipes/registerCar.pipe';
+import { RegisterCarDTO } from './RegisterCarDTO';
 
 export class RegisterCarController {
   async handle(request: Request, response: Response): Promise<Response> {
     try {
-      const registerCarDTO = await registerCarPipe(request.body);
+      const registerCarDTO = await dataValidation(RegisterCarDTO, request.body);
 
       const registerCarUseCase = container.resolve(RegisterCarUseCase);
 
