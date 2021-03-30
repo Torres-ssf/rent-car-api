@@ -1,13 +1,14 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import { AppError } from '@shared/errors/AppError';
+import { dataValidation } from '@shared/utils/dataValidation';
 import { RentCarUseCase } from './RentCarUseCase';
-import { rentCarPipe } from '../../pipes/rentCar.pipe';
+import { RentCarDTO } from './RentCarDTO';
 
 export class RentCarController {
   async handle(request: Request, response: Response): Promise<Response> {
     try {
-      const rentCarDTO = await rentCarPipe(request.body);
+      const rentCarDTO = await dataValidation(RentCarDTO, request.body);
 
       const rentCarUseCase = container.resolve(RentCarUseCase);
 
