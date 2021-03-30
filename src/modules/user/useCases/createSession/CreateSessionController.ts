@@ -1,13 +1,17 @@
 import { AppError } from '@shared/errors/AppError';
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
+import { dataValidation } from '@shared/utils/dataValidation';
 import { CreateSessionUseCase } from './CreateSessionUseCase';
-import { createSessionPipe } from '../../pipes/createSession.pipe';
+import { CreateSessionDTO } from './CreateSessionDTO';
 
 export class CreateSessionController {
   async handle(request: Request, response: Response): Promise<Response> {
     try {
-      const { email, password } = await createSessionPipe(request.body);
+      const { email, password } = await dataValidation(
+        CreateSessionDTO,
+        request.body,
+      );
 
       const createSessionUseCase = container.resolve(CreateSessionUseCase);
 
