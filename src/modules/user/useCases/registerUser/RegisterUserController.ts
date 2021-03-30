@@ -1,13 +1,17 @@
 import { AppError } from '@shared/errors/AppError';
+import { dataValidation } from '@shared/utils/dataValidation';
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
-import { registerUserPipe } from '../../pipes/registerUser.pipe';
+import { RegisterUserDTO } from './RegisterUserDTO';
 import { RegisterUserUseCase } from './RegisterUserUseCase';
 
 export class RegisterUserController {
   async handle(request: Request, response: Response): Promise<Response> {
     try {
-      const { name, email, password } = await registerUserPipe(request.body);
+      const { name, email, password } = await dataValidation(
+        RegisterUserDTO,
+        request.body,
+      );
 
       const registerUserUseCase = container.resolve(RegisterUserUseCase);
 
