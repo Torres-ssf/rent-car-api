@@ -11,13 +11,13 @@ export const errorHandlingMiddleware = (
     const { statusCode, message } = err;
 
     return res.status(statusCode).json({
-      status: statusCode,
       message,
       error: errorCode[statusCode] ? errorCode[statusCode] : 'Bad Request',
     });
   }
 
-  return res
-    .status(500)
-    .json({ status: 'error', message: 'Internal server error' });
+  return res.status(500).json({
+    status: 'error',
+    message: `Internal server error - ${err.message}`,
+  });
 };
