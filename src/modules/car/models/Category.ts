@@ -7,7 +7,7 @@ export class Category {
 
   description: string;
 
-  created_at: string;
+  created_at: Date;
 
   constructor() {
     if (!this.id) {
