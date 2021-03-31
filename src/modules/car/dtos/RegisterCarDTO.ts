@@ -1,8 +1,8 @@
-import { Engine, Transmission } from '../enums';
+import { CarDTO } from '@modules/car/dtos/CarDTO';
 
-export class Car {
-  id: string;
+import { Transmission, Engine } from '../enums';
 
+export class RegisterCarDTO extends CarDTO {
   model: string;
 
   brand: string;
@@ -20,8 +20,4 @@ export class Car {
   passengers: number;
 
   daily_value: number;
-
-  created_at: Date;
-
-  updated_at: Date;
 }

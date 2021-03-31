@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { RentCarController } from '../useCases/RentCar/RentCarController';
+import { RentCarController } from '../useCases/rentCar/RentCarController';
 
 const rentCarController = new RentCarController();
 

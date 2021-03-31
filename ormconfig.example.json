@@ -7,7 +7,7 @@
   "password": "docker",
   "database": "rent_api_db",
   "entities": [
-    "./src/modules/**/models/typeorm/*.ts"
+    "./src/modules/**/entities/*.ts"
   ],
   "migrations": [
     "./src/shared/database/migrations/*.ts"

@@ -9,7 +9,7 @@ import {
   MinLength,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { Engine, Transmission } from '../models/enums';
+import { Engine, Transmission } from '../enums';
 
 export abstract class CarDTO {
   @IsString()

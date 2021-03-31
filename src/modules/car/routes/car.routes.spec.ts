@@ -2,7 +2,7 @@ import 'reflect-metadata';
 
 import request from 'supertest';
 import { app } from '@shared/app';
-import { Engine, Transmission } from '../models/enums';
+import { Engine, Transmission } from '../enums';
 
 describe('Car Register Endpoint', () => {
   const carParams = {
