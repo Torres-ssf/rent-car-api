@@ -10,7 +10,7 @@ export class ListAvailableCarsController {
     try {
       const listAvailableCarsDTO = await dataValidation(
         ListAvailableCarsDTO,
-        JSON.parse(request.query as any),
+        request.query as any,
       );
 
       const listAvailableCarsUseCase = container.resolve(
