@@ -5,7 +5,7 @@ import { IUserRepository } from '@modules/user/repositories/IUserRepository';
 import { inject, injectable } from 'tsyringe';
 import { Rental } from '../../models/Rental';
 import { IRentalRepository } from '../../repositories/IRentalRepository';
-import { RentCarDTO } from './RentCarDTO';
+import { RentCarDTO } from '../../dtos/RentCarDTO';
 
 @injectable()
 export class RentCarUseCase {
