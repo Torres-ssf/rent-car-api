@@ -9,6 +9,7 @@ describe('User Register Endpoint', () => {
     name: 'Paul Airon',
     email: 'paul@email.com',
     password: 'fdsSs932',
+    driver_license: '1345234123',
   };
 
   it('should check if name have at least 3 chars length and max 80 chars length', async () => {
@@ -16,6 +17,7 @@ describe('User Register Endpoint', () => {
       name: 'yo',
       email: userParams.email,
       password: userParams.password,
+      driver_license: userParams.driver_license,
     });
 
     const res2 = await request(app).post('/user').send({
@@ -23,6 +25,7 @@ describe('User Register Endpoint', () => {
         'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ip',
       email: userParams.email,
       password: userParams.password,
+      driver_license: userParams.driver_license,
     });
 
     expect(res1.status).toBe(400);
@@ -41,12 +44,14 @@ describe('User Register Endpoint', () => {
       name: userParams.name,
       email: 'paul',
       password: userParams.password,
+      driver_license: userParams.driver_license,
     });
 
     const res2 = await request(app).post('/user').send({
       name: userParams.name,
       email: 'paul@email',
       password: userParams.password,
+      driver_license: userParams.driver_license,
     });
 
     expect(res1.status).toBe(400);
@@ -61,21 +66,24 @@ describe('User Register Endpoint', () => {
       name: userParams.name,
       email: 'PAUL@email.com',
       password: userParams.password,
+      driver_license: '13241234145',
     });
 
     const res2 = await request(app).post('/user').send({
       name: userParams.name,
       email: 'PAUL@email.com',
       password: userParams.password,
+      driver_license: userParams.driver_license,
     });
 
     const res3 = await request(app).post('/user').send({
       name: userParams.name,
       email: 'PAul@email.com',
       password: userParams.password,
+      driver_license: userParams.driver_license,
     });
 
-    expect(res1.status).toBe(200);
+    expect(res1.status).toBe(201);
     expect(res1.body.email).toBe('paul@email.com');
 
     expect(res2.status).toBe(400);
@@ -90,12 +98,14 @@ describe('User Register Endpoint', () => {
       name: userParams.name,
       email: userParams.email,
       password: '1234567',
+      driver_license: userParams.driver_license,
     });
 
     const res2 = await request(app).post('/user').send({
       name: userParams.name,
       email: userParams.email,
       password: '012345678901234567890',
+      driver_license: userParams.driver_license,
     });
 
     expect(res1.status).toBe(400);
@@ -114,30 +124,35 @@ describe('User Register Endpoint', () => {
       name: userParams.name,
       email: userParams.email,
       password: 'asASfdsf',
+      driver_license: userParams.driver_license,
     });
 
     const res2 = await request(app).post('/user').send({
       name: userParams.name,
       email: userParams.email,
       password: 'asas1212',
+      driver_license: userParams.driver_license,
     });
 
     const res3 = await request(app).post('/user').send({
       name: userParams.name,
       email: userParams.email,
       password: 'ASAS1212',
+      driver_license: userParams.driver_license,
     });
 
     const res4 = await request(app).post('/user').send({
       name: userParams.name,
       email: userParams.email,
       password: 'asAS1212 ',
+      driver_license: userParams.driver_license,
     });
 
     const res5 = await request(app).post('/user').send({
       name: userParams.name,
       email: 'david@email.com ',
       password: userParams.password,
+      driver_license: '3654453563456',
     });
 
     expect(res1.status).toBe(400);
@@ -160,7 +175,7 @@ describe('User Register Endpoint', () => {
       'Password should have at least one number, one lower letter, one upper letter and no empty spaces',
     );
 
-    expect(res5.status).toBe(200);
+    expect(res5.status).toBe(201);
   });
 
   it('should check if fields have no empty spaces at the start or the end', async () => {
@@ -168,9 +183,10 @@ describe('User Register Endpoint', () => {
       name: '     No Empty Space     ',
       email: '    nospace@email.com     ',
       password: userParams.password,
+      driver_license: '634563568678',
     });
 
-    expect(res.status).toBe(200);
+    expect(res.status).toBe(201);
     expect(res.body.name).toBe('No Empty Space');
     expect(res.body.email).toBe('nospace@email.com');
   });
@@ -180,9 +196,10 @@ describe('User Register Endpoint', () => {
       name: 'Sergio Torres',
       email: 'sergio@email.com',
       password: 'rtyFSf123',
+      driver_license: '07896856354',
     });
 
-    expect(res.status).toBe(200);
+    expect(res.status).toBe(201);
     expect(res.body.name).toBe('Sergio Torres');
     expect(res.body.email).toBe('sergio@email.com');
   });
@@ -192,6 +209,7 @@ describe('User Register Endpoint', () => {
       name: 'Brian',
       email: 'brian@email.com',
       password: 'rtyFSf123',
+      driver_license: userParams.driver_license,
     });
 
     expect(res.body.password).toBeUndefined();

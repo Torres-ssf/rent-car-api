@@ -15,6 +15,7 @@ describe('RegisterUserUseCase', () => {
     name: 'Paul Airon',
     email: 'paul@email.com',
     password: '123456',
+    driver_license: '123442545234',
   };
 
   beforeEach(() => {
@@ -49,6 +50,7 @@ describe('RegisterUserUseCase', () => {
         name: 'Paul',
         email: userParams.email,
         password: 'a.gdfssSfsa9',
+        driver_license: '123442545234',
       }),
     ).rejects.toHaveProperty('message', 'Email already taken');
   });
@@ -60,6 +62,7 @@ describe('RegisterUserUseCase', () => {
       name: 'Paul',
       email: userParams.email,
       password: 'unhashedPass10',
+      driver_license: '123442545234',
     });
 
     expect(spy).toHaveBeenCalledWith('unhashedPass10');

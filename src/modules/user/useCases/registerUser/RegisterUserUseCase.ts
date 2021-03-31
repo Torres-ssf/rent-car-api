@@ -1,11 +1,10 @@
 import { inject, injectable } from 'tsyringe';
 
 import { AppError } from '@shared/errors/AppError';
-import { v4 } from 'uuid';
 import { IHashProvider } from '@modules/user/providers/HashProvider/models/IHashProvider';
 import { User } from '../../models/User';
 import { IUserRepository } from '../../repositories/IUserRepository';
-import { RegisterUserDTO } from '../../dtos/RegisterUserDTO';
+import { CreateUserDTO } from '../../dtos/CreateUserDTO';
 
 @injectable()
 export class RegisterUserUseCase {
@@ -16,8 +15,8 @@ export class RegisterUserUseCase {
     private hashProvider: IHashProvider,
   ) {}
 
-  async execute(registerUserDTO: RegisterUserDTO): Promise<User> {
-    const { name, email, password } = registerUserDTO;
+  async execute(registerUserDTO: CreateUserDTO): Promise<User> {
+    const { name, email, password, driver_license } = registerUserDTO;
 
     const userExists = await this.userRepository.findByEmail(email);
 
@@ -25,23 +24,21 @@ export class RegisterUserUseCase {
       throw new AppError('Email already taken');
     }
 
+    const licenseInUse = await this.userRepository.findByDriverLicense(
+      driver_license,
+    );
+
+    if (licenseInUse) {
+      throw new AppError('Driver license already being used by another user');
+    }
+
     const hashedPassword = await this.hashProvider.generateHash(password);
 
-    const user = new User();
-
-    const now = new Date();
-
-    Object.assign(user, {
-      id: v4(),
+    return this.userRepository.create({
       name,
       email,
       password: hashedPassword,
-      image: null,
-      admin: false,
-      created_at: now,
-      updated_at: now,
+      driver_license,
     });
-
-    return this.userRepository.save(user);
   }
 }

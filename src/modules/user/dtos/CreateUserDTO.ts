@@ -5,9 +5,10 @@ import {
   Matches,
   MaxLength,
   MinLength,
+  IsNumberString,
 } from 'class-validator';
 
-export class RegisterUserDTO {
+export class CreateUserDTO {
   @IsNotEmpty()
   @MinLength(3)
   @MaxLength(80)
@@ -20,10 +21,13 @@ export class RegisterUserDTO {
 
   @MinLength(8)
   @MaxLength(20)
-  // @Transform(({ value }) => value.trim())
   @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})\S*$/, {
     message:
       'Password should have at least one number, one lower letter, one upper letter and no empty spaces',
   })
   password: string;
+
+  @IsNotEmpty()
+  @IsNumberString()
+  driver_license: string;
 }

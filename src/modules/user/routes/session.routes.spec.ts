@@ -97,6 +97,7 @@ describe('Create Session Endpoint', () => {
       name: 'Paul',
       email: userParams.email,
       password: userParams.password,
+      driver_license: '13412341234',
     });
 
     const {
