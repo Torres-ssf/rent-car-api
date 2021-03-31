@@ -9,6 +9,7 @@ import { TypeormCategoryRepository } from './repositories/implementations/Typeor
 import { FakeCategoryRepository } from './repositories/fakes/FakeCategoryRepository';
 
 import { ISpecificationRepository } from './repositories/ISpecificationRepository';
+import { TypeormSpecificationRepository } from './repositories/implementations/TypeormSpecificationRepository';
 import { FakeSpecificationRepository } from './repositories/fakes/FakeSpecificationRepository';
 
 container.registerSingleton<ICarRepository>('CarRepository', FakeCarRepository);
@@ -20,5 +21,7 @@ container.registerSingleton<ICategoryRepository>(
 
 container.registerSingleton<ISpecificationRepository>(
   'SpecificationRepository',
-  FakeSpecificationRepository,
+  appEnv === 'test'
+    ? FakeSpecificationRepository
+    : TypeormSpecificationRepository,
 );
