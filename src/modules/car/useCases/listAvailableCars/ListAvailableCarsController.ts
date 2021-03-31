@@ -1,14 +1,16 @@
+import { ListAvailableCarsDTO } from '@modules/car/dtos/ListAvailableCarsDTO';
 import { AppError } from '@shared/errors/AppError';
+import { dataValidation } from '@shared/utils/dataValidation';
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import { ListAvailableCarsUseCase } from './ListAvailableCarsUseCase';
-import { validateListAvailableCarsDTO } from './validateListAvailableCarsDTO';
 
 export class ListAvailableCarsController {
   async handle(request: Request, response: Response): Promise<Response> {
     try {
-      const listAvailableCarsDTO = await validateListAvailableCarsDTO(
-        request.query,
+      const listAvailableCarsDTO = await dataValidation(
+        ListAvailableCarsDTO,
+        JSON.parse(request.query as any),
       );
 
       const listAvailableCarsUseCase = container.resolve(
