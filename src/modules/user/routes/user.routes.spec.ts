@@ -66,7 +66,7 @@ describe('User Register Endpoint', () => {
       name: userParams.name,
       email: 'PAUL@email.com',
       password: userParams.password,
-      driver_license: userParams.driver_license,
+      driver_license: '13241234145',
     });
 
     const res2 = await request(app).post('/user').send({
@@ -152,7 +152,7 @@ describe('User Register Endpoint', () => {
       name: userParams.name,
       email: 'david@email.com ',
       password: userParams.password,
-      driver_license: userParams.driver_license,
+      driver_license: '3654453563456',
     });
 
     expect(res1.status).toBe(400);
@@ -183,7 +183,7 @@ describe('User Register Endpoint', () => {
       name: '     No Empty Space     ',
       email: '    nospace@email.com     ',
       password: userParams.password,
-      driver_license: userParams.driver_license,
+      driver_license: '634563568678',
     });
 
     expect(res.status).toBe(201);
@@ -196,7 +196,7 @@ describe('User Register Endpoint', () => {
       name: 'Sergio Torres',
       email: 'sergio@email.com',
       password: 'rtyFSf123',
-      driver_license: userParams.driver_license,
+      driver_license: '07896856354',
     });
 
     expect(res.status).toBe(201);
