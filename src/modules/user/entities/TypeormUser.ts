@@ -9,7 +9,7 @@ import {
 import { User } from '../models/User';
 
 @Entity('user')
-@Unique(['email'])
+@Unique(['email', 'driver_license'])
 export class TypeormUser extends User {
   @PrimaryColumn()
   id: string;
@@ -27,6 +27,9 @@ export class TypeormUser extends User {
   password: string;
 
   @Column()
+  driver_license: string;
+
+  @Column()
   admin: boolean;
 
   @CreateDateColumn()
@@ -34,4 +37,8 @@ export class TypeormUser extends User {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  constructor() {
+    super();
+  }
 }
