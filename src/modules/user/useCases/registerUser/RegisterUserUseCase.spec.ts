@@ -36,7 +36,7 @@ describe('RegisterUserUseCase', () => {
     expect(createdUser).toHaveProperty('name', createdUser.name);
     expect(createdUser).toHaveProperty('email', createdUser.email);
     expect(createdUser).toHaveProperty('password');
-    expect(createdUser).toHaveProperty('image', null);
+    expect(createdUser).toHaveProperty('avatar', null);
     expect(createdUser).toHaveProperty('admin', false);
     expect(createdUser).toHaveProperty('created_at');
     expect(createdUser).toHaveProperty('updated_at');

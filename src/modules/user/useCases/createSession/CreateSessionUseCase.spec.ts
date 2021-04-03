@@ -82,7 +82,7 @@ describe('CreateSessionUseCase', () => {
     ).rejects.toBeInstanceOf(AppError);
   });
 
-  it('should a jwt token and the user info', async () => {
+  it('should have a jwt token and the user info', async () => {
     const newUser = new User();
 
     const userParams = usersSeed[0];
@@ -104,6 +104,6 @@ describe('CreateSessionUseCase', () => {
     expect(token).toBeTruthy();
     expect(typeof token).toBe('string');
     expect(user).toMatchObject(newUser);
-    expect(jwtVerified).toHaveProperty('id', newUser.id);
+    expect(jwtVerified).toHaveProperty('sub', newUser.id);
   });
 });
