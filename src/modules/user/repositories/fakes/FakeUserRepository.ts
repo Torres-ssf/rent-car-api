@@ -19,7 +19,7 @@ export class FakeUserRepository implements IUserRepository {
       name,
       email,
       password,
-      image: null,
+      avatar: null,
       admin: false,
       driver_license,
       created_at: dateNow,
