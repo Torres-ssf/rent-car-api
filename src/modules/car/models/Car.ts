@@ -1,4 +1,4 @@
-import { Engine, Transmission } from '../enums';
+import { v4 } from 'uuid';
 
 export class Car {
   id: string;
@@ -13,15 +13,22 @@ export class Car {
 
   zero_to_one_hundred: number;
 
-  engine: Engine;
-
-  transmission: Transmission;
-
-  passengers: number;
+  license_plate: string;
 
   daily_value: number;
 
+  fine_amount: number;
+
+  available: boolean;
+
+  category_id: string;
+
   created_at: Date;
 
-  updated_at: Date;
+  constructor() {
+    if (!this.id) {
+      this.id = v4();
+      this.created_at = new Date();
+    }
+  }
 }
