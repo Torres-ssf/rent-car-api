@@ -15,6 +15,10 @@ export class FakeCategoryRepository implements ICategoryRepository {
     return newCategory;
   }
 
+  async findById(id: string): Promise<Category | undefined> {
+    return this.categories.find(category => category.id === id);
+  }
+
   async findByName(name: string): Promise<Category | undefined> {
     return this.categories.find(eachCategory => eachCategory.name === name);
   }
