@@ -23,6 +23,10 @@ export class TypeormCategoryRepository implements ICategoryRepository {
     return newCategory;
   }
 
+  async findById(id: string): Promise<Category | undefined> {
+    return this.categoryRepository.findOne({ where: { id } });
+  }
+
   async findByName(name: string): Promise<Category | undefined> {
     return this.categoryRepository.findOne({ where: { name } });
   }
