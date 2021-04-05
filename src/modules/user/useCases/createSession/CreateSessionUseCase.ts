@@ -41,7 +41,8 @@ export class CreateSessionUseCase {
 
     const { secret, expiresIn } = auth.jwt;
 
-    const token = jwt.sign({ id: user.id }, secret, {
+    const token = jwt.sign({}, secret, {
+      subject: user.id,
       expiresIn,
     });
 

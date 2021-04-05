@@ -5,9 +5,9 @@ export class User {
 
   name: string;
 
-  image: string | null;
-
   email: string;
+
+  avatar: string | null;
 
   password: string;
 

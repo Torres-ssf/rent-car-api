@@ -21,7 +21,7 @@ export class TypeormUser extends User {
   email: string;
 
   @Column({ nullable: true })
-  image: string;
+  avatar: string;
 
   @Column()
   password: string;

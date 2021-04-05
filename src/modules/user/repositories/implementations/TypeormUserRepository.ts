@@ -14,7 +14,7 @@ export class TypeormUserRepository implements IUserRepository {
   async create(createUserDTO: CreateUserDTO): Promise<User> {
     const newUser = this.ormRepository.create({
       ...createUserDTO,
-      image: null,
+      avatar: null,
       admin: false,
       created_at: new Date(),
       updated_at: new Date(),
@@ -26,7 +26,7 @@ export class TypeormUserRepository implements IUserRepository {
   }
 
   findById(id: string): Promise<User | undefined> {
-    return this.ormRepository.findOne(id);
+    return this.ormRepository.findOne({ id });
   }
 
   findByEmail(email: string): Promise<User | undefined> {

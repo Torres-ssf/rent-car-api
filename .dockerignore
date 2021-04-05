@@ -1,3 +1,8 @@
 node_modules
 ormconfig.json
 .vscode
+tmp/*
+!tmp/.gitkeep
+tmp/avatar/*
+!tmp/avatar/
+!tmp/avatar/.gitkeep
