@@ -7,7 +7,7 @@ import {
   PrimaryColumn,
 } from 'typeorm';
 import { Car } from '../models/Car';
-import { Category } from '../models/Category';
+import { TypeormCategory } from './TypeormCategory';
 
 @Entity('car')
 export class TypeormCar extends Car {
@@ -41,12 +41,12 @@ export class TypeormCar extends Car {
   @Column()
   available: boolean;
 
-  @ManyToOne(() => Category)
-  @JoinColumn({ name: 'category_id' })
-  category: Category;
-
   @Column()
   category_id: string;
+
+  @ManyToOne(() => TypeormCategory)
+  @JoinColumn({ name: 'category_id' })
+  category: TypeormCategory;
 
   @CreateDateColumn()
   created_at: Date;
