@@ -1,5 +1,5 @@
 import { RegisterCarDTO } from '@modules/car/dtos/RegisterCarDTO';
-import { Car } from 'modules/car/models/Car';
+import { Car } from '@modules/car/models/Car';
 import { ICarRepository } from '../ICarRepository';
 
 export class FakeCarRepository implements ICarRepository {
