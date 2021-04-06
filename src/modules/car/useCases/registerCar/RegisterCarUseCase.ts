@@ -1,5 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 import { AppError } from '@shared/errors/AppError';
+import { ICategoryRepository } from '@modules/car/repositories/ICategoryRepository';
 import { Car } from '../../models/Car';
 import { ICarRepository } from '../../repositories/ICarRepository';
 import { RegisterCarDTO } from '../../dtos/RegisterCarDTO';
@@ -7,6 +8,8 @@ import { RegisterCarDTO } from '../../dtos/RegisterCarDTO';
 @injectable()
 export class RegisterCarUseCase {
   constructor(
+    @inject('CategoryRepository')
+    private categoryRepository: ICategoryRepository,
     @inject('CarRepository')
     private carRepository: ICarRepository,
   ) {}
@@ -30,6 +33,12 @@ export class RegisterCarUseCase {
 
     if (licensePlateExists) {
       throw new AppError('License plate already in use');
+    }
+
+    const categoryExists = await this.categoryRepository.findById(category_id);
+
+    if (!categoryExists) {
+      throw new AppError('Category does not exists');
     }
 
     return this.carRepository.create({
