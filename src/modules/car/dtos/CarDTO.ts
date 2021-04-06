@@ -38,6 +38,7 @@ export abstract class CarDTO {
   abstract daily_value?: number;
 
   @IsString()
+  @Transform(({ value }) => value.trim())
   abstract license_plate?: string;
 
   @IsPositive()
