@@ -21,7 +21,7 @@ describe('RegisterCarUseCase', () => {
     fine_amount: 200,
   };
 
-  beforeAll(() => {
+  beforeEach(() => {
     carRepository = new FakeCarRepository();
 
     categoryRepository = new FakeCategoryRepository();
@@ -59,5 +59,20 @@ describe('RegisterCarUseCase', () => {
         category_id: v4(),
       }),
     ).rejects.toHaveProperty('message', 'Category does not exists');
+  });
+
+  it('should be possible to register a new car', async () => {
+    const newCategory = await categoryRepository.create({
+      name: 'Dummy',
+      description: 'This is a dummy category',
+    });
+
+    await expect(
+      registerCarUseCase.execute({
+        ...carParams,
+        license_plate: '123123-asda',
+        category_id: newCategory.id,
+      }),
+    ).resolves.toHaveProperty('license_plate', '123123-asda');
   });
 });
