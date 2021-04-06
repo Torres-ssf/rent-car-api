@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 
-import { Engine, Transmission } from '@modules/car/enums';
 import { FakeCarRepository } from '@modules/car/repositories/fakes/FakeCarRepository';
+import { FakeCategoryRepository } from '@modules/car/repositories/fakes/FakeCategoryRepository';
 import { RemoveCarUseCase } from './RemoveCarUseCase';
 import { RegisterCarUseCase } from '../registerCar/RegisterCarUseCase';
 
@@ -12,16 +12,17 @@ describe('RemoveCarUseCase', () => {
 
   let carRepository: FakeCarRepository;
 
+  let categoryRepository: FakeCategoryRepository;
+
   const carParams = {
     model: 'F8',
     brand: 'Ferrari',
+    license_plate: '123-3434',
     max_speed: 340,
     horse_power: 720,
     zero_to_one_hundred: 2.9,
-    engine: Engine.Gas,
-    transmission: Transmission.Automatic,
-    passengers: 2,
     daily_value: 900,
+    fine_amount: 200,
   };
 
   beforeEach(() => {
@@ -29,7 +30,12 @@ describe('RemoveCarUseCase', () => {
 
     removeCarUseCase = new RemoveCarUseCase(carRepository);
 
-    registerCarUseCase = new RegisterCarUseCase(carRepository);
+    categoryRepository = new FakeCategoryRepository();
+
+    registerCarUseCase = new RegisterCarUseCase(
+      categoryRepository,
+      carRepository,
+    );
   });
 
   it('ensures car exists in the database to be removed', async () => {
@@ -39,7 +45,15 @@ describe('RemoveCarUseCase', () => {
   });
 
   it('ensures car is removed from the database', async () => {
-    const newCar = await registerCarUseCase.execute(carParams);
+    const category = await categoryRepository.create({
+      name: 'SUV',
+      description: 'Big car',
+    });
+
+    const newCar = await registerCarUseCase.execute({
+      ...carParams,
+      category_id: category.id,
+    });
 
     await expect(removeCarUseCase.execute(newCar.id)).resolves.toBeUndefined();
 

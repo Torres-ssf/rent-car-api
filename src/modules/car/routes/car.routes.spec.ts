@@ -2,7 +2,6 @@ import 'reflect-metadata';
 
 import request from 'supertest';
 import { app } from '@shared/app';
-import { Engine, Transmission } from '../enums';
 
 describe('Car Register Endpoint', () => {
   const carParams = {
@@ -10,11 +9,10 @@ describe('Car Register Endpoint', () => {
     brand: 'Ferrari',
     max_speed: 340,
     horse_power: 720,
+    license_plate: '1231-SDA',
     zero_to_one_hundred: 2.9,
-    engine: Engine.Gas,
-    transmission: Transmission.Automatic,
-    passengers: 2,
     daily_value: 900,
+    fine_amount: 200,
   };
 
   it('ensures that model and brand have at least 2 chars length and max 80 chars length', async () => {
@@ -67,57 +65,24 @@ describe('Car Register Endpoint', () => {
   });
 
   it('ensures all Car string properties have no empty spaces at the start/end', async () => {
+    const resCat = await request(app).post('/category').send({
+      name: 'SUV',
+      description: 'Big car for the family',
+    });
+
     const res = await request(app)
       .post('/car')
       .send({
         ...carParams,
         model: '          Enzo ',
         brand: '  Ferrari    ',
-        engine: 'gas   ',
-        transmission: '   automatic    ',
+        license_plate: '      1231-SDA      ',
+        category_id: resCat.body.id,
       });
 
     expect(res.status).toBe(200);
     expect(res.body.model === 'Enzo').toBeTruthy();
     expect(res.body.brand === 'Ferrari').toBeTruthy();
-    expect(res.body.engine === 'GAS').toBeTruthy();
-    expect(res.body.transmission === 'AUTOMATIC').toBeTruthy();
-  });
-
-  it('ensures transmission value is one of the Transmission enum', async () => {
-    const res = await request(app).post('/car').send({
-      transmission: 'car t',
-    });
-
-    expect(res.status).toBe(400);
-    expect(res.body.message).toContain(
-      'engine must be one of Manual,Automatic',
-    );
-  });
-
-  it('ensures engine value is one of the Engine enum', async () => {
-    const res = await request(app).post('/car').send({
-      engine: 'uranium',
-    });
-
-    expect(res.status).toBe(400);
-    expect(res.body.message).toContain(
-      'engine must be one of Gas,Hybrid,Eletric',
-    );
-  });
-
-  it('ensures passengers value is min 2 and max 9', async () => {
-    const res1 = await request(app).post('/car').send({
-      passengers: 1,
-    });
-
-    const res2 = await request(app).post('/car').send({
-      passengers: 10,
-    });
-
-    expect(res1.body.message).toContain('passengers must not be less than 2');
-    expect(res2.body.message).toContain(
-      'passengers must not be greater than 9',
-    );
+    expect(res.body.license_plate === '1231-SDA').toBeTruthy();
   });
 });
