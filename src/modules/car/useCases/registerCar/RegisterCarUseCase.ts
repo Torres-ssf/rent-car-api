@@ -1,5 +1,5 @@
 import { inject, injectable } from 'tsyringe';
-import { v4 } from 'uuid';
+import { AppError } from '@shared/errors/AppError';
 import { Car } from '../../models/Car';
 import { ICarRepository } from '../../repositories/ICarRepository';
 import { RegisterCarDTO } from '../../dtos/RegisterCarDTO';
@@ -15,34 +15,33 @@ export class RegisterCarUseCase {
     const {
       model,
       brand,
-      engine,
+      license_plate,
       horse_power,
       max_speed,
-      transmission,
       zero_to_one_hundred,
-      passengers,
       daily_value,
+      fine_amount,
+      category_id,
     } = registerCarDTO;
 
-    const newCar = new Car();
+    const licensePlateExists = await this.carRepository.findByLicensePlate(
+      license_plate,
+    );
 
-    const date = new Date();
+    if (licensePlateExists) {
+      throw new AppError('License plate already in use');
+    }
 
-    Object.assign(newCar, {
-      id: v4(),
+    return this.carRepository.create({
       model,
       brand,
-      daily_value,
-      engine,
+      license_plate,
       horse_power,
       max_speed,
-      transmission,
       zero_to_one_hundred,
-      passengers,
-      created_at: date,
-      updated_at: date,
+      daily_value,
+      fine_amount,
+      category_id,
     });
-
-    return this.carRepository.save(newCar);
   }
 }
