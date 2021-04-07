@@ -1,3 +1,5 @@
+import { ensureAdminMiddleware } from '@shared/middlewares/ensureAdminMiddleware';
+import { ensureAuthenticatedMiddleware } from '@shared/middlewares/ensureAuthenticatedMiddleware';
 import { Router } from 'express';
 import { ListAvailableCarsController } from '../useCases/listAvailableCars/ListAvailableCarsController';
 import { ListCarController } from '../useCases/listCar/ListCarController';
@@ -17,8 +19,23 @@ carRoutes.get('/', listCarController.handle);
 
 carRoutes.get('/available', listAvailableCarsController.handle);
 
-carRoutes.post('/', registerCarController.handle);
+carRoutes.post(
+  '/',
+  ensureAuthenticatedMiddleware,
+  ensureAdminMiddleware,
+  registerCarController.handle,
+);
 
-carRoutes.put('/:id', updateCarController.handle);
+carRoutes.put(
+  '/:id',
+  ensureAuthenticatedMiddleware,
+  ensureAdminMiddleware,
+  updateCarController.handle,
+);
 
-carRoutes.delete('/:id', removeCarController.handle);
+carRoutes.delete(
+  '/:id',
+  ensureAuthenticatedMiddleware,
+  ensureAdminMiddleware,
+  removeCarController.handle,
+);
