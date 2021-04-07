@@ -248,7 +248,7 @@ describe('ListCarUseCase', () => {
       model: 'A8',
       brand: 'Audi',
       license_plate: '1653-LKJ',
-      category_id: sedanCategory.id,
+      category_id: suvCategory.id,
     });
 
     await carRepository.save({ ...car2, available: false });
