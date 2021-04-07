@@ -1,5 +1,7 @@
+import { ListAvailableCarsDTO } from '@modules/car/dtos/ListAvailableCarsDTO';
 import { RegisterCarDTO } from '@modules/car/dtos/RegisterCarDTO';
 import { Car } from '@modules/car/models/Car';
+import { carRoutes } from '@modules/car/routes/car.routes';
 import { ICarRepository } from '../ICarRepository';
 
 export class FakeCarRepository implements ICarRepository {
@@ -30,8 +32,26 @@ export class FakeCarRepository implements ICarRepository {
     return this.cars;
   }
 
-  async listAvailableCars(): Promise<Car[]> {
-    return this.cars;
+  async listAvailableCars(
+    listAvailableCarsDTO: ListAvailableCarsDTO,
+  ): Promise<Car[]> {
+    const { category_id, brand, model } = listAvailableCarsDTO;
+
+    let cars = this.cars.filter(car => car.available);
+
+    if (category_id) {
+      cars = cars.filter(car => car.category_id === category_id);
+    }
+
+    if (brand) {
+      cars = cars.filter(car => car.brand.includes(brand));
+    }
+
+    if (model) {
+      cars = cars.filter(car => car.model.includes(model));
+    }
+
+    return cars;
   }
 
   async save(car: Car): Promise<Car> {
