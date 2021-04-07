@@ -44,11 +44,15 @@ export class FakeCarRepository implements ICarRepository {
     }
 
     if (brand) {
-      cars = cars.filter(car => car.brand.includes(brand));
+      cars = cars.filter(car =>
+        car.brand.toLowerCase().includes(brand.toLowerCase()),
+      );
     }
 
     if (model) {
-      cars = cars.filter(car => car.model.includes(model));
+      cars = cars.filter(car =>
+        car.model.toLowerCase().includes(model.toLowerCase()),
+      );
     }
 
     return cars;
