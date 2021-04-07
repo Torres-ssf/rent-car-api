@@ -9,7 +9,7 @@ interface ITokenPayLoad {
   sub: string;
 }
 
-export const ensuredAuthenticatedMiddleware = (
+export const ensureAuthenticatedMiddleware = (
   request: Request,
   response: Response,
   next: NextFunction,
