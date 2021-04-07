@@ -1,10 +1,8 @@
 import 'reflect-metadata';
 
 import { FakeCarRepository } from '@modules/car/repositories/fakes/FakeCarRepository';
-import { Car } from '@modules/car/models/Car';
 import { FakeCategoryRepository } from '@modules/car/repositories/fakes/FakeCategoryRepository';
 import { ListAvailableCarsUseCase } from './ListAvailableCarsUseCase';
-import carsSeed from '../../seeds/cars.json';
 
 describe('ListCarUseCase', () => {
   let listAvailableCarsUseCase: ListAvailableCarsUseCase;
@@ -206,6 +204,63 @@ describe('ListCarUseCase', () => {
 
     expect(availableCars).toContain(car1);
     expect(availableCars).toContain(car3);
+    expect(availableCars).not.toContain(car2);
+    expect(availableCars).not.toContain(car4);
+  });
+
+  it('should return available cars when all 3 filters are applied', async () => {
+    const sedanCategory = await categoryRepository.create({
+      name: 'Sedan',
+      description: 'Four doors and a traditional trunk',
+    });
+
+    const suvCategory = await categoryRepository.create({
+      name: 'SUV',
+      description: 'Sport Utility Vehicle',
+    });
+
+    const car1 = await carRepository.create({
+      ...carParams,
+      model: 'Enzo',
+      brand: 'Ferrari',
+      license_plate: '1231-KSD',
+      category_id: sedanCategory.id,
+    });
+
+    const car2 = await carRepository.create({
+      ...carParams,
+      model: 'Enzo',
+      brand: 'Ferrari',
+      license_plate: '9689-MVB',
+      category_id: sedanCategory.id,
+    });
+
+    const car3 = await carRepository.create({
+      ...carParams,
+      model: 'F8',
+      brand: 'Ferrari',
+      license_plate: '9689-MVB',
+      category_id: sedanCategory.id,
+    });
+
+    const car4 = await carRepository.create({
+      ...carParams,
+      model: 'A8',
+      brand: 'Audi',
+      license_plate: '1653-LKJ',
+      category_id: sedanCategory.id,
+    });
+
+    await carRepository.save({ ...car2, available: false });
+
+    const availableCars = await listAvailableCarsUseCase.execute({
+      category_id: sedanCategory.id,
+      brand: 'ferrari',
+      model: 'enzo',
+    });
+
+    expect(availableCars).toContain(car1);
+    expect(availableCars).not.toContain(car3);
     expect(availableCars).not.toContain(car2);
     expect(availableCars).not.toContain(car4);
   });
