@@ -27,6 +27,6 @@ export class ListAvailableCarsUseCase {
       }
     }
 
-    return this.carRepository.listAvailableCars();
+    return this.carRepository.listAvailableCars(listAvailableCarsDTO);
   }
 }

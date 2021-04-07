@@ -13,6 +13,16 @@ describe('ListCarUseCase', () => {
 
   let categoryRepository: FakeCategoryRepository;
 
+  const carParams = {
+    model: 'F8',
+    brand: 'Ferrari',
+    max_speed: 340,
+    horse_power: 720,
+    zero_to_one_hundred: 2.9,
+    daily_value: 800,
+    fine_amount: 200,
+  };
+
   beforeEach(() => {
     carRepository = new FakeCarRepository();
 
@@ -41,5 +51,76 @@ describe('ListCarUseCase', () => {
         category_id: newCategory.id,
       }),
     ).resolves.toBeTruthy();
+  });
+
+  it('should return only available cars', async () => {
+    const newCategory = await categoryRepository.create({
+      name: 'Dummy Category',
+      description: 'This is a dummy category',
+    });
+
+    const car1 = await carRepository.create({
+      ...carParams,
+      license_plate: '1231-KSD',
+      category_id: newCategory.id,
+    });
+
+    const car2 = await carRepository.create({
+      ...carParams,
+      license_plate: '9689-MVB',
+      category_id: newCategory.id,
+    });
+
+    const car3 = await carRepository.create({
+      ...carParams,
+      license_plate: '1653-LKJ',
+      category_id: newCategory.id,
+    });
+
+    await carRepository.save({ ...car1, available: false });
+
+    const availableCars = await listAvailableCarsUseCase.execute({});
+
+    expect(availableCars).toMatchObject([car2, car3]);
+    expect(availableCars).not.toMatchObject([car1, car2, car3]);
+  });
+
+  it('should return available cars from the provided category when category is provided', async () => {
+    const suvCategory = await categoryRepository.create({
+      name: 'SUV',
+      description: 'Sport Utility Vehicle',
+    });
+
+    const sedanCategory = await categoryRepository.create({
+      name: 'Sedan',
+      description: 'Four doors and a traditional trunk',
+    });
+
+    const car1 = await carRepository.create({
+      ...carParams,
+      license_plate: '1231-KSD',
+      category_id: suvCategory.id,
+    });
+
+    const car2 = await carRepository.create({
+      ...carParams,
+      license_plate: '9689-MVB',
+      category_id: suvCategory.id,
+    });
+
+    const car3 = await carRepository.create({
+      ...carParams,
+      license_plate: '1653-LKJ',
+      category_id: sedanCategory.id,
+    });
+
+    await carRepository.save({ ...car1, available: false });
+
+    const availableCars = await listAvailableCarsUseCase.execute({
+      category_id: suvCategory.id,
+    });
+
+    expect(availableCars).toMatchObject([car2]);
+    expect(availableCars).not.toMatchObject([car1, car2, car3]);
   });
 });
