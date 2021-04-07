@@ -1,5 +1,5 @@
 import { uploadAvatar } from '@config/upload';
-import { ensuredAuthenticatedMiddleware } from '@shared/middlewares/ensuredAuthenticatedMiddleware';
+import { ensureAuthenticatedMiddleware } from '@shared/middlewares/ensureAuthenticatedMiddleware';
 import { Router } from 'express';
 import multer from 'multer';
 
@@ -17,7 +17,7 @@ userRoutes.post('/', registerUserController.handle);
 
 userRoutes.patch(
   '/avatar',
-  ensuredAuthenticatedMiddleware,
+  ensureAuthenticatedMiddleware,
   uploadAvatarMiddleware.single('avatar'),
   updateUserAvatarController.handle,
 );
