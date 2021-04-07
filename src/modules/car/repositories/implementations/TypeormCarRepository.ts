@@ -1,3 +1,4 @@
+import { ListAvailableCarsDTO } from '@modules/car/dtos/ListAvailableCarsDTO';
 import { RegisterCarDTO } from '@modules/car/dtos/RegisterCarDTO';
 import { TypeormCar } from '@modules/car/entities/TypeormCar';
 import { Car } from 'modules/car/models/Car';
@@ -32,8 +33,27 @@ export class TypeormCarRepository implements ICarRepository {
     return this.carRepository.find();
   }
 
-  async listAvailableCars(): Promise<Car[]> {
-    return this.carRepository.find({ where: { available: true } });
+  async listAvailableCars(
+    listAvailableCarsDTO: ListAvailableCarsDTO,
+  ): Promise<Car[]> {
+    const { category_id, brand, model } = listAvailableCarsDTO;
+    const query = this.carRepository
+      .createQueryBuilder('car')
+      .where('available = :available', { available: true });
+
+    if (category_id) {
+      query.andWhere('category_id = :category_id', { category_id });
+    }
+
+    if (model) {
+      query.andWhere('model ILIKE :model', { model: `%${model}%` });
+    }
+
+    if (brand) {
+      query.andWhere('brand ILIKE :brand', { brand: `%${brand}%` });
+    }
+
+    return query.getMany();
   }
 
   async save(car: Car): Promise<Car> {
