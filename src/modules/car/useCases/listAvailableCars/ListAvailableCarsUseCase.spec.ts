@@ -18,33 +18,28 @@ describe('ListCarUseCase', () => {
 
     categoryRepository = new FakeCategoryRepository();
 
-    listAvailableCarsUseCase = new ListAvailableCarsUseCase(carRepository);
+    listAvailableCarsUseCase = new ListAvailableCarsUseCase(
+      carRepository,
+      categoryRepository,
+    );
   });
 
-  it('should list all available cars', async () => {
-    const magicNumber = Math.ceil(Math.random() * 5);
+  it('should ensure category exists when category id is provided', async () => {
+    await expect(
+      listAvailableCarsUseCase.execute({
+        category_id: 'not an actual category',
+      }),
+    ).rejects.toHaveProperty('message', 'Category does not exists');
 
-    const promiseArr: Promise<Car>[] = [];
-
-    const category = await categoryRepository.create({
-      name: 'SUV',
-      description: 'Big car',
+    const newCategory = await categoryRepository.create({
+      name: 'Dummy Category',
+      description: 'This is a dummy category',
     });
 
-    for (let i = 0; i < magicNumber; i += 1) {
-      const car = carsSeed[i];
-
-      const newCar = new Car();
-
-      promiseArr.push(
-        carRepository.save(
-          Object.assign(newCar, { ...car, category_id: category.id }),
-        ),
-      );
-    }
-
-    await Promise.all(promiseArr);
-
-    expect(2).toBe(2);
+    await expect(
+      listAvailableCarsUseCase.execute({
+        category_id: newCategory.id,
+      }),
+    ).resolves.toBeTruthy();
   });
 });
