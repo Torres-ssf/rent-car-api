@@ -1,5 +1,5 @@
-import { CreateSpecificationDTO } from '@modules/car/dtos/CreateSpecificationDTO';
-import { Specification } from '@modules/car/models/Specification';
+import { CreateSpecificationDTO } from '@modules/specification/dtos/CreateSpecificationDTO';
+import { Specification } from '@modules/specification/models/Specification';
 import { ISpecificationRepository } from '../ISpecificationRepository';
 
 export class FakeSpecificationRepository implements ISpecificationRepository {

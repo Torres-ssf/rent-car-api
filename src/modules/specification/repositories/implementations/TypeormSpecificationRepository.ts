@@ -1,6 +1,6 @@
-import { CreateSpecificationDTO } from '@modules/car/dtos/CreateSpecificationDTO';
-import { TypeormSpecification } from '@modules/car/entities/TypeormSpecification';
-import { Specification } from '@modules/car/models/Specification';
+import { CreateSpecificationDTO } from '@modules/specification/dtos/CreateSpecificationDTO';
+import { TypeormSpecification } from '@modules/specification/entities/TypeormSpecification';
+import { Specification } from '@modules/specification/models/Specification';
 import { getRepository, Repository } from 'typeorm';
 import { ISpecificationRepository } from '../ISpecificationRepository';
 
