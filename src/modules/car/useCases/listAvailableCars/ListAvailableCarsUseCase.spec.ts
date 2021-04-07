@@ -81,8 +81,9 @@ describe('ListCarUseCase', () => {
 
     const availableCars = await listAvailableCarsUseCase.execute({});
 
-    expect(availableCars).toMatchObject([car2, car3]);
-    expect(availableCars).not.toMatchObject([car1, car2, car3]);
+    expect(availableCars).toContain(car2);
+    expect(availableCars).toContain(car3);
+    expect(availableCars).not.toContain(car1);
   });
 
   it('should return available cars from the provided category when category is provided', async () => {
@@ -120,8 +121,9 @@ describe('ListCarUseCase', () => {
       category_id: suvCategory.id,
     });
 
-    expect(availableCars).toMatchObject([car2]);
-    expect(availableCars).not.toMatchObject([car1, car2, car3]);
+    expect(availableCars).toContain(car2);
+    expect(availableCars).not.toMatchObject(car1);
+    expect(availableCars).not.toMatchObject(car3);
   });
 
   it('should return available cars from the provided model when model is provided', async () => {
@@ -157,7 +159,54 @@ describe('ListCarUseCase', () => {
       model: 'f',
     });
 
-    expect(availableCars).toMatchObject([car3]);
-    expect(availableCars).not.toMatchObject([car1, car2, car3]);
+    expect(availableCars).toContain(car3);
+    expect(availableCars).not.toContain(car1);
+    expect(availableCars).not.toContain(car2);
+  });
+
+  it('should return available cars from the provided brand when brand is provided', async () => {
+    const sedanCategory = await categoryRepository.create({
+      name: 'Sedan',
+      description: 'Four doors and a traditional trunk',
+    });
+
+    const car1 = await carRepository.create({
+      ...carParams,
+      brand: 'Ferrari',
+      license_plate: '1231-KSD',
+      category_id: sedanCategory.id,
+    });
+
+    const car2 = await carRepository.create({
+      ...carParams,
+      brand: 'Ferrari',
+      license_plate: '9689-MVB',
+      category_id: sedanCategory.id,
+    });
+
+    const car3 = await carRepository.create({
+      ...carParams,
+      brand: 'Ferrari',
+      license_plate: '9689-MVB',
+      category_id: sedanCategory.id,
+    });
+
+    const car4 = await carRepository.create({
+      ...carParams,
+      brand: 'Audi',
+      license_plate: '1653-LKJ',
+      category_id: sedanCategory.id,
+    });
+
+    await carRepository.save({ ...car2, available: false });
+
+    const availableCars = await listAvailableCarsUseCase.execute({
+      brand: 'ferra',
+    });
+
+    expect(availableCars).toContain(car1);
+    expect(availableCars).toContain(car3);
+    expect(availableCars).not.toContain(car2);
+    expect(availableCars).not.toContain(car4);
   });
 });
