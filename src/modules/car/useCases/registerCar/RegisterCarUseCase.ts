@@ -1,5 +1,6 @@
 import { inject, injectable } from 'tsyringe';
-import { v4 } from 'uuid';
+import { AppError } from '@shared/errors/AppError';
+import { ICategoryRepository } from '@modules/car/repositories/ICategoryRepository';
 import { Car } from '../../models/Car';
 import { ICarRepository } from '../../repositories/ICarRepository';
 import { RegisterCarDTO } from '../../dtos/RegisterCarDTO';
@@ -7,6 +8,8 @@ import { RegisterCarDTO } from '../../dtos/RegisterCarDTO';
 @injectable()
 export class RegisterCarUseCase {
   constructor(
+    @inject('CategoryRepository')
+    private categoryRepository: ICategoryRepository,
     @inject('CarRepository')
     private carRepository: ICarRepository,
   ) {}
@@ -15,34 +18,39 @@ export class RegisterCarUseCase {
     const {
       model,
       brand,
-      engine,
+      license_plate,
       horse_power,
       max_speed,
-      transmission,
       zero_to_one_hundred,
-      passengers,
       daily_value,
+      fine_amount,
+      category_id,
     } = registerCarDTO;
 
-    const newCar = new Car();
+    const licensePlateExists = await this.carRepository.findByLicensePlate(
+      license_plate,
+    );
 
-    const date = new Date();
+    if (licensePlateExists) {
+      throw new AppError('License plate already in use');
+    }
 
-    Object.assign(newCar, {
-      id: v4(),
+    const categoryExists = await this.categoryRepository.findById(category_id);
+
+    if (!categoryExists) {
+      throw new AppError('Category does not exists');
+    }
+
+    return this.carRepository.create({
       model,
       brand,
-      daily_value,
-      engine,
+      license_plate,
       horse_power,
       max_speed,
-      transmission,
       zero_to_one_hundred,
-      passengers,
-      created_at: date,
-      updated_at: date,
+      daily_value,
+      fine_amount,
+      category_id,
     });
-
-    return this.carRepository.save(newCar);
   }
 }

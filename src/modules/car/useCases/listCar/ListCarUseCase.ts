@@ -10,6 +10,6 @@ export class ListCarUseCase {
   ) {}
 
   async execute(): Promise<Car[]> {
-    return this.carRepository.list();
+    return this.carRepository.listAllCars();
   }
 }

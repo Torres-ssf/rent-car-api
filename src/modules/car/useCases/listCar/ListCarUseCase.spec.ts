@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 
-import { Engine, Transmission } from '@modules/car/enums';
 import { FakeCarRepository } from '@modules/car/repositories/fakes/FakeCarRepository';
 import { Car } from '@modules/car/models/Car';
+import { FakeCategoryRepository } from '@modules/car/repositories/fakes/FakeCategoryRepository';
 import { ListCarUseCase } from './ListCarUseCase';
 
 import carsSeed from '../../seeds/cars.json';
@@ -10,10 +10,14 @@ import carsSeed from '../../seeds/cars.json';
 describe('ListCarUseCase', () => {
   let listCarUseCase: ListCarUseCase;
 
+  let categoryRepository: FakeCategoryRepository;
+
   let carRepository: FakeCarRepository;
 
   beforeEach(() => {
     carRepository = new FakeCarRepository();
+
+    categoryRepository = new FakeCategoryRepository();
 
     listCarUseCase = new ListCarUseCase(carRepository);
   });
@@ -23,17 +27,19 @@ describe('ListCarUseCase', () => {
 
     const promiseArr: Promise<Car>[] = [];
 
+    const category = await categoryRepository.create({
+      name: 'SUV',
+      description: 'Big car',
+    });
+
     for (let i = 0; i < magicNumber; i += 1) {
       const car = carsSeed[i];
-
-      const engine = car.engine as Engine;
-      const transmission = car.transmission as Transmission;
 
       const newCar = new Car();
 
       promiseArr.push(
         carRepository.save(
-          Object.assign(newCar, { ...car, engine, transmission }),
+          Object.assign(newCar, { ...car, category_id: category.id }),
         ),
       );
     }

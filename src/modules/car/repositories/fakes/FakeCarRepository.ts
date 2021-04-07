@@ -1,19 +1,36 @@
-import { ListAvailableCarsDTO } from '@modules/car/dtos/ListAvailableCarsDTO';
-import { Car } from 'modules/car/models/Car';
+import { RegisterCarDTO } from '@modules/car/dtos/RegisterCarDTO';
+import { Car } from '@modules/car/models/Car';
 import { ICarRepository } from '../ICarRepository';
 
 export class FakeCarRepository implements ICarRepository {
   private cars: Car[] = [];
 
+  async create(registerCarDTO: RegisterCarDTO): Promise<Car> {
+    const newCar = new Car();
+
+    Object.assign(newCar, {
+      ...registerCarDTO,
+      available: true,
+    });
+
+    this.cars.push(newCar);
+
+    return newCar;
+  }
+
   async findById(id: string): Promise<Car | undefined> {
     return this.cars.find(car => car.id === id);
   }
 
-  async list(): Promise<Car[]> {
+  async findByLicensePlate(license_plate: string): Promise<Car | undefined> {
+    return this.cars.find(car => car.license_plate === license_plate);
+  }
+
+  async listAllCars(): Promise<Car[]> {
     return this.cars;
   }
 
-  async listAvailableCars(data: ListAvailableCarsDTO): Promise<Car[]> {
+  async listAvailableCars(): Promise<Car[]> {
     return this.cars;
   }
 

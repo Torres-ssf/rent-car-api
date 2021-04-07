@@ -1,7 +1,5 @@
 import { CarDTO } from '@modules/car/dtos/CarDTO';
 
-import { Transmission, Engine } from '../enums';
-
 export class RegisterCarDTO extends CarDTO {
   model: string;
 
@@ -13,11 +11,11 @@ export class RegisterCarDTO extends CarDTO {
 
   zero_to_one_hundred: number;
 
-  engine: Engine;
-
-  transmission: Transmission;
-
-  passengers: number;
-
   daily_value: number;
+
+  license_plate: string;
+
+  fine_amount: number;
+
+  category_id: string;
 }

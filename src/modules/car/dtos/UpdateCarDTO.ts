@@ -1,4 +1,3 @@
-import { Engine, Transmission } from '@modules/car/enums';
 import { IsOptional } from 'class-validator';
 import { CarDTO } from './CarDTO';
 
@@ -19,14 +18,14 @@ export class UpdateCarDTO extends CarDTO {
   zero_to_one_hundred?: number;
 
   @IsOptional()
-  engine?: Engine;
-
-  @IsOptional()
-  transmission?: Transmission;
-
-  @IsOptional()
-  passengers?: number;
-
-  @IsOptional()
   daily_value?: number;
+
+  @IsOptional()
+  license_plate?: string;
+
+  @IsOptional()
+  fine_amount?: number;
+
+  @IsOptional()
+  category_id?: string;
 }
