@@ -30,7 +30,7 @@ export class TypeormCarRepository implements ICarRepository {
 
   async findByLicensePlate(license_plate: string): Promise<Car | undefined> {
     return this.carRepository.findOne({
-      where: license_plate,
+      where: { license_plate },
       relations: ['specifications'],
     });
   }
