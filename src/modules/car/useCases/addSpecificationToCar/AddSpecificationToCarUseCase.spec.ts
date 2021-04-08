@@ -128,4 +128,46 @@ describe('AddSpecificationToCar', () => {
     );
     expect(newCar.specifications.length).toBe(1);
   });
+
+  it('should add all specifications to a car', async () => {
+    const suvCategory = await categoryRepository.create({
+      name: 'SUV',
+      description: 'Sport Utility Vehicle',
+    });
+
+    const newCar = await carRepository.create({
+      ...carParams,
+      category_id: suvCategory.id,
+    });
+
+    const newSpecification1 = await specificationRepository.create({
+      name: 'Nitro',
+      description: 'Boosts car acceleration when used',
+    });
+
+    const newSpecification2 = await specificationRepository.create({
+      name: 'Eletric Car',
+      description: 'Car which is propelled by one or more electric motors',
+    });
+
+    const newSpecification3 = await specificationRepository.create({
+      name: '2 Doors',
+      description: 'Car with 2 doors',
+    });
+
+    await expect(
+      addSpecificationToCarUseCase.execute({
+        car_id: newCar.id,
+        specifications_ids: [
+          newSpecification1.id,
+          newSpecification2.id,
+          newSpecification3.id,
+        ],
+      }),
+    ).resolves.toHaveProperty('specifications');
+    expect(newCar.specifications.length).toBe(3);
+    expect(newCar.specifications).toContain(newSpecification1);
+    expect(newCar.specifications).toContain(newSpecification2);
+    expect(newCar.specifications).toContain(newSpecification3);
+  });
 });
