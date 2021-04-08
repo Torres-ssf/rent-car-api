@@ -39,6 +39,24 @@ export class AddSpecificationToCarUseCase {
       );
     }
 
+    if (carExists.specifications.length) {
+      const carSpecificationsIds = carExists.specifications.map(
+        spec => spec.id,
+      );
+
+      specifications.forEach(specification => {
+        if (carSpecificationsIds.includes(specification.id)) {
+          throw new AppError(
+            `Car already have specification ${specification.name}`,
+          );
+        }
+
+        carExists.specifications.push(specification);
+      });
+    } else {
+      carExists.specifications = specifications;
+    }
+
     return new Car();
   }
 }
