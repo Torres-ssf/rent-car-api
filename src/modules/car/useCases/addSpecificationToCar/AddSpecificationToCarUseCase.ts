@@ -25,6 +25,14 @@ export class AddSpecificationToCarUseCase {
       throw new AppError('No car found for the given car id');
     }
 
+    const specifications = await this.specificationRepository.findByIds(
+      specifications_ids,
+    );
+
+    if (specifications.length === 0) {
+      throw new AppError('No specifications were found for the given ids');
+    }
+
     return new Car();
   }
 }
