@@ -1,6 +1,7 @@
 import { ensureAdminMiddleware } from '@shared/middlewares/ensureAdminMiddleware';
 import { ensureAuthenticatedMiddleware } from '@shared/middlewares/ensureAuthenticatedMiddleware';
 import { Router } from 'express';
+import { AddSpecificationToCarController } from '../useCases/addSpecificationToCar/AddSpecificationToCarController';
 import { ListAvailableCarsController } from '../useCases/listAvailableCars/ListAvailableCarsController';
 import { ListCarController } from '../useCases/listCar/ListCarController';
 import { RegisterCarController } from '../useCases/registerCar/RegisterCarController';
@@ -12,6 +13,7 @@ const listAvailableCarsController = new ListAvailableCarsController();
 const registerCarController = new RegisterCarController();
 const updateCarController = new UpdateCarController();
 const removeCarController = new RemoveCarController();
+const addSpecificationToCarController = new AddSpecificationToCarController();
 
 export const carRoutes = Router();
 
@@ -24,6 +26,13 @@ carRoutes.post(
   ensureAuthenticatedMiddleware,
   ensureAdminMiddleware,
   registerCarController.handle,
+);
+
+carRoutes.post(
+  '/:id/add-specification',
+  ensureAuthenticatedMiddleware,
+  ensureAdminMiddleware,
+  addSpecificationToCarController.handle,
 );
 
 carRoutes.put(
