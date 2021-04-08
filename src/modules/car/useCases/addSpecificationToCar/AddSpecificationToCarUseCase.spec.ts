@@ -1,6 +1,5 @@
 import 'reflect-metadata';
 
-import { Car } from '@modules/car/models/Car';
 import { FakeCarRepository } from '@modules/car/repositories/fakes/FakeCarRepository';
 import { FakeSpecificationRepository } from '@modules/specification/repositories/fakes/FakeSpecificationRepository';
 import { v4 } from 'uuid';
@@ -68,6 +67,33 @@ describe('AddSpecificationToCar', () => {
     ).rejects.toHaveProperty(
       'message',
       'No specifications were found for the given ids',
+    );
+  });
+
+  it('should find specification for all given specifications ids', async () => {
+    const suvCategory = await categoryRepository.create({
+      name: 'SUV',
+      description: 'Sport Utility Vehicle',
+    });
+
+    const newCar = await carRepository.create({
+      ...carParams,
+      category_id: suvCategory.id,
+    });
+
+    const newSpecification = await specificationRepository.create({
+      name: 'Nitro',
+      description: 'Boosts car acceleration when used',
+    });
+
+    await expect(
+      addSpecificationToCarUseCase.execute({
+        car_id: newCar.id,
+        specifications_ids: [newSpecification.id, v4()],
+      }),
+    ).rejects.toHaveProperty(
+      'message',
+      'One or more specifications were not found for the given ids',
     );
   });
 });
