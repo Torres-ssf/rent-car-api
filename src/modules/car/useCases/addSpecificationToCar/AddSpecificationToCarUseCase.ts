@@ -57,6 +57,6 @@ export class AddSpecificationToCarUseCase {
       carExists.specifications = specifications;
     }
 
-    return new Car();
+    return carExists;
   }
 }
