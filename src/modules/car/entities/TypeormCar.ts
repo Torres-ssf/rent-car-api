@@ -1,8 +1,12 @@
+import { TypeormSpecification } from '@modules/specification/entities/TypeormSpecification';
+import { Specification } from '@modules/specification/models/Specification';
 import {
   Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   PrimaryColumn,
 } from 'typeorm';
@@ -47,6 +51,14 @@ export class TypeormCar extends Car {
   @ManyToOne(() => TypeormCategory)
   @JoinColumn({ name: 'category_id' })
   category: TypeormCategory;
+
+  @ManyToMany(() => TypeormSpecification)
+  @JoinTable({
+    name: 'specification_car',
+    joinColumn: { name: 'car_id' },
+    inverseJoinColumn: { name: 'specification_id' },
+  })
+  specifications: Specification[];
 
   @CreateDateColumn()
   created_at: Date;
