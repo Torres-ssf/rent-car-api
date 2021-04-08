@@ -96,4 +96,36 @@ describe('AddSpecificationToCar', () => {
       'One or more specifications were not found for the given ids',
     );
   });
+
+  it('should not add the same specification twice to a car', async () => {
+    const suvCategory = await categoryRepository.create({
+      name: 'SUV',
+      description: 'Sport Utility Vehicle',
+    });
+
+    const newCar = await carRepository.create({
+      ...carParams,
+      category_id: suvCategory.id,
+    });
+
+    const newSpecification = await specificationRepository.create({
+      name: 'Nitro',
+      description: 'Boosts car acceleration when used',
+    });
+
+    newCar.specifications.push(newSpecification);
+
+    await carRepository.save(newCar);
+
+    await expect(
+      addSpecificationToCarUseCase.execute({
+        car_id: newCar.id,
+        specifications_ids: [newSpecification.id],
+      }),
+    ).rejects.toHaveProperty(
+      'message',
+      `Car already have specification ${newSpecification.name}`,
+    );
+    expect(newCar.specifications.length).toBe(1);
+  });
 });
