@@ -29,4 +29,11 @@ export class TypeormSpecificationRepository
   async findByName(name: string): Promise<Specification | undefined> {
     return this.specificationRepository.findOne({ where: { name } });
   }
+
+  async findByIds(specifications_ids: string[]): Promise<Specification[]> {
+    return this.specificationRepository
+      .createQueryBuilder('specification')
+      .whereInIds(specifications_ids)
+      .getMany();
+  }
 }
