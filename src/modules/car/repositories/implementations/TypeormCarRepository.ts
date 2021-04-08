@@ -22,15 +22,23 @@ export class TypeormCarRepository implements ICarRepository {
   }
 
   async findById(id: string): Promise<Car | undefined> {
-    return this.carRepository.findOne({ where: { id } });
+    return this.carRepository.findOne({
+      where: { id },
+      relations: ['specifications'],
+    });
   }
 
   async findByLicensePlate(license_plate: string): Promise<Car | undefined> {
-    return this.carRepository.findOne({ license_plate });
+    return this.carRepository.findOne({
+      where: license_plate,
+      relations: ['specifications'],
+    });
   }
 
   async listAllCars(): Promise<Car[]> {
-    return this.carRepository.find();
+    return this.carRepository.find({
+      relations: ['specifications'],
+    });
   }
 
   async listAvailableCars(
@@ -39,6 +47,7 @@ export class TypeormCarRepository implements ICarRepository {
     const { category_id, brand, model } = listAvailableCarsDTO;
     const query = this.carRepository
       .createQueryBuilder('car')
+      .leftJoinAndSelect('car.specifications', 'specifications')
       .where('available = :available', { available: true });
 
     if (category_id) {
