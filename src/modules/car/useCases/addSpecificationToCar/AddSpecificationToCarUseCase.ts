@@ -33,6 +33,12 @@ export class AddSpecificationToCarUseCase {
       throw new AppError('No specifications were found for the given ids');
     }
 
+    if (specifications.length !== specifications_ids.length) {
+      throw new AppError(
+        'One or more specifications were not found for the given ids',
+      );
+    }
+
     return new Car();
   }
 }
