@@ -29,4 +29,10 @@ export class FakeSpecificationRepository implements ISpecificationRepository {
   async findByName(name: string): Promise<Specification | undefined> {
     return this.specifications.find(spec => spec.name === name);
   }
+
+  async findByIds(specifications_ids: string[]): Promise<Specification[]> {
+    return this.specifications.filter(spec =>
+      specifications_ids.includes(spec.id),
+    );
+  }
 }
