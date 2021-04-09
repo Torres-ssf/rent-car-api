@@ -1,7 +1,7 @@
 import { ListAvailableCarsDTO } from '@modules/car/dtos/ListAvailableCarsDTO';
 import { RegisterCarDTO } from '@modules/car/dtos/RegisterCarDTO';
 import { Car } from '@modules/car/models/Car';
-import { carRoutes } from '@modules/car/routes/car.routes';
+import { Specification } from '@modules/specification/models/Specification';
 import { ICarRepository } from '../ICarRepository';
 
 export class FakeCarRepository implements ICarRepository {
@@ -13,6 +13,7 @@ export class FakeCarRepository implements ICarRepository {
     Object.assign(newCar, {
       ...registerCarDTO,
       available: true,
+      specifications: [] as Specification[],
     });
 
     this.cars.push(newCar);

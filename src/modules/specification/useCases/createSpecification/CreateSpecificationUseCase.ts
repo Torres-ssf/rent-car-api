@@ -1,6 +1,6 @@
-import { CreateSpecificationDTO } from '@modules/car/dtos/CreateSpecificationDTO';
-import { Specification } from '@modules/car/models/Specification';
-import { ISpecificationRepository } from '@modules/car/repositories/ISpecificationRepository';
+import { CreateSpecificationDTO } from '@modules/specification/dtos/CreateSpecificationDTO';
+import { Specification } from '@modules/specification/models/Specification';
+import { ISpecificationRepository } from '@modules/specification/repositories/ISpecificationRepository';
 import { AppError } from '@shared/errors/AppError';
 import { inject, injectable } from 'tsyringe';
 

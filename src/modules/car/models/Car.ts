@@ -1,3 +1,4 @@
+import { Specification } from '@modules/specification/models/Specification';
 import { v4 } from 'uuid';
 
 export class Car {
@@ -22,6 +23,8 @@ export class Car {
   available: boolean;
 
   category_id: string;
+
+  specifications: Specification[];
 
   created_at: Date;
 

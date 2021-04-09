@@ -1,6 +1,6 @@
-import { CreateSpecificationDTO } from '@modules/car/dtos/CreateSpecificationDTO';
-import { TypeormSpecification } from '@modules/car/entities/TypeormSpecification';
-import { Specification } from '@modules/car/models/Specification';
+import { CreateSpecificationDTO } from '@modules/specification/dtos/CreateSpecificationDTO';
+import { TypeormSpecification } from '@modules/specification/entities/TypeormSpecification';
+import { Specification } from '@modules/specification/models/Specification';
 import { getRepository, Repository } from 'typeorm';
 import { ISpecificationRepository } from '../ISpecificationRepository';
 
@@ -28,5 +28,12 @@ export class TypeormSpecificationRepository
 
   async findByName(name: string): Promise<Specification | undefined> {
     return this.specificationRepository.findOne({ where: { name } });
+  }
+
+  async findByIds(specifications_ids: string[]): Promise<Specification[]> {
+    return this.specificationRepository
+      .createQueryBuilder('specification')
+      .whereInIds(specifications_ids)
+      .getMany();
   }
 }

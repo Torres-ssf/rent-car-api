@@ -1,5 +1,5 @@
-import { CreateSpecificationDTO } from '@modules/car/dtos/CreateSpecificationDTO';
-import { Specification } from '@modules/car/models/Specification';
+import { CreateSpecificationDTO } from '@modules/specification/dtos/CreateSpecificationDTO';
+import { Specification } from '@modules/specification/models/Specification';
 import { ISpecificationRepository } from '../ISpecificationRepository';
 
 export class FakeSpecificationRepository implements ISpecificationRepository {
@@ -28,5 +28,11 @@ export class FakeSpecificationRepository implements ISpecificationRepository {
 
   async findByName(name: string): Promise<Specification | undefined> {
     return this.specifications.find(spec => spec.name === name);
+  }
+
+  async findByIds(specifications_ids: string[]): Promise<Specification[]> {
+    return this.specifications.filter(spec =>
+      specifications_ids.includes(spec.id),
+    );
   }
 }

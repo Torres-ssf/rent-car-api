@@ -1,4 +1,4 @@
-import { CreateSpecificationDTO } from '@modules/car/dtos/CreateSpecificationDTO';
+import { CreateSpecificationDTO } from '@modules/specification/dtos/CreateSpecificationDTO';
 import { AppError } from '@shared/errors/AppError';
 import { dataValidation } from '@shared/utils/dataValidation';
 import { Request, Response } from 'express';

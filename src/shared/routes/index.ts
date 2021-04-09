@@ -4,7 +4,7 @@ import { userRoutes } from '@modules/user/routes/user.routes';
 import { sessionRoutes } from '@modules/user/routes/session.routes';
 import { carRoutes } from '@modules/car/routes/car.routes';
 import { categoryRoutes } from '@modules/car/routes/category.routes';
-import { specificationRoutes } from '@modules/car/routes/specification.routes';
+import { specificationRoutes } from '@modules/specification/routes/specification.routes';
 import { rentalRoutes } from '@modules/rental/routes/rental.routes';
 
 export const appRoutes = Router();
