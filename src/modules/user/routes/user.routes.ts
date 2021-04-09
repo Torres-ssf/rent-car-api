@@ -1,4 +1,4 @@
-import { uploadAvatar } from '@config/upload';
+import { uploadFile } from '@config/upload';
 import { ensureAuthenticatedMiddleware } from '@shared/middlewares/ensureAuthenticatedMiddleware';
 import { Router } from 'express';
 import multer from 'multer';
@@ -11,7 +11,7 @@ const updateUserAvatarController = new UpdateUserAvatarController();
 
 export const userRoutes = Router();
 
-const uploadAvatarMiddleware = multer(uploadAvatar());
+const uploadAvatarMiddleware = multer(uploadFile('avatar'));
 
 userRoutes.post('/', registerUserController.handle);
 

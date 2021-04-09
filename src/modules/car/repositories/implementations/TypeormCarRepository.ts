@@ -37,7 +37,7 @@ export class TypeormCarRepository implements ICarRepository {
 
   async listAllCars(): Promise<Car[]> {
     return this.carRepository.find({
-      relations: ['specifications'],
+      relations: ['specifications', 'images'],
     });
   }
 
@@ -48,6 +48,7 @@ export class TypeormCarRepository implements ICarRepository {
     const query = this.carRepository
       .createQueryBuilder('car')
       .leftJoinAndSelect('car.specifications', 'specifications')
+      .leftJoinAndSelect('car.images', 'images')
       .where('available = :available', { available: true });
 
     if (category_id) {

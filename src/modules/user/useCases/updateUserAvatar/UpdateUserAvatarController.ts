@@ -1,3 +1,5 @@
+import { AppError } from '@shared/errors/AppError';
+import { deleteMultipleFiles } from '@shared/utils/deleteMultipleFiles';
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import { UpdateUserAvatarUseCase } from './UpdateUserAvatarUseCase';
@@ -7,14 +9,23 @@ export class UpdateUserAvatarController {
     const { id } = request.user;
 
     const avatar_file = request.file.filename;
+    try {
+      const updateUserAvatarUseCase = container.resolve(
+        UpdateUserAvatarUseCase,
+      );
 
-    const updateUserAvatarUseCase = container.resolve(UpdateUserAvatarUseCase);
+      const updatedUser = await updateUserAvatarUseCase.execute({
+        user_id: id,
+        user_avatar: avatar_file,
+      });
 
-    const updatedUser = await updateUserAvatarUseCase.execute({
-      user_id: id,
-      user_avatar: avatar_file,
-    });
+      return response.json(updatedUser);
+    } catch (err) {
+      await deleteMultipleFiles([`./tmp/avatar/${avatar_file}`]);
 
-    return response.json(updatedUser);
+      throw new AppError(
+        err.message || 'error occurred while trying to update user avatar',
+      );
+    }
   }
 }

@@ -6,6 +6,7 @@ import { carRoutes } from '@modules/car/routes/car.routes';
 import { categoryRoutes } from '@modules/car/routes/category.routes';
 import { specificationRoutes } from '@modules/specification/routes/specification.routes';
 import { rentalRoutes } from '@modules/rental/routes/rental.routes';
+import { carImageRoutes } from '@modules/carImage/routes/carImages.routes';
 
 export const appRoutes = Router();
 
@@ -13,7 +14,7 @@ appRoutes.use('/user', userRoutes);
 
 appRoutes.use('/session', sessionRoutes);
 
-appRoutes.use('/car', carRoutes);
+appRoutes.use('/car', carRoutes, carImageRoutes);
 
 appRoutes.use('/category', categoryRoutes);
 

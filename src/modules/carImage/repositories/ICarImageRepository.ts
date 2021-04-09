@@ -1,6 +1,6 @@
-import { CreateCarImageDTO } from '../dtos/CreateCarImageDTO';
+import { UploadCarImagesDTO } from '../dtos/UploadCarImagesDTO';
 import { CarImage } from '../models/CarImage';
 
 export interface ICarImageRepository {
-  createMany(createCarImageDTO: CreateCarImageDTO): Promise<CarImage[]>;
+  createMany(uploadCarImageDTO: UploadCarImagesDTO): Promise<CarImage[]>;
 }
