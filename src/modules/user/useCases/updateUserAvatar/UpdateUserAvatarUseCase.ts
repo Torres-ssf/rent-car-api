@@ -1,8 +1,8 @@
 import { User } from '@modules/user/models/User';
 import { IUserRepository } from '@modules/user/repositories/IUserRepository';
 import { AppError } from '@shared/errors/AppError';
+import { deleteMultipleFiles } from '@shared/utils/deleteMultipleFiles';
 import { inject, injectable } from 'tsyringe';
-import { deleteFile } from '@shared/utils/deleteFile';
 
 interface IParams {
   user_id: string;
@@ -26,7 +26,7 @@ export class UpdateUserAvatarUseCase {
     }
 
     if (userExists.avatar) {
-      await deleteFile(`./tmp/avatar/${userExists.avatar}`);
+      await deleteMultipleFiles([`./tmp/avatar/${userExists.avatar}`]);
     }
 
     userExists.avatar = user_avatar;
