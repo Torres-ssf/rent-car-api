@@ -1,6 +1,6 @@
 import { IsString, IsUUID, IsNotEmpty, IsArray } from 'class-validator';
 
-export class UploadCarImageDTO {
+export class UploadCarImagesDTO {
   @IsUUID('4')
   car_id: string;
 
