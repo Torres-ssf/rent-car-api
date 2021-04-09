@@ -1,6 +1,7 @@
 import { ListAvailableCarsDTO } from '@modules/car/dtos/ListAvailableCarsDTO';
 import { RegisterCarDTO } from '@modules/car/dtos/RegisterCarDTO';
 import { Car } from '@modules/car/models/Car';
+import { CarImage } from '@modules/carImage/models/CarImage';
 import { Specification } from '@modules/specification/models/Specification';
 import { ICarRepository } from '../ICarRepository';
 
@@ -14,6 +15,7 @@ export class FakeCarRepository implements ICarRepository {
       ...registerCarDTO,
       available: true,
       specifications: [] as Specification[],
+      images: [] as CarImage[],
     });
 
     this.cars.push(newCar);
