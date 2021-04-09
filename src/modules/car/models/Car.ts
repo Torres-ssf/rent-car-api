@@ -1,3 +1,4 @@
+import { CarImage } from '@modules/carImage/models/CarImage';
 import { Specification } from '@modules/specification/models/Specification';
 import { v4 } from 'uuid';
 
@@ -25,6 +26,8 @@ export class Car {
   category_id: string;
 
   specifications: Specification[];
+
+  images: CarImage[];
 
   created_at: Date;
 
