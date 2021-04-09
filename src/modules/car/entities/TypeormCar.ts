@@ -1,3 +1,4 @@
+import { TypeormCarImage } from '@modules/carImage/entities/TypeormCarImage';
 import { TypeormSpecification } from '@modules/specification/entities/TypeormSpecification';
 import { Specification } from '@modules/specification/models/Specification';
 import {
@@ -8,6 +9,7 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryColumn,
 } from 'typeorm';
 import { Car } from '../models/Car';
@@ -59,6 +61,9 @@ export class TypeormCar extends Car {
     inverseJoinColumn: { name: 'specification_id' },
   })
   specifications: Specification[];
+
+  @OneToMany(() => TypeormCarImage, carImage => carImage.car)
+  images: TypeormCarImage[];
 
   @CreateDateColumn()
   created_at: Date;
