@@ -1,5 +1,6 @@
 import { ICarRepository } from '@modules/car/repositories/ICarRepository';
 import { UploadCarImagesDTO } from '@modules/carImage/dtos/UploadCarImagesDTO';
+import { CarImage } from '@modules/carImage/models/CarImage';
 import { ICarImageRepository } from '@modules/carImage/repositories/ICarImageRepository';
 import { AppError } from '@shared/errors/AppError';
 import { inject, injectable } from 'tsyringe';
@@ -13,7 +14,7 @@ export class UploadCarImageUseCase {
     private carImageRepository: ICarImageRepository,
   ) {}
 
-  async execute(uploadCarImagesDTO: UploadCarImagesDTO): Promise<void> {
+  async execute(uploadCarImagesDTO: UploadCarImagesDTO): Promise<CarImage[]> {
     const { car_id } = uploadCarImagesDTO;
 
     const carExists = await this.carRepository.findById(car_id);
@@ -21,5 +22,7 @@ export class UploadCarImageUseCase {
     if (!carExists) {
       throw new AppError('No car found for the given id');
     }
+
+    return this.carImageRepository.createMany(uploadCarImagesDTO);
   }
 }
