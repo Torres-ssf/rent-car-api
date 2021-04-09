@@ -31,6 +31,8 @@ describe('UploadCarUseCase', () => {
 
     carImageRepository = new FakeCarImageRepository();
 
+    categoryRepository = new FakeCategoryRepository();
+
     uploadCarImageUseCase = new UploadCarImageUseCase(
       carRepository,
       carImageRepository,
@@ -44,5 +46,33 @@ describe('UploadCarUseCase', () => {
         images_names: ['image1'],
       }),
     ).rejects.toHaveProperty('message', 'No car found for the given id');
+  });
+
+  it('should save all car images', async () => {
+    const category = await categoryRepository.create({
+      name: 'Dummy Category',
+      description: 'This is a dummy category',
+    });
+
+    const car = await carRepository.create({
+      ...carParams1,
+      category_id: category.id,
+    });
+
+    const [
+      carImage1,
+      carImage2,
+      carImage3,
+    ] = await uploadCarImageUseCase.execute({
+      car_id: car.id,
+      images_names: ['image1', 'image2', 'image3'],
+    });
+
+    expect(carImage1).toHaveProperty('car_id', car.id);
+    expect(carImage1).toHaveProperty('image_name', 'image1');
+    expect(carImage2).toHaveProperty('car_id', car.id);
+    expect(carImage2).toHaveProperty('image_name', 'image2');
+    expect(carImage3).toHaveProperty('car_id', car.id);
+    expect(carImage3).toHaveProperty('image_name', 'image3');
   });
 });
