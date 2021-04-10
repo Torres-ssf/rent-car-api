@@ -45,7 +45,11 @@ export class CreateRentalUseCase {
     const carExists = await this.carRepository.findById(car_id);
 
     if (!carExists) {
-      throw new AppError('Car does not exists');
+      throw new AppError('No car found for the given id');
+    }
+
+    if (!carExists.available) {
+      throw new AppError('Given car is not available');
     }
 
     if (isBefore(startOfDay(start_date), startOfDay(Date.now()))) {
