@@ -71,8 +71,8 @@ export class CreateRentalUseCase {
     }
 
     const estimatedRentPeriod = differenceInDays(
-      startOfDay(start_date),
       startOfDay(expected_return_date),
+      startOfDay(start_date),
     );
 
     const rental = await this.rentalRepository.create({
