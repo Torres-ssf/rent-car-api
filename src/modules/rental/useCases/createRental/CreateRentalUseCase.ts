@@ -42,6 +42,12 @@ export class CreateRentalUseCase {
       throw new AppError('There is an open rental for the given user');
     }
 
+    const carExists = await this.carRepository.findById(car_id);
+
+    if (!carExists) {
+      throw new AppError('Car does not exists');
+    }
+
     // if (isBefore(start_date, Date.now())) {
     //   throw new AppError(`you can't rent a car on a past date`);
     // }
