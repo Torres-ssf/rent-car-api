@@ -5,6 +5,9 @@ import { FakeUserRepository } from '@modules/user/repositories/fakes/FakeUserRep
 
 import { FakeCategoryRepository } from '@modules/car/repositories/fakes/FakeCategoryRepository';
 import { differenceInDays } from 'date-fns';
+import { Car } from '@modules/car/models/Car';
+import { Category } from '@modules/car/models/Category';
+import { User } from '@modules/user/models/User';
 import { CreateRentalUseCase } from './CreateRentalUseCase';
 import { FakeRentalRepository } from '../../repositories/fakes/FakeRentalRepository';
 
@@ -19,18 +22,13 @@ describe('CreateRentalUseCase', () => {
 
   let categoryRepository: FakeCategoryRepository;
 
-  const carParams = {
-    model: 'F8',
-    brand: 'Ferrari',
-    max_speed: 340,
-    horse_power: 720,
-    zero_to_one_hundred: 2.9,
-    license_plate: 'MWS-2123',
-    daily_value: 900,
-    fine_amount: 200,
-  };
+  let category: Category;
 
-  beforeEach(() => {
+  let car: Car;
+
+  let user: User;
+
+  beforeAll(async () => {
     categoryRepository = new FakeCategoryRepository();
 
     carRepository = new FakeCarRepository();
@@ -44,6 +42,36 @@ describe('CreateRentalUseCase', () => {
       carRepository,
       rentalRepository,
     );
+
+    category = await categoryRepository.create({
+      name: 'Dummy',
+      description: 'This is a dummy category',
+    });
+
+    car = await carRepository.create({
+      model: 'F8',
+      brand: 'Ferrari',
+      max_speed: 340,
+      horse_power: 720,
+      zero_to_one_hundred: 2.9,
+      license_plate: 'MWS-2123',
+      daily_value: 900,
+      fine_amount: 200,
+      category_id: category.id,
+    });
+
+    user = await userRepository.create({
+      name: 'John',
+      email: 'john@email.com',
+      password: 'a123123FSS',
+      driver_license: '12312343',
+    });
+  });
+
+  afterEach(async () => {
+    await rentalRepository.destroyAll();
+
+    await carRepository.updateCarAvailability(car.id, true);
   });
 
   it('should not create rental if user does not exists', async () => {
@@ -58,39 +86,22 @@ describe('CreateRentalUseCase', () => {
   });
 
   it('should not allow a user to rent more than one car at the same time', async () => {
-    const newCategory = await categoryRepository.create({
-      name: 'Dummy',
-      description: 'This is a dummy category',
-    });
-
-    const newCar = await carRepository.create({
-      ...carParams,
-      category_id: newCategory.id,
-    });
-
-    const newUser = await userRepository.create({
-      name: 'John',
-      email: 'john@email.com',
-      password: 'a123123FSS',
-      driver_license: '12312343',
-    });
-
     global.Date.now = jest.fn(() => new Date(2021, 1, 10).getTime());
 
     await rentalRepository.create({
-      car_id: newCar.id,
-      user_id: newUser.id,
+      car_id: car.id,
+      user_id: user.id,
       start_date: new Date(2021, 1, 10),
       expected_return_date: new Date(2021, 1, 12),
-      car_daily_value: newCar.daily_value,
-      car_daily_fine: newCar.fine_amount,
-      estimated_total: newCar.daily_value * 2,
+      car_daily_value: car.daily_value,
+      car_daily_fine: car.fine_amount,
+      estimated_total: car.daily_value * 2,
     });
 
     await expect(
       createRentalUseCase.execute({
-        car_id: newCar.id,
-        user_id: newUser.id,
+        car_id: car.id,
+        user_id: user.id,
         start_date: new Date(2021, 1, 13),
         expected_return_date: new Date(2021, 1, 14),
       }),
@@ -101,17 +112,10 @@ describe('CreateRentalUseCase', () => {
   });
 
   it('should not allow a user to rent a nonexistent car', async () => {
-    const newUser = await userRepository.create({
-      name: 'John',
-      email: 'john@email.com',
-      password: 'a123123FSS',
-      driver_license: '12312343',
-    });
-
     await expect(
       createRentalUseCase.execute({
         car_id: 'nonexistent car id',
-        user_id: newUser.id,
+        user_id: user.id,
         start_date: new Date(),
         expected_return_date: new Date(),
       }),
@@ -119,29 +123,12 @@ describe('CreateRentalUseCase', () => {
   });
 
   it('should not allow a user to rent an unavailable car', async () => {
-    const newCategory = await categoryRepository.create({
-      name: 'Dummy',
-      description: 'This is a dummy category',
-    });
-
-    const newCar = await carRepository.create({
-      ...carParams,
-      category_id: newCategory.id,
-    });
-
-    await carRepository.save({ ...newCar, available: false });
-
-    const newUser = await userRepository.create({
-      name: 'John',
-      email: 'john@email.com',
-      password: 'a123123FSS',
-      driver_license: '12312343',
-    });
+    await carRepository.updateCarAvailability(car.id, false);
 
     await expect(
       createRentalUseCase.execute({
-        car_id: newCar.id,
-        user_id: newUser.id,
+        car_id: car.id,
+        user_id: user.id,
         start_date: new Date(),
         expected_return_date: new Date(),
       }),
@@ -149,28 +136,12 @@ describe('CreateRentalUseCase', () => {
   });
 
   it('should not allow a car to be rented on a past day', async () => {
-    const newCategory = await categoryRepository.create({
-      name: 'Dummy',
-      description: 'This is a dummy category',
-    });
-
-    const newCar = await carRepository.create({
-      ...carParams,
-      category_id: newCategory.id,
-    });
-    const newUser = await userRepository.create({
-      name: 'John',
-      email: 'john@email.com',
-      password: 'a123123FSS',
-      driver_license: '12312343',
-    });
-
     global.Date.now = jest.fn(() => new Date(2021, 1, 10).getTime());
 
     await expect(
       createRentalUseCase.execute({
-        car_id: newCar.id,
-        user_id: newUser.id,
+        car_id: car.id,
+        user_id: user.id,
         start_date: new Date(2021, 1, 9),
         expected_return_date: new Date(),
       }),
@@ -178,28 +149,12 @@ describe('CreateRentalUseCase', () => {
   });
 
   it('should not allow a car to be rented on a future date', async () => {
-    const newCategory = await categoryRepository.create({
-      name: 'Dummy',
-      description: 'This is a dummy category',
-    });
-
-    const newCar = await carRepository.create({
-      ...carParams,
-      category_id: newCategory.id,
-    });
-    const newUser = await userRepository.create({
-      name: 'John',
-      email: 'john@email.com',
-      password: 'a123123FSS',
-      driver_license: '12312343',
-    });
-
     global.Date.now = jest.fn(() => new Date(2021, 1, 10).getTime());
 
     await expect(
       createRentalUseCase.execute({
-        car_id: newCar.id,
-        user_id: newUser.id,
+        car_id: car.id,
+        user_id: user.id,
         start_date: new Date(2021, 1, 11),
         expected_return_date: new Date(),
       }),
@@ -210,28 +165,12 @@ describe('CreateRentalUseCase', () => {
   });
 
   it('should not allow the return date to be a past date', async () => {
-    const newCategory = await categoryRepository.create({
-      name: 'Dummy',
-      description: 'This is a dummy category',
-    });
-
-    const newCar = await carRepository.create({
-      ...carParams,
-      category_id: newCategory.id,
-    });
-    const newUser = await userRepository.create({
-      name: 'John',
-      email: 'john@email.com',
-      password: 'a123123FSS',
-      driver_license: '12312343',
-    });
-
     global.Date.now = jest.fn(() => new Date(2021, 1, 10).getTime());
 
     await expect(
       createRentalUseCase.execute({
-        car_id: newCar.id,
-        user_id: newUser.id,
+        car_id: car.id,
+        user_id: user.id,
         start_date: new Date(2021, 1, 10),
         expected_return_date: new Date(2021, 1, 5),
       }),
@@ -239,28 +178,12 @@ describe('CreateRentalUseCase', () => {
   });
 
   it('should not allow car be rent for a period last than one day', async () => {
-    const newCategory = await categoryRepository.create({
-      name: 'Dummy',
-      description: 'This is a dummy category',
-    });
-
-    const newCar = await carRepository.create({
-      ...carParams,
-      category_id: newCategory.id,
-    });
-    const newUser = await userRepository.create({
-      name: 'John',
-      email: 'john@email.com',
-      password: 'a123123FSS',
-      driver_license: '12312343',
-    });
-
     global.Date.now = jest.fn(() => new Date(2021, 1, 10).getTime());
 
     await expect(
       createRentalUseCase.execute({
-        car_id: newCar.id,
-        user_id: newUser.id,
+        car_id: car.id,
+        user_id: user.id,
         start_date: new Date(2021, 1, 10),
         expected_return_date: new Date(2021, 1, 10),
       }),
@@ -271,28 +194,12 @@ describe('CreateRentalUseCase', () => {
   });
 
   it('should create a rental if right credentials are passed', async () => {
-    const newCategory = await categoryRepository.create({
-      name: 'Dummy',
-      description: 'This is a dummy category',
-    });
-
-    const newCar = await carRepository.create({
-      ...carParams,
-      category_id: newCategory.id,
-    });
-    const newUser = await userRepository.create({
-      name: 'John',
-      email: 'john@email.com',
-      password: 'a123123FSS',
-      driver_license: '12312343',
-    });
-
     global.Date.now = jest.fn(() => new Date(2021, 1, 10).getTime());
 
     await expect(
       createRentalUseCase.execute({
-        car_id: newCar.id,
-        user_id: newUser.id,
+        car_id: car.id,
+        user_id: user.id,
         start_date: new Date(2021, 1, 10),
         expected_return_date: new Date(2021, 1, 14),
       }),
@@ -300,57 +207,25 @@ describe('CreateRentalUseCase', () => {
   });
 
   it('should save the car daily value and fine value at the created rental', async () => {
-    const newCategory = await categoryRepository.create({
-      name: 'Dummy',
-      description: 'This is a dummy category',
-    });
-
-    const newCar = await carRepository.create({
-      ...carParams,
-      category_id: newCategory.id,
-    });
-    const newUser = await userRepository.create({
-      name: 'John',
-      email: 'john@email.com',
-      password: 'a123123FSS',
-      driver_license: '12312343',
-    });
-
     global.Date.now = jest.fn(() => new Date(2021, 1, 10).getTime());
 
     const rental = await createRentalUseCase.execute({
-      car_id: newCar.id,
-      user_id: newUser.id,
+      car_id: car.id,
+      user_id: user.id,
       start_date: new Date(2021, 1, 10),
       expected_return_date: new Date(2021, 1, 14),
     });
 
-    expect(rental.car_daily_value).toBe(newCar.daily_value);
-    expect(rental.car_daily_fine).toBe(newCar.fine_amount);
+    expect(rental.car_daily_value).toBe(car.daily_value);
+    expect(rental.car_daily_fine).toBe(car.fine_amount);
   });
 
   it('should save the estimated total based in the car daily value', async () => {
-    const newCategory = await categoryRepository.create({
-      name: 'Dummy',
-      description: 'This is a dummy category',
-    });
-
-    const newCar = await carRepository.create({
-      ...carParams,
-      category_id: newCategory.id,
-    });
-    const newUser = await userRepository.create({
-      name: 'John',
-      email: 'john@email.com',
-      password: 'a123123FSS',
-      driver_license: '12312343',
-    });
-
     global.Date.now = jest.fn(() => new Date(2021, 1, 10).getTime());
 
     const rental = await createRentalUseCase.execute({
-      car_id: newCar.id,
-      user_id: newUser.id,
+      car_id: car.id,
+      user_id: user.id,
       start_date: new Date(2021, 1, 10),
       expected_return_date: new Date(2021, 1, 14),
     });
@@ -360,35 +235,19 @@ describe('CreateRentalUseCase', () => {
       rental.start_date,
     );
 
-    expect(rental.estimated_total).toBe(newCar.daily_value * rentDays);
+    expect(rental.estimated_total).toBe(car.daily_value * rentDays);
   });
 
   it('should update rented car to become unavailable', async () => {
-    const newCategory = await categoryRepository.create({
-      name: 'Dummy',
-      description: 'This is a dummy category',
-    });
-
-    const newCar = await carRepository.create({
-      ...carParams,
-      category_id: newCategory.id,
-    });
-    const newUser = await userRepository.create({
-      name: 'John',
-      email: 'john@email.com',
-      password: 'a123123FSS',
-      driver_license: '12312343',
-    });
-
     global.Date.now = jest.fn(() => new Date(2021, 1, 10).getTime());
 
     await createRentalUseCase.execute({
-      car_id: newCar.id,
-      user_id: newUser.id,
+      car_id: car.id,
+      user_id: user.id,
       start_date: new Date(2021, 1, 10),
       expected_return_date: new Date(2021, 1, 14),
     });
 
-    expect(newCar.available).toBeFalsy();
+    expect(car.available).toBeFalsy();
   });
 });
