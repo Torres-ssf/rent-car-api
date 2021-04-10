@@ -25,10 +25,10 @@ export class TypeormRental extends Rental {
   @Column()
   expected_return_date: Date;
 
-  @Column()
-  returned_date: Date | null;
+  @Column({ nullable: true })
+  returned_date: Date;
 
-  @Column()
+  @Column('enum')
   status: Status;
 
   @Column()
@@ -40,8 +40,8 @@ export class TypeormRental extends Rental {
   @Column()
   estimated_total: number;
 
-  @Column()
-  total: number | null;
+  @Column({ nullable: true })
+  total: number;
 
   @CreateDateColumn()
   created_at: Date;
