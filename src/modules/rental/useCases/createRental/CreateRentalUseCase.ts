@@ -1,4 +1,4 @@
-import { getHours, isBefore, isSameDay } from 'date-fns';
+import { getHours, isBefore, isSameDay, startOfDay } from 'date-fns';
 import { ICarRepository } from '@modules/car/repositories/ICarRepository';
 import { AppError } from '@shared/errors/AppError';
 import { IUserRepository } from '@modules/user/repositories/IUserRepository';
@@ -46,6 +46,10 @@ export class CreateRentalUseCase {
 
     if (!carExists) {
       throw new AppError('Car does not exists');
+    }
+
+    if (isBefore(startOfDay(start_date), startOfDay(Date.now()))) {
+      throw new AppError('Cannot create rental for a past date');
     }
 
     // if (isBefore(start_date, Date.now())) {
