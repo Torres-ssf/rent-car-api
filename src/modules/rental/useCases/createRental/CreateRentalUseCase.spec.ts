@@ -99,7 +99,7 @@ describe('CreateRentalUseCase', () => {
     );
   });
 
-  it('should not allow a user to rent more than one car at the same time', async () => {
+  it('should not allow a user to rent a nonexistent car', async () => {
     const newUser = await userRepository.create({
       name: 'John',
       email: 'john@email.com',
@@ -114,7 +114,37 @@ describe('CreateRentalUseCase', () => {
         start_date: new Date(),
         expected_return_date: new Date(),
       }),
-    ).rejects.toHaveProperty('message', 'Car does not exists');
+    ).rejects.toHaveProperty('message', 'No car found for the given id');
+  });
+
+  it('should not allow a user to rent an unavailable car', async () => {
+    const newCategory = await categoryRepository.create({
+      name: 'Dummy',
+      description: 'This is a dummy category',
+    });
+
+    const newCar = await carRepository.create({
+      ...carParams,
+      category_id: newCategory.id,
+    });
+
+    await carRepository.save({ ...newCar, available: false });
+
+    const newUser = await userRepository.create({
+      name: 'John',
+      email: 'john@email.com',
+      password: 'a123123FSS',
+      driver_license: '12312343',
+    });
+
+    await expect(
+      createRentalUseCase.execute({
+        car_id: newCar.id,
+        user_id: newUser.id,
+        start_date: new Date(),
+        expected_return_date: new Date(),
+      }),
+    ).rejects.toHaveProperty('message', 'Given car is not available');
   });
 
   it('should not allow a car to be rented on a past day', async () => {
