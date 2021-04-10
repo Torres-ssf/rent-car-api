@@ -1,4 +1,4 @@
-import { getHours, isBefore, isSameDay, startOfDay } from 'date-fns';
+import { isBefore, isSameDay, startOfDay, differenceInDays } from 'date-fns';
 import { ICarRepository } from '@modules/car/repositories/ICarRepository';
 import { AppError } from '@shared/errors/AppError';
 import { IUserRepository } from '@modules/user/repositories/IUserRepository';
@@ -64,49 +64,27 @@ export class CreateRentalUseCase {
       throw new AppError('Return date cannot be a past date');
     }
 
-    // if (isBefore(end_date, start_date)) {
-    //   throw new AppError(`the end date can't be before the starting date`);
-    // }
+    if (isSameDay(expected_return_date, Date.now())) {
+      throw new AppError(
+        'Return date cannot be at the same day as the start date',
+      );
+    }
 
-    // if (isSameDay(start_date, end_date)) {
-    //   throw new AppError(`car rent period needs to be at least 1 day`);
-    // }
+    const estimatedRentPeriod = differenceInDays(
+      startOfDay(start_date),
+      startOfDay(expected_return_date),
+    );
 
-    // if (isSameDay(start_date, Date.now())) {
-    //   const hour = getHours(Date.now());
+    const rental = await this.rentalRepository.create({
+      user_id,
+      car_id,
+      start_date,
+      expected_return_date,
+      car_daily_value: carExists.daily_value,
+      car_daily_fine: carExists.fine_amount,
+      estimated_total: estimatedRentPeriod * carExists.daily_value,
+    });
 
-    //   if (hour >= 20) {
-    //     throw new AppError(
-    //       `rent store is close right now, try schedule a rent for tomorrow`,
-    //     );
-    //   }
-    // }
-
-    // const car = await this.carRepository.findById(car_id);
-
-    // if (!car) {
-    //   throw new AppError('no car was found for the given id');
-    // }
-
-    // const rentalExists = await this.rentalRepository.findByCarIdAndDate({
-    //   car_id,
-    //   start_date,
-    //   end_date,
-    // });
-
-    // if (rentalExists.length) {
-    //   throw new Error('car rental period conflicts with other existent rental');
-    // }
-
-    // const rental = Object.assign(new Rental(), {
-    //   car_id,
-    //   client_id,
-    //   start_date,
-    //   end_date,
-    //   created_at: Date.now(),
-    //   updated_at: Date.now(),
-    // });
-
-    return new Rental();
+    return rental;
   }
 }
