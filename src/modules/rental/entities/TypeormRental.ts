@@ -32,6 +32,12 @@ export class TypeormRental extends Rental {
   status: Status;
 
   @Column()
+  car_daily_value: number;
+
+  @Column()
+  car_daily_fine: number;
+
+  @Column()
   estimated_total: number;
 
   @Column()

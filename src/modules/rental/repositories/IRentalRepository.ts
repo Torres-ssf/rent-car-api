@@ -1,8 +1,9 @@
+import { CreateRentalDTO } from '../dtos/CreateRentalDTO';
 import { Rental } from '../models/Rental';
-import { IFindByCarAndDate } from '../dtos/IFindByCarAndDate';
 
 export interface IRentalRepository {
+  create(createRentalDTO: CreateRentalDTO): Promise<Rental>;
+  findOpenRentalForCar(carId: string): Promise<Rental | undefined>;
+  findOpenRentalForUser(userId: string): Promise<Rental | undefined>;
   save(rental: Rental): Promise<Rental>;
-  findByCarIdAndDate(data: IFindByCarAndDate): Promise<Rental[]>;
-  findByUserId(userId: string): Promise<Rental>;
 }
