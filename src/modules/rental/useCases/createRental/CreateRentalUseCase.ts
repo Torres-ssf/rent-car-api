@@ -56,9 +56,9 @@ export class CreateRentalUseCase {
       throw new AppError('Cannot create rental for a future date');
     }
 
-    // if (isBefore(start_date, Date.now())) {
-    //   throw new AppError(`you can't rent a car on a past date`);
-    // }
+    if (isBefore(startOfDay(expected_return_date), startOfDay(Date.now()))) {
+      throw new AppError('Return date cannot be a past date');
+    }
 
     // if (isBefore(end_date, start_date)) {
     //   throw new AppError(`the end date can't be before the starting date`);
