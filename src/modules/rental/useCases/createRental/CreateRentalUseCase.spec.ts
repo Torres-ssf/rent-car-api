@@ -117,6 +117,35 @@ describe('CreateRentalUseCase', () => {
     ).rejects.toHaveProperty('message', 'Car does not exists');
   });
 
+  it('should not allow a car to be rented on a past day', async () => {
+    const newCategory = await categoryRepository.create({
+      name: 'Dummy',
+      description: 'This is a dummy category',
+    });
+
+    const newCar = await carRepository.create({
+      ...carParams,
+      category_id: newCategory.id,
+    });
+    const newUser = await userRepository.create({
+      name: 'John',
+      email: 'john@email.com',
+      password: 'a123123FSS',
+      driver_license: '12312343',
+    });
+
+    global.Date.now = jest.fn(() => new Date(2021, 1, 10).getTime());
+
+    await expect(
+      createRentalUseCase.execute({
+        car_id: newCar.id,
+        user_id: newUser.id,
+        start_date: new Date(2021, 1, 9),
+        expected_return_date: new Date(),
+      }),
+    ).rejects.toHaveProperty('message', 'Cannot create rental for a past date');
+  });
+
   // it('should not be possible for the end date happens before the starting date', async () => {
   //   global.Date.now = jest.fn(() => new Date(2021, 1, 10).getTime());
 
