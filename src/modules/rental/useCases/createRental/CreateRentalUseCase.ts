@@ -85,6 +85,8 @@ export class CreateRentalUseCase {
       estimated_total: estimatedRentPeriod * carExists.daily_value,
     });
 
+    await this.carRepository.updateCarAvailability(car_id, false);
+
     return rental;
   }
 }
