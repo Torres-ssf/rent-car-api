@@ -99,6 +99,24 @@ describe('CreateRentalUseCase', () => {
     );
   });
 
+  it('should not allow a user to rent more than one car at the same time', async () => {
+    const newUser = await userRepository.create({
+      name: 'John',
+      email: 'john@email.com',
+      password: 'a123123FSS',
+      driver_license: '12312343',
+    });
+
+    await expect(
+      createRentalUseCase.execute({
+        car_id: 'nonexistent car id',
+        user_id: newUser.id,
+        start_date: new Date(),
+        expected_return_date: new Date(),
+      }),
+    ).rejects.toHaveProperty('message', 'Car does not exists');
+  });
+
   // it('should not be possible for the end date happens before the starting date', async () => {
   //   global.Date.now = jest.fn(() => new Date(2021, 1, 10).getTime());
 
