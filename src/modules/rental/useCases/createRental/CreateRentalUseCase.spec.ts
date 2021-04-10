@@ -145,7 +145,7 @@ describe('CreateRentalUseCase', () => {
         start_date: new Date(2021, 1, 9),
         expected_return_date: new Date(),
       }),
-    ).rejects.toHaveProperty('message', 'Cannot create rental for a past date');
+    ).rejects.toHaveProperty('message', 'Start date cannot be a past date');
   });
 
   it('should not allow a car to be rented on a future date', async () => {
@@ -158,10 +158,7 @@ describe('CreateRentalUseCase', () => {
         start_date: new Date(2021, 1, 11),
         expected_return_date: new Date(),
       }),
-    ).rejects.toHaveProperty(
-      'message',
-      'Cannot create rental for a future date',
-    );
+    ).rejects.toHaveProperty('message', 'Start date cannot a future date');
   });
 
   it('should not allow the return date to be a past date', async () => {

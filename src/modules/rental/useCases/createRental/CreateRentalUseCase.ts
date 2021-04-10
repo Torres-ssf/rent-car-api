@@ -53,11 +53,11 @@ export class CreateRentalUseCase {
     }
 
     if (isBefore(startOfDay(start_date), startOfDay(Date.now()))) {
-      throw new AppError('Cannot create rental for a past date');
+      throw new AppError('Start date cannot be a past date');
     }
 
     if (!isSameDay(start_date, Date.now())) {
-      throw new AppError('Cannot create rental for a future date');
+      throw new AppError('Start date cannot a future date');
     }
 
     if (isBefore(startOfDay(expected_return_date), startOfDay(Date.now()))) {
@@ -80,8 +80,8 @@ export class CreateRentalUseCase {
       car_id,
       start_date,
       expected_return_date,
-      car_daily_value: carExists.daily_value,
-      car_daily_fine: carExists.fine_amount,
+      car_daily_value: Number(carExists.daily_value),
+      car_daily_fine: Number(carExists.fine_amount),
       estimated_total: estimatedRentPeriod * carExists.daily_value,
     });
 
