@@ -29,16 +29,16 @@ describe('CreateRentalUseCase', () => {
     );
   });
 
-  // it('should not be possible to rent a car in a past date', async () => {
-  //   await expect(
-  //     createRentalUseCase.execute({
-  //       car_id: '1',
-  //       user_id: '1',
-  //       start_date: new Date(1987, 1, 11),
-  //       expected_return_date: new Date(1989, 6, 10),
-  //     }),
-  //   ).rejects.toHaveProperty('message', "you can't rent a car on a past date");
-  // });
+  it('should not create rental if user does not exists', async () => {
+    await expect(
+      createRentalUseCase.execute({
+        car_id: 'nonexistent car',
+        user_id: 'nonexistent user',
+        start_date: new Date(),
+        expected_return_date: new Date(),
+      }),
+    ).rejects.toHaveProperty('message', 'No user was found for the given id');
+  });
 
   // it('should not be possible for the end date happens before the starting date', async () => {
   //   global.Date.now = jest.fn(() => new Date(2021, 1, 10).getTime());
