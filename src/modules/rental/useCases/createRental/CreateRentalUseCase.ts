@@ -34,6 +34,14 @@ export class CreateRentalUseCase {
       throw new AppError('No user was found for the given id');
     }
 
+    const openRentalForUser = await this.rentalRepository.findOpenRentalForUser(
+      user.id,
+    );
+
+    if (openRentalForUser) {
+      throw new AppError('There is an open rental for the given user');
+    }
+
     // if (isBefore(start_date, Date.now())) {
     //   throw new AppError(`you can't rent a car on a past date`);
     // }
