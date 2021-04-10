@@ -3,6 +3,7 @@ import 'reflect-metadata';
 import { FakeCarRepository } from '@modules/car/repositories/fakes/FakeCarRepository';
 import { FakeUserRepository } from '@modules/user/repositories/fakes/FakeUserRepository';
 
+import { FakeCategoryRepository } from '@modules/car/repositories/fakes/FakeCategoryRepository';
 import { CreateRentalUseCase } from './CreateRentalUseCase';
 import { FakeRentalRepository } from '../../repositories/fakes/FakeRentalRepository';
 
@@ -15,7 +16,22 @@ describe('CreateRentalUseCase', () => {
 
   let userRepository: FakeUserRepository;
 
+  let categoryRepository: FakeCategoryRepository;
+
+  const carParams = {
+    model: 'F8',
+    brand: 'Ferrari',
+    max_speed: 340,
+    horse_power: 720,
+    zero_to_one_hundred: 2.9,
+    license_plate: 'MWS-2123',
+    daily_value: 900,
+    fine_amount: 200,
+  };
+
   beforeEach(() => {
+    categoryRepository = new FakeCategoryRepository();
+
     carRepository = new FakeCarRepository();
 
     rentalRepository = new FakeRentalRepository();
@@ -38,6 +54,49 @@ describe('CreateRentalUseCase', () => {
         expected_return_date: new Date(),
       }),
     ).rejects.toHaveProperty('message', 'No user was found for the given id');
+  });
+
+  it('should not allow a user to rent more than one car at the same time', async () => {
+    const newCategory = await categoryRepository.create({
+      name: 'Dummy',
+      description: 'This is a dummy category',
+    });
+
+    const newCar = await carRepository.create({
+      ...carParams,
+      category_id: newCategory.id,
+    });
+
+    const newUser = await userRepository.create({
+      name: 'John',
+      email: 'john@email.com',
+      password: 'a123123FSS',
+      driver_license: '12312343',
+    });
+
+    global.Date.now = jest.fn(() => new Date(2021, 1, 10).getTime());
+
+    await rentalRepository.create({
+      car_id: newCar.id,
+      user_id: newUser.id,
+      start_date: new Date(2021, 1, 10),
+      expected_return_date: new Date(2021, 1, 12),
+      car_daily_value: newCar.daily_value,
+      car_daily_fine: newCar.fine_amount,
+      estimated_total: newCar.daily_value * 2,
+    });
+
+    await expect(
+      createRentalUseCase.execute({
+        car_id: newCar.id,
+        user_id: newUser.id,
+        start_date: new Date(2021, 1, 13),
+        expected_return_date: new Date(2021, 1, 14),
+      }),
+    ).rejects.toHaveProperty(
+      'message',
+      'There is an open rental for the given user',
+    );
   });
 
   // it('should not be possible for the end date happens before the starting date', async () => {
