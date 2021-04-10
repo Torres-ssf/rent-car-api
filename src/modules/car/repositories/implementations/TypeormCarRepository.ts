@@ -1,6 +1,7 @@
 import { ListAvailableCarsDTO } from '@modules/car/dtos/ListAvailableCarsDTO';
 import { RegisterCarDTO } from '@modules/car/dtos/RegisterCarDTO';
 import { TypeormCar } from '@modules/car/entities/TypeormCar';
+import { AppError } from '@shared/errors/AppError';
 import { Car } from 'modules/car/models/Car';
 import { getRepository, Repository } from 'typeorm';
 import { ICarRepository } from '../ICarRepository';
@@ -64,6 +65,20 @@ export class TypeormCarRepository implements ICarRepository {
     }
 
     return query.getMany();
+  }
+
+  async updateCarAvailability(id: string, available: boolean): Promise<void> {
+    const car = await this.carRepository.findOne({ where: { id } });
+
+    if (!car) {
+      throw new AppError(
+        'Cannot update car availability, no car found for the given id',
+      );
+    }
+
+    car.available = available;
+
+    await this.carRepository.save(car);
   }
 
   async save(car: Car): Promise<Car> {

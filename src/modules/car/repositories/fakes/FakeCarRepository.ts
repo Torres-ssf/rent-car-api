@@ -3,6 +3,7 @@ import { RegisterCarDTO } from '@modules/car/dtos/RegisterCarDTO';
 import { Car } from '@modules/car/models/Car';
 import { CarImage } from '@modules/carImage/models/CarImage';
 import { Specification } from '@modules/specification/models/Specification';
+import { AppError } from '@shared/errors/AppError';
 import { ICarRepository } from '../ICarRepository';
 
 export class FakeCarRepository implements ICarRepository {
@@ -71,6 +72,18 @@ export class FakeCarRepository implements ICarRepository {
     }
 
     return car;
+  }
+
+  async updateCarAvailability(id: string, available: boolean): Promise<void> {
+    const carIndex = this.cars.findIndex(car => car.id === id);
+
+    if (carIndex < 0) {
+      throw new AppError(
+        'Cannot update car availability, no car found for the given id',
+      );
+    }
+
+    this.cars[carIndex].available = available;
   }
 
   async remove(id: string): Promise<void> {
