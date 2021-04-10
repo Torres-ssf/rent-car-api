@@ -146,7 +146,7 @@ describe('CreateRentalUseCase', () => {
     ).rejects.toHaveProperty('message', 'Cannot create rental for a past date');
   });
 
-  it('should not allow a car to be rented on a future day', async () => {
+  it('should not allow a car to be rented on a future date', async () => {
     const newCategory = await categoryRepository.create({
       name: 'Dummy',
       description: 'This is a dummy category',
@@ -176,6 +176,35 @@ describe('CreateRentalUseCase', () => {
       'message',
       'Cannot create rental for a future date',
     );
+  });
+
+  it('should not allow the return date to be a past date', async () => {
+    const newCategory = await categoryRepository.create({
+      name: 'Dummy',
+      description: 'This is a dummy category',
+    });
+
+    const newCar = await carRepository.create({
+      ...carParams,
+      category_id: newCategory.id,
+    });
+    const newUser = await userRepository.create({
+      name: 'John',
+      email: 'john@email.com',
+      password: 'a123123FSS',
+      driver_license: '12312343',
+    });
+
+    global.Date.now = jest.fn(() => new Date(2021, 1, 10).getTime());
+
+    await expect(
+      createRentalUseCase.execute({
+        car_id: newCar.id,
+        user_id: newUser.id,
+        start_date: new Date(2021, 1, 10),
+        expected_return_date: new Date(2021, 1, 5),
+      }),
+    ).rejects.toHaveProperty('message', 'Return date cannot be a past date');
   });
 
   // it('should not be possible for the end date happens before the starting date', async () => {
