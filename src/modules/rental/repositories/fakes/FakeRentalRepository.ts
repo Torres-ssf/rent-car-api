@@ -19,15 +19,15 @@ export class FakeRentalRepository implements IRentalRepository {
     return newRental;
   }
 
-  async findOpenRentalForCar(carId: string): Promise<Rental | undefined> {
+  async findOpenRentalForCar(car_id: string): Promise<Rental | undefined> {
     return this.rentals.find(
-      rental => rental.car_id === carId && rental.status === Status.Open,
+      rental => rental.car_id === car_id && rental.status === Status.Open,
     );
   }
 
-  async findOpenRentalForUser(userId: string): Promise<Rental | undefined> {
+  async findOpenRentalForUser(user_id: string): Promise<Rental | undefined> {
     return this.rentals.find(
-      rental => rental.user_id === userId && rental.status === Status.Open,
+      rental => rental.user_id === user_id && rental.status === Status.Open,
     );
   }
 
