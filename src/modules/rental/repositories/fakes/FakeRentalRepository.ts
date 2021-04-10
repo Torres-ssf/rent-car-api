@@ -4,7 +4,7 @@ import { Rental } from '@modules/rental/models/Rental';
 import { IRentalRepository } from '../IRentalRepository';
 
 export class FakeRentalRepository implements IRentalRepository {
-  private readonly rentals: Rental[] = [];
+  private rentals: Rental[] = [];
 
   async create(createRentalDTO: CreateRentalDTO): Promise<Rental> {
     const newRental = new Rental();
@@ -43,5 +43,9 @@ export class FakeRentalRepository implements IRentalRepository {
     }
 
     return rental;
+  }
+
+  async destroyAll(): Promise<void> {
+    this.rentals = [];
   }
 }
