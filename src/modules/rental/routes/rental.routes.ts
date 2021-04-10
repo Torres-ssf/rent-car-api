@@ -1,8 +1,13 @@
+import { ensureAuthenticatedMiddleware } from '@shared/middlewares/ensureAuthenticatedMiddleware';
 import { Router } from 'express';
-import { RentCarController } from '../useCases/rentCar/RentCarController';
+import { CreateRentalController } from '../useCases/createRental/CreateRentalController';
 
-const rentCarController = new RentCarController();
+const createRentalController = new CreateRentalController();
 
 export const rentalRoutes = Router();
 
-rentalRoutes.post('/', rentCarController.handle);
+rentalRoutes.post(
+  '/:car_id',
+  ensureAuthenticatedMiddleware,
+  createRentalController.handle,
+);
