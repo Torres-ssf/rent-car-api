@@ -3,9 +3,9 @@ import { ICarRepository } from '@modules/car/repositories/ICarRepository';
 import { AppError } from '@shared/errors/AppError';
 import { IUserRepository } from '@modules/user/repositories/IUserRepository';
 import { inject, injectable } from 'tsyringe';
+import { ClientSideCreateRentalDTO } from '@modules/rental/dtos/ClientSideCreateRentalDTO';
 import { Rental } from '../../models/Rental';
 import { IRentalRepository } from '../../repositories/IRentalRepository';
-import { CreateRentalDTO } from '../../dtos/CreateRentalDTO';
 
 @injectable()
 export class CreateRentalUseCase {
@@ -18,13 +18,21 @@ export class CreateRentalUseCase {
     private rentalRepository: IRentalRepository,
   ) {}
 
-  async execute(rentCarDTO: CreateRentalDTO): Promise<Rental> {
-    // const {
-    //   car_id,
-    //   user_id: client_id,
-    //   start_date,
-    //   expected_return_date: end_date,
-    // } = rentCarDTO;
+  async execute(
+    clientSideCreateRentalDTO: ClientSideCreateRentalDTO,
+  ): Promise<Rental> {
+    const {
+      user_id,
+      car_id,
+      start_date,
+      expected_return_date,
+    } = clientSideCreateRentalDTO;
+
+    const user = await this.userRepository.findById(user_id);
+
+    if (!user) {
+      throw new AppError('No user was found for the given id');
+    }
 
     // if (isBefore(start_date, Date.now())) {
     //   throw new AppError(`you can't rent a car on a past date`);
@@ -46,12 +54,6 @@ export class CreateRentalUseCase {
     //       `rent store is close right now, try schedule a rent for tomorrow`,
     //     );
     //   }
-    // }
-
-    // const user = await this.userRepository.findById(client_id);
-
-    // if (!user) {
-    //   throw new AppError('no user was found for the given id');
     // }
 
     // const car = await this.carRepository.findById(car_id);
