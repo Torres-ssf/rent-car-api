@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Sedan",
+    "description": "A sedan has four doors and a traditional trunk. They're available in a range of sizes from small to compact to mid-size, and full-size."
+  },
+  {
+    "name": "Coupe",
+    "description": "A coupe has historically been considered a two-door car with a trunk and a solid roof."
+  },
+  {
+    "name": "Sports Car",
+    "description": "These are the sportiest, hottest, coolest-looking coupes and convertibles—low to the ground, sleek, and often expensive. They generally are two-seaters, but sometimes have small rear seats as well."
+  },
+  {
+    "name": "Station Wagon",
+    "description": "Wagons are similar to sedans but have an extended roofline and a hatch door at the rear instead of a trunk."
+  },
+  {
+    "name": "Hatchback",
+    "description": "Traditionally, the term 'hatchback' has meant a compact or subcompact sedan with a squared-off roof and a rear flip-up hatch door that provides access to the vehicle's cargo area instead of a conventional trunk."
+  },
+  {
+    "name": "Convertible",
+    "description": "Does the roof retract into the body leaving the passenger cabin open to the elements? If so, it's a convertible. Most convertibles have a fully powered fabric roof that folds down, but a few have to be lowered by hand."
+  },
+  {
+    "name": "Sport-Utility-Vehicle (SUV)",
+    "description": "SUVs—often also referred to as crossovers—tend to be taller and boxier than sedans, offer an elevated seating position, and have more ground clearance than a car. They include a station wagon-like cargo area that is accessed through a flip-up rear hatch door, and many offer all-wheel drive."
+  },
+  {
+    "name": "Minivan",
+    "description": "Minivans are the workhorses of the family-car world, the best at carrying people and cargo in an efficient package. They're called minivans but they are far from 'mini'. That's because they are tall boxes-on-wheels with sliding side doors for easy access and a rear hatch that opens to a large cargo area."
+  },
+  {
+    "name": "Pickup Truck",
+    "description": "A pickup truck has a passenger cab and an open cargo bed in the rear. Virtually all pickups offer some form of all-wheel drive or part-time four-wheel drive—the latter for off-road use only."
+  }
+]
