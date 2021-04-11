@@ -29,7 +29,7 @@ export class AddSpecificationToCarController {
     } catch (err) {
       throw new AppError(
         err.message ||
-          'Error occuured while trying to add specification to car',
+          'Error occurred while trying to add specification to car',
       );
     }
   }

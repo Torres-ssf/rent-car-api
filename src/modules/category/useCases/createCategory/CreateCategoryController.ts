@@ -1,4 +1,4 @@
-import { CreateCategoryDTO } from '@modules/car/dtos/CreateCategoryDTO';
+import { CreateCategoryDTO } from '@modules/category/dtos/CreateCategoryDTO';
 import { AppError } from '@shared/errors/AppError';
 import { dataValidation } from '@shared/utils/dataValidation';
 import { Request, Response } from 'express';

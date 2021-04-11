@@ -1,5 +1,5 @@
-import { CreateCategoryDTO } from '@modules/car/dtos/CreateCategoryDTO';
-import { Category } from '@modules/car/models/Category';
+import { CreateCategoryDTO } from '@modules/category/dtos/CreateCategoryDTO';
+import { Category } from '@modules/category/models/Category';
 import { ICategoryRepository } from '../ICategoryRepository';
 
 export class FakeCategoryRepository implements ICategoryRepository {

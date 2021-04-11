@@ -3,7 +3,7 @@ import 'reflect-metadata';
 import { FakeCarRepository } from '@modules/car/repositories/fakes/FakeCarRepository';
 import { FakeSpecificationRepository } from '@modules/specification/repositories/fakes/FakeSpecificationRepository';
 import { v4 } from 'uuid';
-import { FakeCategoryRepository } from '@modules/car/repositories/fakes/FakeCategoryRepository';
+import { FakeCategoryRepository } from '@modules/category/repositories/fakes/FakeCategoryRepository';
 import { AddSpecificationToCarUseCase } from './AddSpecificationToCarUseCase';
 
 describe('AddSpecificationToCar', () => {
