@@ -1,3 +1,4 @@
+import './providers';
 import '@modules/specification';
 import '@modules/car';
 import '@modules/carImage';
