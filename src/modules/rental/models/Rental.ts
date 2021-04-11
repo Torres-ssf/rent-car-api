@@ -16,6 +16,10 @@ export class Rental {
 
   status: Status;
 
+  car_daily_value: number;
+
+  car_daily_fine: number;
+
   estimated_total: number;
 
   total: number | null;

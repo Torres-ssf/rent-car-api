@@ -1,8 +1,8 @@
 import { container } from 'tsyringe';
 import { IRentalRepository } from './repositories/IRentalRepository';
-import { FakeRentalRepository } from './repositories/fakes/FakeRentalRepository';
+import { TypeormRentalRepository } from './repositories/implementations/TypeormRentalRepository';
 
 container.registerSingleton<IRentalRepository>(
   'RentalRepository',
-  FakeRentalRepository,
+  TypeormRentalRepository,
 );

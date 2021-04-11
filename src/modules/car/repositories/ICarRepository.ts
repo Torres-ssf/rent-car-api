@@ -8,6 +8,7 @@ export interface ICarRepository {
   findByLicensePlate(license_plate: string): Promise<Car | undefined>;
   listAllCars(): Promise<Car[]>;
   listAvailableCars(listAvailableCarsDTO: ListAvailableCarsDTO): Promise<Car[]>;
+  updateCarAvailability(id: string, available: boolean): Promise<void>;
   save(car: Car): Promise<Car>;
   remove(id: string): Promise<void>;
 }
