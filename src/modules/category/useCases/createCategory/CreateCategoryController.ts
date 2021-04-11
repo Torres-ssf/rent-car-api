@@ -1,4 +1,4 @@
-import { CreateCategoryDTO } from '@modules/car/dtos/CreateCategoryDTO';
+import { CreateCategoryDTO } from '@modules/category/dtos/CreateCategoryDTO';
 import { AppError } from '@shared/errors/AppError';
 import { dataValidation } from '@shared/utils/dataValidation';
 import { Request, Response } from 'express';
@@ -21,7 +21,7 @@ export class CreateCategoryController {
       return response.json(newCategory);
     } catch (err) {
       throw new AppError(
-        err.message || 'error occurred while trying to create new category.',
+        err.message || 'Error occurred while trying to create new category.',
       );
     }
   }

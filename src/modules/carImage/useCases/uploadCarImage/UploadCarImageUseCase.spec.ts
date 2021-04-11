@@ -2,7 +2,7 @@ import 'reflect-metadata';
 
 import { FakeCarRepository } from '@modules/car/repositories/fakes/FakeCarRepository';
 import { FakeCarImageRepository } from '@modules/carImage/repositories/fakes/FakeCarImageRepository';
-import { FakeCategoryRepository } from '@modules/car/repositories/fakes/FakeCategoryRepository';
+import { FakeCategoryRepository } from '@modules/category/repositories/fakes/FakeCategoryRepository';
 import { UploadCarImageUseCase } from './UploadCarImageUseCase';
 
 describe('UploadCarUseCase', () => {

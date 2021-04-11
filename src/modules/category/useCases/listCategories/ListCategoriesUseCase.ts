@@ -1,5 +1,5 @@
-import { Category } from '@modules/car/models/Category';
-import { ICategoryRepository } from '@modules/car/repositories/ICategoryRepository';
+import { Category } from '@modules/category/models/Category';
+import { ICategoryRepository } from '@modules/category/repositories/ICategoryRepository';
 import { inject, injectable } from 'tsyringe';
 
 @injectable()

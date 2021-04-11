@@ -1,5 +1,5 @@
-import { CreateCategoryDTO } from '@modules/car/dtos/CreateCategoryDTO';
-import { Category } from '@modules/car/models/Category';
+import { CreateCategoryDTO } from '@modules/category/dtos/CreateCategoryDTO';
+import { Category } from '@modules/category/models/Category';
 import { ICategoryRepository } from '../ICategoryRepository';
 
 export class FakeCategoryRepository implements ICategoryRepository {
@@ -8,7 +8,7 @@ export class FakeCategoryRepository implements ICategoryRepository {
   async create({ name, description }: CreateCategoryDTO): Promise<Category> {
     const newCategory = new Category();
 
-    Object.assign(newCategory, { name, description, created_at: new Date() });
+    Object.assign(newCategory, { name, description });
 
     this.categories.push(newCategory);
 

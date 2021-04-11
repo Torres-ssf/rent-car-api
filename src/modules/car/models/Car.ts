@@ -32,9 +32,7 @@ export class Car {
   created_at: Date;
 
   constructor() {
-    if (!this.id) {
-      this.id = v4();
-      this.created_at = new Date();
-    }
+    this.id = v4();
+    this.created_at = new Date();
   }
 }

@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
 import { AppError } from '@shared/errors/AppError';
-import { ICategoryRepository } from '@modules/car/repositories/ICategoryRepository';
+import { ICategoryRepository } from '@modules/category/repositories/ICategoryRepository';
 import { Car } from '../../models/Car';
 import { ICarRepository } from '../../repositories/ICarRepository';
 import { RegisterCarDTO } from '../../dtos/RegisterCarDTO';

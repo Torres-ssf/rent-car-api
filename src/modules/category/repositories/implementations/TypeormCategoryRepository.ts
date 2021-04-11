@@ -1,6 +1,6 @@
-import { CreateCategoryDTO } from '@modules/car/dtos/CreateCategoryDTO';
-import { TypeormCategory } from '@modules/car/entities/TypeormCategory';
-import { Category } from '@modules/car/models/Category';
+import { CreateCategoryDTO } from '@modules/category/dtos/CreateCategoryDTO';
+import { TypeormCategory } from '@modules/category/entities/TypeormCategory';
+import { Category } from '@modules/category/models/Category';
 import { getRepository, Repository } from 'typeorm';
 import { ICategoryRepository } from '../ICategoryRepository';
 
@@ -15,7 +15,6 @@ export class TypeormCategoryRepository implements ICategoryRepository {
     const newCategory = this.categoryRepository.create({
       name,
       description,
-      created_at: new Date(),
     });
 
     await this.categoryRepository.save(newCategory);

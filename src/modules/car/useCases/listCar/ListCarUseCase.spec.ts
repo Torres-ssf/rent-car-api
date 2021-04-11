@@ -2,7 +2,7 @@ import 'reflect-metadata';
 
 import { FakeCarRepository } from '@modules/car/repositories/fakes/FakeCarRepository';
 import { Car } from '@modules/car/models/Car';
-import { FakeCategoryRepository } from '@modules/car/repositories/fakes/FakeCategoryRepository';
+import { FakeCategoryRepository } from '@modules/category/repositories/fakes/FakeCategoryRepository';
 import { ListCarUseCase } from './ListCarUseCase';
 
 import carsSeed from '../../seeds/cars.json';

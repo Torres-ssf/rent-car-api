@@ -3,10 +3,10 @@ import 'reflect-metadata';
 import { FakeCarRepository } from '@modules/car/repositories/fakes/FakeCarRepository';
 import { FakeUserRepository } from '@modules/user/repositories/fakes/FakeUserRepository';
 
-import { FakeCategoryRepository } from '@modules/car/repositories/fakes/FakeCategoryRepository';
+import { FakeCategoryRepository } from '@modules/category/repositories/fakes/FakeCategoryRepository';
 import { differenceInDays } from 'date-fns';
 import { Car } from '@modules/car/models/Car';
-import { Category } from '@modules/car/models/Category';
+import { Category } from '@modules/category/models/Category';
 import { User } from '@modules/user/models/User';
 import { FakeDateProvider } from '@shared/container/providers/DateProvider/fakes/FakeDateProvider';
 import { CreateRentalUseCase } from './CreateRentalUseCase';

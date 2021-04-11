@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe';
 import { Car } from '@modules/car/models/Car';
 import { ICarRepository } from '@modules/car/repositories/ICarRepository';
 import { ListAvailableCarsDTO } from '@modules/car/dtos/ListAvailableCarsDTO';
-import { ICategoryRepository } from '@modules/car/repositories/ICategoryRepository';
+import { ICategoryRepository } from '@modules/category/repositories/ICategoryRepository';
 import { AppError } from '@shared/errors/AppError';
 
 @injectable()

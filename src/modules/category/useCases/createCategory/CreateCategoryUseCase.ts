@@ -1,6 +1,6 @@
-import { CreateCategoryDTO } from '@modules/car/dtos/CreateCategoryDTO';
-import { Category } from '@modules/car/models/Category';
-import { ICategoryRepository } from '@modules/car/repositories/ICategoryRepository';
+import { CreateCategoryDTO } from '@modules/category/dtos/CreateCategoryDTO';
+import { Category } from '@modules/category/models/Category';
+import { ICategoryRepository } from '@modules/category/repositories/ICategoryRepository';
 import { AppError } from '@shared/errors/AppError';
 import { inject, injectable } from 'tsyringe';
 

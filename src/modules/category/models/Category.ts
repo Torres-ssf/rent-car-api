@@ -10,8 +10,7 @@ export class Category {
   created_at: Date;
 
   constructor() {
-    if (!this.id) {
-      this.id = v4();
-    }
+    this.id = v4();
+    this.created_at = new Date();
   }
 }

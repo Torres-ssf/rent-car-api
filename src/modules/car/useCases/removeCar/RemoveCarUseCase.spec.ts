@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 
 import { FakeCarRepository } from '@modules/car/repositories/fakes/FakeCarRepository';
-import { FakeCategoryRepository } from '@modules/car/repositories/fakes/FakeCategoryRepository';
+import { FakeCategoryRepository } from '@modules/category/repositories/fakes/FakeCategoryRepository';
 import { RemoveCarUseCase } from './RemoveCarUseCase';
 import { RegisterCarUseCase } from '../registerCar/RegisterCarUseCase';
 
