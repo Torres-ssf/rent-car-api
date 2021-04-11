@@ -1,9 +1,9 @@
-import { isBefore, isSameDay, startOfDay, differenceInDays } from 'date-fns';
 import { ICarRepository } from '@modules/car/repositories/ICarRepository';
 import { AppError } from '@shared/errors/AppError';
 import { IUserRepository } from '@modules/user/repositories/IUserRepository';
 import { inject, injectable } from 'tsyringe';
 import { ClientSideCreateRentalDTO } from '@modules/rental/dtos/ClientSideCreateRentalDTO';
+import { IDateProvider } from '@shared/container/providers/DateProvider/models/IDateProvider';
 import { Rental } from '../../models/Rental';
 import { IRentalRepository } from '../../repositories/IRentalRepository';
 
@@ -16,6 +16,8 @@ export class CreateRentalUseCase {
     private carRepository: ICarRepository,
     @inject('RentalRepository')
     private rentalRepository: IRentalRepository,
+    @inject('DateProvider')
+    private dateProvider: IDateProvider,
   ) {}
 
   async execute(
@@ -52,27 +54,27 @@ export class CreateRentalUseCase {
       throw new AppError('Given car is not available');
     }
 
-    if (isBefore(startOfDay(start_date), startOfDay(Date.now()))) {
+    if (this.dateProvider.isBefore(start_date, Date.now())) {
       throw new AppError('Start date cannot be a past date');
     }
 
-    if (!isSameDay(start_date, Date.now())) {
+    if (!this.dateProvider.isSameDay(start_date, Date.now())) {
       throw new AppError('Start date cannot a future date');
     }
 
-    if (isBefore(startOfDay(expected_return_date), startOfDay(Date.now()))) {
+    if (this.dateProvider.isBefore(expected_return_date, Date.now())) {
       throw new AppError('Return date cannot be a past date');
     }
 
-    if (isSameDay(expected_return_date, Date.now())) {
+    if (this.dateProvider.isSameDay(expected_return_date, Date.now())) {
       throw new AppError(
         'Return date cannot be at the same day as the start date',
       );
     }
 
-    const estimatedRentPeriod = differenceInDays(
-      startOfDay(expected_return_date),
-      startOfDay(start_date),
+    const estimatedRentPeriod = this.dateProvider.differenceInDays(
+      expected_return_date,
+      start_date,
     );
 
     const rental = await this.rentalRepository.create({

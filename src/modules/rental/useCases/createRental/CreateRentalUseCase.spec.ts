@@ -8,6 +8,7 @@ import { differenceInDays } from 'date-fns';
 import { Car } from '@modules/car/models/Car';
 import { Category } from '@modules/car/models/Category';
 import { User } from '@modules/user/models/User';
+import { FakeDateProvider } from '@shared/container/providers/DateProvider/fakes/FakeDateProvider';
 import { CreateRentalUseCase } from './CreateRentalUseCase';
 import { FakeRentalRepository } from '../../repositories/fakes/FakeRentalRepository';
 
@@ -19,6 +20,8 @@ describe('CreateRentalUseCase', () => {
   let carRepository: FakeCarRepository;
 
   let userRepository: FakeUserRepository;
+
+  let dateProvider: FakeDateProvider;
 
   let categoryRepository: FakeCategoryRepository;
 
@@ -37,10 +40,13 @@ describe('CreateRentalUseCase', () => {
 
     userRepository = new FakeUserRepository();
 
+    dateProvider = new FakeDateProvider();
+
     createRentalUseCase = new CreateRentalUseCase(
       userRepository,
       carRepository,
       rentalRepository,
+      dateProvider,
     );
 
     category = await categoryRepository.create({
