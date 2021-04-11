@@ -21,7 +21,7 @@ export class CreateCategoryController {
       return response.json(newCategory);
     } catch (err) {
       throw new AppError(
-        err.message || 'error occurred while trying to create new category.',
+        err.message || 'Error occurred while trying to create new category.',
       );
     }
   }

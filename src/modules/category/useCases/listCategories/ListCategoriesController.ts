@@ -13,7 +13,7 @@ export class ListCategoriesController {
       return response.json(categories);
     } catch (err) {
       throw new AppError(
-        err.message || 'error occurred while trying to fetch categories.',
+        err.message || 'Error occurred while trying to fetch categories.',
       );
     }
   }
