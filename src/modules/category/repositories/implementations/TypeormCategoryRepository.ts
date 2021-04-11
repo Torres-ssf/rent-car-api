@@ -15,7 +15,6 @@ export class TypeormCategoryRepository implements ICategoryRepository {
     const newCategory = this.categoryRepository.create({
       name,
       description,
-      created_at: new Date(),
     });
 
     await this.categoryRepository.save(newCategory);

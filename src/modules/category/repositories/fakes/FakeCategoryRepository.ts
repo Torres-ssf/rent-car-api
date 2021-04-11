@@ -8,7 +8,7 @@ export class FakeCategoryRepository implements ICategoryRepository {
   async create({ name, description }: CreateCategoryDTO): Promise<Category> {
     const newCategory = new Category();
 
-    Object.assign(newCategory, { name, description, created_at: new Date() });
+    Object.assign(newCategory, { name, description });
 
     this.categories.push(newCategory);
 
