@@ -12,8 +12,8 @@ import {
   OneToMany,
   PrimaryColumn,
 } from 'typeorm';
+import { TypeormCategory } from '@modules/category/entities/TypeormCategory';
 import { Car } from '../models/Car';
-import { TypeormCategory } from './TypeormCategory';
 
 @Entity('car')
 export class TypeormCar extends Car {
