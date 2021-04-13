@@ -4,6 +4,8 @@ import request from 'supertest';
 import { app } from '@shared/app';
 import { Connection, createConnection } from 'typeorm';
 import { getUserAuthToken } from '@modules/user/seeds/';
+import { Specification } from '@modules/specification/models/Specification';
+import { createSpecifications } from '@modules/specification/seeds';
 
 describe('List Specifications Endpoint', () => {
   let connection: Connection;
@@ -39,5 +41,37 @@ describe('List Specifications Endpoint', () => {
       .expect(res =>
         expect(res.body).toHaveProperty('message', 'Invalid JWT token'),
       );
+  });
+
+  it('should list all created specifications', async () => {
+    const spec1 = {
+      name: 'Electric Engine',
+      description: 'An electric car.',
+    };
+
+    const spec2 = {
+      name: 'Hybrid Engine',
+      description: 'A hybrid electric vehicle (HEV).',
+    };
+
+    const specificationsParamsArr = [spec1, spec2];
+
+    await createSpecifications(connection, specificationsParamsArr);
+
+    await request(app)
+      .get('/specification')
+      .set('Authorization', `Bearer ${userToken}`)
+      .expect(200)
+      .expect(res => {
+        expect(res.body).toHaveLength(2);
+        expect(res.body).toMatchObject([spec1, spec2]);
+      });
+
+    const savedSpecifications = (await connection.query(
+      `SELECT * FROM specification`,
+    )) as Specification[];
+
+    expect(savedSpecifications).toHaveLength(2);
+    expect(savedSpecifications).toMatchObject([spec1, spec2]);
   });
 });
