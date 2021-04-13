@@ -130,4 +130,32 @@ describe('Create Specification Endpoint', () => {
 
     expect(savedSpecifications).toHaveLength(1);
   });
+
+  it('should create a new specification and return it in the response', async () => {
+    const nameParam = 'Electric Engine';
+    const descriptionParam =
+      'An electric car is a car which is propelled by one or more electric motors';
+
+    const res = await request(app)
+      .post('/specification')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        name: nameParam,
+        description: descriptionParam,
+      });
+
+    expect(res.status).toBe(201);
+    expect(res.body).toHaveProperty('name', nameParam);
+    expect(res.body).toHaveProperty('description', descriptionParam);
+
+    const savedSpecification = (await connection.query(
+      `SELECT * FROM specification where name = '${nameParam}'`,
+    )) as Specification[];
+
+    expect(savedSpecification[0]).toHaveProperty('name', res.body.name);
+    expect(savedSpecification[0]).toHaveProperty(
+      'description',
+      res.body.description,
+    );
+  });
 });
