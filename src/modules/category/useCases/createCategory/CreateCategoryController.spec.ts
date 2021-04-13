@@ -134,4 +134,28 @@ describe('Create Category Endpoint', () => {
 
     expect(savedCategories).toHaveLength(1);
   });
+
+  it('should create a new category and return it in the response', async () => {
+    const nameParam = 'SUV';
+    const descriptionParam = 'SUVs—often also referred to as crossovers—tend';
+
+    const res = await request(app)
+      .post('/category')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        name: nameParam,
+        description: descriptionParam,
+      });
+
+    expect(res.status).toBe(201);
+    expect(res.body).toHaveProperty('name', nameParam);
+    expect(res.body).toHaveProperty('description', descriptionParam);
+
+    const savedUser = (await connection.query(
+      `SELECT * FROM category where name = 'SUV'`,
+    )) as User[];
+
+    expect(savedUser[0]).toHaveProperty('name', res.body.name);
+    expect(savedUser[0]).toHaveProperty('description', res.body.description);
+  });
 });
