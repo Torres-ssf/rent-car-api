@@ -4,25 +4,18 @@ import request from 'supertest';
 import { app } from '@shared/app';
 import { Connection, createConnection } from 'typeorm';
 import { User } from '@modules/user/models/User';
-import {
-  getAdminAuthToken,
-  getUserAuthToken,
-} from '@modules/user/seeds/user.seeds';
-import { Category } from '@modules/category/models/Category';
+import { getUserAuthToken } from '@modules/user/seeds/user.seeds';
+import { createCategories } from '@modules/category/seeds';
 
 describe('List Categories Endpoint', () => {
   let connection: Connection;
 
   let userToken: string;
 
-  let adminToken: string;
-
   beforeAll(async () => {
     connection = await createConnection();
 
     await connection.runMigrations();
-
-    adminToken = await getAdminAuthToken(connection);
 
     userToken = await getUserAuthToken(connection);
   });
@@ -48,5 +41,38 @@ describe('List Categories Endpoint', () => {
       .expect(res =>
         expect(res.body).toHaveProperty('message', 'Invalid JWT token'),
       );
+  });
+
+  it('should list all created categories', async () => {
+    const cat1 = {
+      name: 'Sedan',
+      description: 'A sedan has four doors and a traditional trunk.',
+    };
+
+    const cat2 = {
+      name: 'Coupe',
+      description:
+        'A coupe has historically been considered a two-door car with a trunk and a solid roof.',
+    };
+
+    const categoriesParamsArr = [cat1, cat2];
+
+    await createCategories(connection, categoriesParamsArr);
+
+    await request(app)
+      .get('/category')
+      .set('Authorization', `Bearer ${userToken}`)
+      .expect(200)
+      .expect(res => {
+        expect(res.body).toHaveLength(2);
+        expect(res.body).toMatchObject([cat1, cat2]);
+      });
+
+    const savedCategories = (await connection.query(
+      `SELECT * FROM category`,
+    )) as User[];
+
+    expect(savedCategories).toHaveLength(2);
+    expect(savedCategories).toMatchObject([cat1, cat2]);
   });
 });
