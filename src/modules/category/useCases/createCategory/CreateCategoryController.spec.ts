@@ -100,4 +100,38 @@ describe('Create Category Endpoint', () => {
     expect(res2.body.message).toContain('name should not be empty');
     expect(res2.body.message).toContain('description should not be empty');
   });
+
+  it('should not allow to create a category with the name of another existent category', async () => {
+    const categoryName = 'Unique Category';
+    const categoryDescription = 'This is a unique category';
+
+    await request(app)
+      .post('/category')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        name: categoryName,
+        description: categoryDescription,
+      });
+
+    await request(app)
+      .post('/category')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        name: categoryName,
+        description: categoryDescription,
+      })
+      .expect(400)
+      .expect(res =>
+        expect(res.body).toHaveProperty(
+          'message',
+          'Category with name Unique Category already exists',
+        ),
+      );
+
+    const savedCategories = (await connection.query(
+      `SELECT * FROM category where name = '${categoryName}'`,
+    )) as Category[];
+
+    expect(savedCategories).toHaveLength(1);
+  });
 });
