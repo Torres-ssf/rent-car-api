@@ -3,7 +3,6 @@ import 'reflect-metadata';
 import request from 'supertest';
 import { app } from '@shared/app';
 import { Connection, createConnection } from 'typeorm';
-import { User } from '@modules/user/models/User';
 import {
   getAdminAuthToken,
   getUserAuthToken,
@@ -151,11 +150,14 @@ describe('Create Category Endpoint', () => {
     expect(res.body).toHaveProperty('name', nameParam);
     expect(res.body).toHaveProperty('description', descriptionParam);
 
-    const savedUser = (await connection.query(
+    const savedCategory = (await connection.query(
       `SELECT * FROM category where name = 'SUV'`,
-    )) as User[];
+    )) as Category[];
 
-    expect(savedUser[0]).toHaveProperty('name', res.body.name);
-    expect(savedUser[0]).toHaveProperty('description', res.body.description);
+    expect(savedCategory[0]).toHaveProperty('name', res.body.name);
+    expect(savedCategory[0]).toHaveProperty(
+      'description',
+      res.body.description,
+    );
   });
 });
