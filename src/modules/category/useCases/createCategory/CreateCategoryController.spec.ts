@@ -57,4 +57,21 @@ describe('Create Category Endpoint', () => {
         expect(res.body).toHaveProperty('message', 'Invalid JWT token'),
       );
   });
+
+  it('should verify if user is an admin', async () => {
+    await request(app)
+      .post('/category')
+      .send({
+        name: 'Sport',
+        description: 'Sports cars category',
+      })
+      .set('Authorization', `Bearer ${userToken}`)
+      .expect(401)
+      .expect(res =>
+        expect(res.body).toHaveProperty(
+          'message',
+          'An admin is required for this operation',
+        ),
+      );
+  });
 });
