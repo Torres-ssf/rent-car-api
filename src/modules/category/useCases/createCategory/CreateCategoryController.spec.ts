@@ -74,4 +74,30 @@ describe('Create Category Endpoint', () => {
         ),
       );
   });
+
+  it('should verify if name and description params are strings and not empty', async () => {
+    const res1 = await request(app)
+      .post('/category')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        name: 4,
+        description: null,
+      });
+
+    const res2 = await request(app)
+      .post('/category')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        name: '',
+        description: '',
+      });
+
+    expect(res1.status).toBe(400);
+    expect(res1.body.message).toContain('name must be a string');
+    expect(res1.body.message).toContain('description must be a string');
+
+    expect(res2.status).toBe(400);
+    expect(res2.body.message).toContain('name should not be empty');
+    expect(res2.body.message).toContain('description should not be empty');
+  });
 });
