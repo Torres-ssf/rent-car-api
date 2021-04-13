@@ -1,0 +1,54 @@
+[
+  {
+    "name": "Electric Engine",
+    "description": "An electric car is a car which is propelled by one or more electric motors, using energy stored in rechargeable batteries."
+  },
+  {
+    "name": "Hybrid Engine",
+    "description": "A hybrid electric vehicle (HEV) is a type of hybrid vehicle that combines a conventional internal combustion engine (ICE) system with an electric propulsion system (hybrid vehicle drivetrain). The presence of the electric powertrain is intended to achieve either better fuel economy than a conventional vehicle or better performance."
+  },
+  {
+    "name": "Gas Engine",
+    "description": "An internal combustion engine (ICE) is a heat engine in which the combustion of a fuel occurs with an oxidizer (usually air) in a combustion chamber that is an integral part of the working fluid flow circuit. In an internal combustion engine, the expansion of the high-temperature and high-pressure gases produced by combustion applies direct force to some component of the engine."
+  },
+  {
+    "name": "Four-wheel drive",
+    "description": "Four-wheel drive, also called 4x4 or 4WD, refers to a two-axled vehicle drivetrain capable of providing torque to all of its wheels simultaneously. It may be full-time or on-demand, and is typically linked via a transfer case providing an additional output drive shaft and, in many instances, additional gear ranges."
+  },
+  {
+    "name": "Rear-wheel drive",
+    "description": "Rear-wheel-drive (RWD) is a form of engine and transmission layout used in motor vehicles, where the engine drives the rear wheels only. Until the late 20th century, rear-wheel drive was the most common configuration for cars. Most rear-wheel drive vehicles feature a longitudinally-mounted engine at the front of the car."
+  },
+  {
+    "name": "Automatic transmission",
+    "description": "An automatic transmission (sometimes abbreviated to auto or AT) is a multi-speed transmission used in motor vehicles that does not require any driver input to change gears under normal driving conditions"
+  },
+  {
+    "name": "Manual transmission",
+    "description": "A manual transmission (also known as a manual gearbox; abbreviated as MT, and sometimes called a standard transmission in the US) is a multi-speed motor vehicle transmission system, where gear changes require the driver to manually select the gears by operating a gear stick and clutch (which is usually a foot pedal for cars, or a hand lever for motorcycles)."
+  },
+  {
+    "name": "2 Doors",
+    "description": "Car with 2 doors."
+  },
+  {
+    "name": "4 Doors",
+    "description": "Car with 4 doors."
+  },
+  {
+    "name": "Turbocharger",
+    "description": "A turbocharger, colloquially known as a turbo, is a turbine-driven, forced induction device that increases an internal combustion engine's power output by forcing extra compressed air into the combustion chamber."
+  },
+  {
+    "name": "Rain Tyres",
+    "description": "Rain tyres are cut or moulded with patterned grooves or tread in them. This allows the tyre to quickly displace the water between the ground and the rubber on the tyre. If this water is not displaced, the car will experience an effect known as hydroplaning as the rubber will not be in contact with the ground."
+  },
+  {
+    "name": "Headlamp",
+    "description": "A headlamp is a lamp attached to the front of a vehicle to illuminate the road ahead. Headlamps are also often called headlights, but in the most precise usage, headlamp is the term for the device itself and headlight is the term for the beam of light produced and distributed by the device."
+  },
+  {
+    "name": "Airbag",
+    "description": "An airbag is a vehicle occupant-restraint system using a bag designed to inflate extremely quickly, then quickly deflate during a collision."
+  }
+]
