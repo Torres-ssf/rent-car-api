@@ -29,4 +29,16 @@ describe('ListSpecificationsUseCase', () => {
       }),
     ).rejects.toHaveProperty('message', 'Specification already exists');
   });
+
+  it('should create a new specification', async () => {
+    const res = await createSpecificationUseCase.execute({
+      name: 'Hybrid Engine',
+      description: 'Dummy Desc.',
+    });
+
+    expect(res).toHaveProperty('name', 'Hybrid Engine');
+    expect(res).toHaveProperty('description', 'Dummy Desc.');
+
+    await expect(specificationRepository.list()).resolves.toMatchObject([res]);
+  });
 });
