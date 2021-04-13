@@ -3,10 +3,7 @@ import 'reflect-metadata';
 import request from 'supertest';
 import { app } from '@shared/app';
 import { Connection, createConnection } from 'typeorm';
-import {
-  getAdminAuthToken,
-  getUserAuthToken,
-} from '@modules/user/seeds/user.seeds';
+import { getAdminAuthToken, getUserAuthToken } from '@modules/user/seeds/';
 import { Category } from '@modules/category/models/Category';
 
 describe('Create Category Endpoint', () => {

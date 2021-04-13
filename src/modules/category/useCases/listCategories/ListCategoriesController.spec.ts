@@ -4,7 +4,7 @@ import request from 'supertest';
 import { app } from '@shared/app';
 import { Connection, createConnection } from 'typeorm';
 import { User } from '@modules/user/models/User';
-import { getUserAuthToken } from '@modules/user/seeds/user.seeds';
+import { getUserAuthToken } from '@modules/user/seeds/';
 import { createCategories } from '@modules/category/seeds';
 
 describe('List Categories Endpoint', () => {
