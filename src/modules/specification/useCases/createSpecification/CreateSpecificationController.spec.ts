@@ -4,6 +4,7 @@ import request from 'supertest';
 import { app } from '@shared/app';
 import { Connection, createConnection } from 'typeorm';
 import { getAdminAuthToken, getUserAuthToken } from '@modules/user/seeds/';
+import { Specification } from '@modules/specification/models/Specification';
 
 describe('Create Specification Endpoint', () => {
   let connection: Connection;
@@ -94,5 +95,39 @@ describe('Create Specification Endpoint', () => {
     expect(res2.status).toBe(400);
     expect(res2.body.message).toContain('name should not be empty');
     expect(res2.body.message).toContain('description should not be empty');
+  });
+
+  it('should not allow to create a specification with the name of another existent specification', async () => {
+    const specificationName = 'Unique Specification';
+    const specificationDescription = 'This is a unique specification';
+
+    await request(app)
+      .post('/specification')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        name: specificationName,
+        description: specificationDescription,
+      });
+
+    await request(app)
+      .post('/specification')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        name: specificationName,
+        description: specificationDescription,
+      })
+      .expect(400)
+      .expect(res =>
+        expect(res.body).toHaveProperty(
+          'message',
+          `Specification with name ${specificationName} already exists`,
+        ),
+      );
+
+    const savedSpecifications = (await connection.query(
+      `SELECT * FROM specification where name = '${specificationName}'`,
+    )) as Specification[];
+
+    expect(savedSpecifications).toHaveLength(1);
   });
 });
