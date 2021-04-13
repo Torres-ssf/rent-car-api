@@ -36,4 +36,8 @@ export class TypeormSpecificationRepository
       .whereInIds(specifications_ids)
       .getMany();
   }
+
+  async list(): Promise<Specification[]> {
+    return this.specificationRepository.find();
+  }
 }

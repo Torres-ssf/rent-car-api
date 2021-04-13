@@ -35,4 +35,8 @@ export class FakeSpecificationRepository implements ISpecificationRepository {
       specifications_ids.includes(spec.id),
     );
   }
+
+  async list(): Promise<Specification[]> {
+    return this.specifications;
+  }
 }
