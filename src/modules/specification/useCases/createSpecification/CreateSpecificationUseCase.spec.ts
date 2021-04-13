@@ -27,7 +27,10 @@ describe('ListSpecificationsUseCase', () => {
         name: specification.name,
         description: 'Another Dummy desc',
       }),
-    ).rejects.toHaveProperty('message', 'Specification already exists');
+    ).rejects.toHaveProperty(
+      'message',
+      `Specification with name ${specification.name} already exists`,
+    );
   });
 
   it('should create a new specification', async () => {
