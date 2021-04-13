@@ -9,7 +9,11 @@ const listCategoriesController = new ListCategoriesController();
 
 export const categoryRoutes = Router();
 
-categoryRoutes.get('/', listCategoriesController.handle);
+categoryRoutes.get(
+  '/',
+  ensureAuthenticatedMiddleware,
+  listCategoriesController.handle,
+);
 
 categoryRoutes.post(
   '/',
