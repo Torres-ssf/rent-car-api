@@ -19,7 +19,11 @@ export const carRoutes = Router();
 
 carRoutes.get('/', listCarController.handle);
 
-carRoutes.get('/available', listAvailableCarsController.handle);
+carRoutes.get(
+  '/available',
+  ensureAuthenticatedMiddleware,
+  listAvailableCarsController.handle,
+);
 
 carRoutes.post(
   '/',
