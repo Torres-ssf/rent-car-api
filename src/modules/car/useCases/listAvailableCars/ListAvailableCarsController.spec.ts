@@ -65,4 +65,15 @@ describe('List Available Cars Endpoint', () => {
         expect(res.body.message).toContain('category_id must be a UUID');
       });
   });
+
+  it('should check if category_id belongs to a category when its provided', async () => {
+    await request(app)
+      .get('/car/available')
+      .set('Authorization', `Bearer ${userToken}`)
+      .query({ category_id: v4() })
+      .expect(400)
+      .expect(res => {
+        expect(res.body.message).toContain('Category does not exists');
+      });
+  });
 });
