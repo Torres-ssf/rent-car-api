@@ -17,3 +17,16 @@ export const createCategories = async (
 
   await Promise.all(categoriesQuery);
 };
+
+export const createDummyCategory = async (
+  connection: Connection,
+): Promise<string> => {
+  const id = v4();
+
+  await connection.query(
+    `INSERT INTO category(id, name, description)
+     values('${id}', 'Dummy', 'This is a dummy category')`,
+  );
+
+  return id;
+};
