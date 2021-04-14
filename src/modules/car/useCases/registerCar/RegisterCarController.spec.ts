@@ -5,6 +5,7 @@ import { app } from '@shared/app';
 import { Connection, createConnection } from 'typeorm';
 import { getAdminAuthToken, getUserAuthToken } from '@modules/user/seeds';
 import { createDummyCategory } from '@modules/category/seeds';
+import { Car } from '@modules/car/models/Car';
 import carSeeds from '../../seeds/cars.json';
 
 describe('Register Car Endpoint', () => {
@@ -34,7 +35,7 @@ describe('Register Car Endpoint', () => {
     await connection.close();
   });
 
-  it('should verify if user is an authenticated user', async () => {
+  it('should not allow unauthenticated user', async () => {
     await request(app)
       .post('/car')
       .send({})
@@ -53,7 +54,7 @@ describe('Register Car Endpoint', () => {
       );
   });
 
-  it('should verify if user is an admin', async () => {
+  it('should not allow users that are not admin', async () => {
     await request(app)
       .post('/car')
       .send({})
@@ -67,7 +68,7 @@ describe('Register Car Endpoint', () => {
       );
   });
 
-  it('should ensures that daily_value, fine_amount max_speed, horse_power, zero_to_one_hundred, are positive numbers', async () => {
+  it('should not allow daily_value, fine_amount max_speed, horse_power, zero_to_one_hundred, be values different from positive numbers', async () => {
     await request(app)
       .post('/car')
       .set('Authorization', `Bearer ${adminToken}`)
@@ -139,14 +140,14 @@ describe('Register Car Endpoint', () => {
         category_id: dummyCategoryId,
       })
       .expect(res => {
-        expect(res.status).toBe(200);
+        expect(res.status).toBe(201);
         expect(res.body.model === 'Enzo').toBeTruthy();
         expect(res.body.brand === 'Ferrari').toBeTruthy();
         expect(res.body.license_plate === '1231-SDA').toBeTruthy();
       });
   });
 
-  it('should ensure category_id is an uuid', async () => {
+  it('should not allow category_id be any type different from uuid', async () => {
     await request(app)
       .post('/car')
       .set('Authorization', `Bearer ${adminToken}`)
@@ -159,7 +160,7 @@ describe('Register Car Endpoint', () => {
       });
   });
 
-  it('should ensure that properties strange to the DTO are not being passed', async () => {
+  it('should not allow strange properties to the DTO being passed', async () => {
     await request(app)
       .post('/car')
       .set('Authorization', `Bearer ${adminToken}`)
@@ -170,6 +171,38 @@ describe('Register Car Endpoint', () => {
         expect(res.status).toBe(400);
         expect(res.body.message).toContain(
           'property i_do_not_belong_here should not exist',
+        );
+      });
+  });
+
+  it('should not allow 2 or more cars to have the same license_plate number', async () => {
+    const repeatedPlate = '1234-UDG';
+
+    await request(app)
+      .post('/car')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        ...carSeeds[0],
+        license_plate: repeatedPlate,
+        category_id: dummyCategoryId,
+      })
+      .expect(res => {
+        expect(res.status).toBe(201);
+      });
+
+    await request(app)
+      .post('/car')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        ...carSeeds[1],
+        license_plate: repeatedPlate,
+        category_id: dummyCategoryId,
+      })
+      .expect(res => {
+        expect(res.status).toBe(400);
+        expect(res.body).toHaveProperty(
+          'message',
+          'License plate already in use',
         );
       });
   });
