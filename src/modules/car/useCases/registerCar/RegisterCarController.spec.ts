@@ -6,6 +6,7 @@ import { Connection, createConnection } from 'typeorm';
 import { getAdminAuthToken, getUserAuthToken } from '@modules/user/seeds';
 import { createDummyCategory } from '@modules/category/seeds';
 import { Car } from '@modules/car/models/Car';
+import { v4 } from 'uuid';
 import carSeeds from '../../seeds/cars.json';
 
 describe('Register Car Endpoint', () => {
@@ -204,6 +205,20 @@ describe('Register Car Endpoint', () => {
           'message',
           'License plate already in use',
         );
+      });
+  });
+
+  it('should not allow a car to be registered without a category', async () => {
+    await request(app)
+      .post('/car')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        ...carSeeds[2],
+        category_id: v4(),
+      })
+      .expect(res => {
+        expect(res.status).toBe(400);
+        expect(res.body).toHaveProperty('message', 'Category does not exists');
       });
   });
 });
