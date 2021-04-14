@@ -221,4 +221,30 @@ describe('Register Car Endpoint', () => {
         expect(res.body).toHaveProperty('message', 'Category does not exists');
       });
   });
+
+  it('should create save a new car into the db and return it into the response', async () => {
+    await request(app)
+      .post('/car')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({
+        ...carSeeds[2],
+        category_id: dummyCategoryId,
+      })
+      .expect(res => {
+        expect(res.status).toBe(201);
+        expect(res.body).toMatchObject(carSeeds[2]);
+      });
+
+    const savedCar = (await connection.query(
+      `SELECT * FROM car where license_plate = '${carSeeds[2].license_plate}'`,
+    )) as Car[];
+
+    expect(savedCar).toHaveLength(1);
+    expect(savedCar[0]).toHaveProperty('model', carSeeds[2].model);
+    expect(savedCar[0]).toHaveProperty('brand', carSeeds[2].brand);
+    expect(savedCar[0]).toHaveProperty(
+      'license_plate',
+      carSeeds[2].license_plate,
+    );
+  });
 });
