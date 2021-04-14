@@ -52,4 +52,17 @@ describe('List Available Cars Endpoint', () => {
         expect(res.body).toHaveProperty('message', 'Invalid JWT token'),
       );
   });
+
+  it('should validate params when they are provided', async () => {
+    await request(app)
+      .get('/car/available')
+      .set('Authorization', `Bearer ${userToken}`)
+      .query({ model: '', brand: '', category_id: 123412341 })
+      .expect(400)
+      .expect(res => {
+        expect(res.body.message).toContain('model should not be empty');
+        expect(res.body.message).toContain('brand should not be empty');
+        expect(res.body.message).toContain('category_id must be a UUID');
+      });
+  });
 });
