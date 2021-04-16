@@ -3,18 +3,16 @@ import 'reflect-metadata';
 import request from 'supertest';
 import { app } from '@shared/app';
 import { Connection, createConnection } from 'typeorm';
-import { getAdminAuthToken, getUserAuthToken } from '@modules/user/seeds';
+import { getUserAuthToken } from '@modules/user/seeds';
 import { createDummyCategory } from '@modules/category/seeds';
-import { Car } from '@modules/car/models/Car';
 import { v4 } from 'uuid';
-import carSeeds from '../../seeds/cars.json';
+import { createDummyCars } from '@modules/car/seeds';
+import { randomizeANumber } from '@shared/utils/randomizeANumber';
 
 describe('List Available Cars Endpoint', () => {
   let connection: Connection;
 
   let userToken: string;
-
-  let adminToken: string;
 
   let dummyCategoryId: string;
 
@@ -75,5 +73,131 @@ describe('List Available Cars Endpoint', () => {
       .expect(res => {
         expect(res.body.message).toContain('Category does not exists');
       });
+  });
+
+  it('should find car by category if its available', async () => {
+    const randomNumOfCars = randomizeANumber(2, 5);
+
+    const randomNumOfUnavailableCars = randomizeANumber(1, randomNumOfCars);
+
+    const availableCars = randomNumOfCars - randomNumOfUnavailableCars;
+
+    await createDummyCars(
+      connection,
+      { category_id: dummyCategoryId },
+      randomNumOfCars,
+      randomNumOfUnavailableCars,
+    );
+
+    await request(app)
+      .get('/car/available')
+      .set('Authorization', `Bearer ${userToken}`)
+      .query({ category_id: dummyCategoryId })
+      .expect(200)
+      .expect(res => {
+        expect(res.body).toHaveLength(availableCars);
+        for (let i = 0; i < availableCars; i += 1) {
+          expect(res.body[i]).toHaveProperty('category_id', dummyCategoryId);
+        }
+      });
+
+    await connection.query(
+      `DELETE FROM car WHERE category_id = '${dummyCategoryId}'`,
+    );
+  });
+
+  it('should find car by model if its available', async () => {
+    const model = 'A8';
+
+    const randomNumOfCars = randomizeANumber(2, 5);
+
+    const randomNumOfUnavailableCars = randomizeANumber(1, randomNumOfCars);
+
+    const availableCars = randomNumOfCars - randomNumOfUnavailableCars;
+
+    await createDummyCars(
+      connection,
+      { model, category_id: dummyCategoryId },
+      randomNumOfCars,
+      randomNumOfUnavailableCars,
+    );
+
+    await request(app)
+      .get('/car/available')
+      .set('Authorization', `Bearer ${userToken}`)
+      .query({ model })
+      .expect(200)
+      .expect(res => {
+        expect(res.body).toHaveLength(availableCars);
+        for (let i = 0; i < availableCars; i += 1) {
+          expect(res.body[i]).toHaveProperty('model', model);
+        }
+      });
+
+    await connection.query(`DELETE FROM car WHERE model = '${model}'`);
+  });
+
+  it('should find car by brand if its available', async () => {
+    const brand = 'Ferrari';
+
+    const randomNumOfCars = randomizeANumber(2, 5);
+
+    const randomNumOfUnavailableCars = randomizeANumber(1, randomNumOfCars);
+
+    const availableCars = randomNumOfCars - randomNumOfUnavailableCars;
+
+    await createDummyCars(
+      connection,
+      { brand, category_id: dummyCategoryId },
+      randomNumOfCars,
+      randomNumOfUnavailableCars,
+    );
+
+    await request(app)
+      .get('/car/available')
+      .set('Authorization', `Bearer ${userToken}`)
+      .query({ brand })
+      .expect(200)
+      .expect(res => {
+        expect(res.body).toHaveLength(availableCars);
+        for (let i = 0; i < availableCars; i += 1) {
+          expect(res.body[i]).toHaveProperty('brand', brand);
+        }
+      });
+
+    await connection.query(`DELETE FROM car WHERE brand = '${brand}'`);
+  });
+
+  it('should find car by all 3 params if its available', async () => {
+    const brand = 'Ferrari';
+
+    const model = 'A8';
+
+    const randomNumOfCars = randomizeANumber(2, 5);
+
+    const randomNumOfUnavailableCars = randomizeANumber(1, randomNumOfCars);
+
+    const availableCars = randomNumOfCars - randomNumOfUnavailableCars;
+
+    await createDummyCars(
+      connection,
+      { model, brand, category_id: dummyCategoryId },
+      randomNumOfCars,
+      randomNumOfUnavailableCars,
+    );
+
+    await request(app)
+      .get('/car/available')
+      .set('Authorization', `Bearer ${userToken}`)
+      .query({ brand })
+      .expect(200)
+      .expect(res => {
+        expect(res.body).toHaveLength(availableCars);
+        for (let i = 0; i < availableCars; i += 1) {
+          expect(res.body[i]).toHaveProperty('brand', brand);
+        }
+      });
+
+    await connection.query(`DELETE FROM car WHERE brand = '${brand}'`);
   });
 });
