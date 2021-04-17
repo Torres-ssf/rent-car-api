@@ -2,18 +2,18 @@ import 'reflect-metadata';
 
 import { randomizeANumber } from '@shared/utils/randomizeANumber';
 import { FakeSpecificationRepository } from '@modules/specification/repositories/fakes/FakeSpecificationRepository';
-import { ListSpecificationsUserCase } from './ListSpecificationsUseCase';
+import { ListSpecificationsUseCase } from './ListSpecificationsUseCase';
 import specificationsSeeds from '../../seeds/specifications.json';
 
 describe('ListSpecificationsUseCase', () => {
   let specificationRepository: FakeSpecificationRepository;
 
-  let listSpecificationsUseCase: ListSpecificationsUserCase;
+  let listSpecificationsUseCase: ListSpecificationsUseCase;
 
   beforeAll(() => {
     specificationRepository = new FakeSpecificationRepository();
 
-    listSpecificationsUseCase = new ListSpecificationsUserCase(
+    listSpecificationsUseCase = new ListSpecificationsUseCase(
       specificationRepository,
     );
   });

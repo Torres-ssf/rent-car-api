@@ -3,7 +3,7 @@ import { ISpecificationRepository } from '@modules/specification/repositories/IS
 import { inject, injectable } from 'tsyringe';
 
 @injectable()
-export class ListSpecificationsUserCase {
+export class ListSpecificationsUseCase {
   constructor(
     @inject('SpecificationRepository')
     private specificationRepository: ISpecificationRepository,
