@@ -3,7 +3,7 @@ import { v4 } from 'uuid';
 import { ListAvailableCarsDTO } from '../dtos/ListAvailableCarsDTO';
 import { TypeormCar } from '../entities/TypeormCar';
 
-export const createDummyCars = async (
+export const createManyDummyCars = async (
   connection: Connection,
   { model = 'Dummy Model', brand = 'Dummy', category_id }: ListAvailableCarsDTO,
   numberOfCars: number,
@@ -31,4 +31,31 @@ export const createDummyCars = async (
       }),
     )
     .execute();
+};
+
+export const createDummyCar = async (
+  connection: Connection,
+  categoryId: string,
+): Promise<string> => {
+  const id = v4();
+
+  await connection
+    .createQueryBuilder()
+    .insert()
+    .into(TypeormCar)
+    .values({
+      id,
+      model: 'Dummy',
+      brand: 'Dummy Model',
+      license_plate: v4(),
+      max_speed: 333,
+      horse_power: 650,
+      zero_to_one_hundred: 4.3,
+      daily_value: 400,
+      fine_amount: 150,
+      category_id: categoryId,
+    })
+    .execute();
+
+  return id;
 };
