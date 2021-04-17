@@ -71,7 +71,7 @@ describe('Add Specification to Car Endpoint', () => {
     await request(app)
       .post('/car/12341234/add-specification')
       .send({
-        specification_ids: 'ids',
+        specifications_ids: 'ids',
       })
       .set('Authorization', `Bearer ${adminToken}`)
       .expect(400)
@@ -85,7 +85,7 @@ describe('Add Specification to Car Endpoint', () => {
     await request(app)
       .post('/car/12341234/add-specification')
       .send({
-        specification_ids: [],
+        specifications_ids: [],
       })
       .set('Authorization', `Bearer ${adminToken}`)
       .expect(400)
@@ -98,7 +98,7 @@ describe('Add Specification to Car Endpoint', () => {
     await request(app)
       .post('/car/12341234/add-specification')
       .send({
-        specification_ids: ['id1', 'id2', v4()],
+        specifications_ids: ['id1', 'id2', v4()],
       })
       .set('Authorization', `Bearer ${adminToken}`)
       .expect(400)
@@ -106,6 +106,19 @@ describe('Add Specification to Car Endpoint', () => {
         expect(res.body.message).toContain(
           'each value in specifications_ids must be a UUID',
         );
+      });
+  });
+
+  it('should verify if car exists for the given car id', async () => {
+    await request(app)
+      .post(`/car/${v4()}/add-specification`)
+      .send({
+        specifications_ids: [v4()],
+      })
+      .set('Authorization', `Bearer ${adminToken}`)
+      .expect(400)
+      .expect(res => {
+        expect(res.body.message).toContain('No car found for the given car id');
       });
   });
 });
