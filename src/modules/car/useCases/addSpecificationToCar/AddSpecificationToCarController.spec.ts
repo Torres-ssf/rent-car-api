@@ -6,6 +6,8 @@ import { Connection, createConnection } from 'typeorm';
 import { getAdminAuthToken, getUserAuthToken } from '@modules/user/seeds';
 import { createDummyCategory } from '@modules/category/seeds';
 import { v4 } from 'uuid';
+import { createDummyCar } from '@modules/car/seeds';
+import { createDummySpecifications } from '@modules/specification/seeds';
 
 describe('Add Specification to Car Endpoint', () => {
   let connection: Connection;
@@ -15,6 +17,8 @@ describe('Add Specification to Car Endpoint', () => {
   let adminToken: string;
 
   let dummyCategoryId: string;
+
+  let dummyCarId: string;
 
   beforeAll(async () => {
     connection = await createConnection();
@@ -26,6 +30,8 @@ describe('Add Specification to Car Endpoint', () => {
     userToken = await getUserAuthToken(connection);
 
     dummyCategoryId = await createDummyCategory(connection);
+
+    dummyCarId = await createDummyCar(connection, dummyCategoryId);
   });
 
   afterAll(async () => {
@@ -119,6 +125,36 @@ describe('Add Specification to Car Endpoint', () => {
       .expect(400)
       .expect(res => {
         expect(res.body.message).toContain('No car found for the given car id');
+      });
+  });
+
+  it('should ensure specifications can be find for all given specification ids', async () => {
+    await request(app)
+      .post(`/car/${dummyCarId}/add-specification`)
+      .send({
+        specifications_ids: [v4(), v4(), v4()],
+      })
+      .set('Authorization', `Bearer ${adminToken}`)
+      .expect(400)
+      .expect(res => {
+        expect(res.body.message).toContain(
+          'No specifications were found for the given ids',
+        );
+      });
+
+    const ids = await createDummySpecifications(connection, 2);
+
+    await request(app)
+      .post(`/car/${dummyCarId}/add-specification`)
+      .send({
+        specifications_ids: [v4(), ...ids],
+      })
+      .set('Authorization', `Bearer ${adminToken}`)
+      .expect(400)
+      .expect(res => {
+        expect(res.body.message).toContain(
+          'One or more specifications were not found for the given ids',
+        );
       });
   });
 });
