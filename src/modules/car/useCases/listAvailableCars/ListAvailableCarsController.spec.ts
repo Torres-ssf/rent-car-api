@@ -6,7 +6,7 @@ import { Connection, createConnection } from 'typeorm';
 import { getUserAuthToken } from '@modules/user/seeds';
 import { createDummyCategory } from '@modules/category/seeds';
 import { v4 } from 'uuid';
-import { createDummyCars } from '@modules/car/seeds';
+import { createManyDummyCars } from '@modules/car/seeds';
 import { randomizeANumber } from '@shared/utils/randomizeANumber';
 
 describe('List Available Cars Endpoint', () => {
@@ -82,7 +82,7 @@ describe('List Available Cars Endpoint', () => {
 
     const availableCars = randomNumOfCars - randomNumOfUnavailableCars;
 
-    await createDummyCars(
+    await createManyDummyCars(
       connection,
       { category_id: dummyCategoryId },
       randomNumOfCars,
@@ -115,7 +115,7 @@ describe('List Available Cars Endpoint', () => {
 
     const availableCars = randomNumOfCars - randomNumOfUnavailableCars;
 
-    await createDummyCars(
+    await createManyDummyCars(
       connection,
       { model, category_id: dummyCategoryId },
       randomNumOfCars,
@@ -146,7 +146,7 @@ describe('List Available Cars Endpoint', () => {
 
     const availableCars = randomNumOfCars - randomNumOfUnavailableCars;
 
-    await createDummyCars(
+    await createManyDummyCars(
       connection,
       { brand, category_id: dummyCategoryId },
       randomNumOfCars,
@@ -179,7 +179,7 @@ describe('List Available Cars Endpoint', () => {
 
     const availableCars = randomNumOfCars - randomNumOfUnavailableCars;
 
-    await createDummyCars(
+    await createManyDummyCars(
       connection,
       { model, brand, category_id: dummyCategoryId },
       randomNumOfCars,
