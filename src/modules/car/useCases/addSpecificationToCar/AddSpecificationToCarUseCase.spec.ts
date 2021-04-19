@@ -146,7 +146,7 @@ describe('AddSpecificationToCar', () => {
     });
 
     const newSpecification2 = await specificationRepository.create({
-      name: 'Eletric Car',
+      name: 'Electric Car',
       description: 'Car which is propelled by one or more electric motors',
     });
 

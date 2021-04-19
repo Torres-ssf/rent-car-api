@@ -9,7 +9,10 @@ export const dataValidation = async <T extends Record<string, unknown>>(
 ): Promise<T> => {
   const data = plainToClass(DTO, dataDTO);
 
-  const paramErrors = await validate(data);
+  const paramErrors = await validate(data, {
+    whitelist: true,
+    forbidNonWhitelisted: true,
+  });
 
   if (paramErrors.length) {
     const errorMessages = extractValidationErrors(paramErrors);

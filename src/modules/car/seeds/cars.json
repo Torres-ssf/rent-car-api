@@ -1,6 +1,5 @@
 [
   {
-    "id": "7d5e6ecd-1c27-4e4f-af1e-552c4840f881",
     "model": "F8",
     "brand": "Ferrari",
     "license_plate": "3534-434",
@@ -8,11 +7,9 @@
     "horse_power": 720,
     "zero_to_one_hundred": 2.9,
     "daily_value": 800,
-    "fine_amount": 200,
-    "created_at": "2021-02-11T17:41:29.810Z"
+    "fine_amount": 200
   },
   {
-    "id": "f1013b1a-da3d-42ec-833e-9541e8b3b6a9",
     "model": "Aventador",
     "brand": "Lamborghini",
     "license_plate": "3534-2323",
@@ -20,11 +17,9 @@
     "horse_power": 770  ,
     "zero_to_one_hundred": 2.8,
     "daily_value": 900,
-    "fine_amount": 200,
-    "created_at": "2021-02-11T17:41:29.810Z"
+    "fine_amount": 200
   },
   {
-    "id": "544a3551-fee3-4fa1-bb5b-0d6a00ec9be9",
     "model": "Taycan Turbo S",
     "brand": "Porsche",
     "license_plate": "3534-978",
@@ -32,11 +27,9 @@
     "horse_power": 751,
     "zero_to_one_hundred": 2.8,
     "daily_value": 800,
-    "fine_amount": 200,
-    "created_at": "2021-02-11T17:41:29.810Z"
+    "fine_amount": 200
   },
   {
-    "id": "08995bc9-7750-4287-9da0-ff9954c27eb0",
     "model": "Acura NSX",
     "brand": "Honda",
     "license_plate": "3534-567",
@@ -44,11 +37,9 @@
     "horse_power": 573,
     "zero_to_one_hundred": 3.3,
     "daily_value": 800,
-    "fine_amount": 200,
-    "created_at": "2021-02-11T17:41:29.810Z"
+    "fine_amount": 200
   },
   {
-    "id": "597f43bc-e55f-4eda-b3ab-f7f7f8c1279a",
     "model": "Mustang Mach-E",
     "brand": "Ford",
     "license_plate": "3534-126",
@@ -56,7 +47,6 @@
     "horse_power": 480,
     "zero_to_one_hundred": 3.5,
     "daily_value": 300,
-    "fine_amount": 200,
-    "created_at": "2021-02-11T17:41:29.810Z"
+    "fine_amount": 200
   }
 ]

@@ -2,6 +2,8 @@ import 'reflect-metadata';
 
 import { FakeCarRepository } from '@modules/car/repositories/fakes/FakeCarRepository';
 import { FakeCategoryRepository } from '@modules/category/repositories/fakes/FakeCategoryRepository';
+import categoriesSeeds from '@modules/category/seeds/categories.json';
+import carsSeeds from '../../seeds/cars.json';
 import { ListAvailableCarsUseCase } from './ListAvailableCarsUseCase';
 
 describe('ListCarUseCase', () => {
@@ -10,16 +12,6 @@ describe('ListCarUseCase', () => {
   let carRepository: FakeCarRepository;
 
   let categoryRepository: FakeCategoryRepository;
-
-  const carParams = {
-    model: 'F8',
-    brand: 'Ferrari',
-    max_speed: 340,
-    horse_power: 720,
-    zero_to_one_hundred: 2.9,
-    daily_value: 800,
-    fine_amount: 200,
-  };
 
   beforeEach(() => {
     carRepository = new FakeCarRepository();
@@ -40,8 +32,8 @@ describe('ListCarUseCase', () => {
     ).rejects.toHaveProperty('message', 'Category does not exists');
 
     const newCategory = await categoryRepository.create({
-      name: 'Dummy Category',
-      description: 'This is a dummy category',
+      name: categoriesSeeds[0].name,
+      description: categoriesSeeds[0].description,
     });
 
     await expect(
@@ -53,25 +45,22 @@ describe('ListCarUseCase', () => {
 
   it('should return only available cars', async () => {
     const newCategory = await categoryRepository.create({
-      name: 'Dummy Category',
-      description: 'This is a dummy category',
+      name: categoriesSeeds[0].name,
+      description: categoriesSeeds[0].description,
     });
 
     const car1 = await carRepository.create({
-      ...carParams,
-      license_plate: '1231-KSD',
+      ...carsSeeds[0],
       category_id: newCategory.id,
     });
 
     const car2 = await carRepository.create({
-      ...carParams,
-      license_plate: '9689-MVB',
+      ...carsSeeds[1],
       category_id: newCategory.id,
     });
 
     const car3 = await carRepository.create({
-      ...carParams,
-      license_plate: '1653-LKJ',
+      ...carsSeeds[2],
       category_id: newCategory.id,
     });
 
@@ -86,30 +75,27 @@ describe('ListCarUseCase', () => {
 
   it('should return available cars from the provided category when category is provided', async () => {
     const suvCategory = await categoryRepository.create({
-      name: 'SUV',
-      description: 'Sport Utility Vehicle',
+      name: categoriesSeeds[0].name,
+      description: categoriesSeeds[0].description,
     });
 
     const sedanCategory = await categoryRepository.create({
-      name: 'Sedan',
-      description: 'Four doors and a traditional trunk',
+      name: categoriesSeeds[1].name,
+      description: categoriesSeeds[1].description,
     });
 
     const car1 = await carRepository.create({
-      ...carParams,
-      license_plate: '1231-KSD',
+      ...carsSeeds[0],
       category_id: suvCategory.id,
     });
 
     const car2 = await carRepository.create({
-      ...carParams,
-      license_plate: '9689-MVB',
+      ...carsSeeds[1],
       category_id: suvCategory.id,
     });
 
     const car3 = await carRepository.create({
-      ...carParams,
-      license_plate: '1653-LKJ',
+      ...carsSeeds[2],
       category_id: sedanCategory.id,
     });
 
@@ -126,28 +112,25 @@ describe('ListCarUseCase', () => {
 
   it('should return available cars from the provided model when model is provided', async () => {
     const sedanCategory = await categoryRepository.create({
-      name: 'Sedan',
-      description: 'Four doors and a traditional trunk',
+      name: categoriesSeeds[0].name,
+      description: categoriesSeeds[0].description,
     });
 
     const car1 = await carRepository.create({
-      ...carParams,
+      ...carsSeeds[0],
       model: 'Enzo',
-      license_plate: '1231-KSD',
       category_id: sedanCategory.id,
     });
 
     const car2 = await carRepository.create({
-      ...carParams,
+      ...carsSeeds[1],
       model: 'F8',
-      license_plate: '9689-MVB',
       category_id: sedanCategory.id,
     });
 
     const car3 = await carRepository.create({
-      ...carParams,
+      ...carsSeeds[2],
       model: 'SF90',
-      license_plate: '1653-LKJ',
       category_id: sedanCategory.id,
     });
 
@@ -164,35 +147,31 @@ describe('ListCarUseCase', () => {
 
   it('should return available cars from the provided brand when brand is provided', async () => {
     const sedanCategory = await categoryRepository.create({
-      name: 'Sedan',
-      description: 'Four doors and a traditional trunk',
+      name: categoriesSeeds[0].name,
+      description: categoriesSeeds[0].description,
     });
 
     const car1 = await carRepository.create({
-      ...carParams,
+      ...carsSeeds[0],
       brand: 'Ferrari',
-      license_plate: '1231-KSD',
       category_id: sedanCategory.id,
     });
 
     const car2 = await carRepository.create({
-      ...carParams,
+      ...carsSeeds[1],
       brand: 'Ferrari',
-      license_plate: '9689-MVB',
       category_id: sedanCategory.id,
     });
 
     const car3 = await carRepository.create({
-      ...carParams,
+      ...carsSeeds[2],
       brand: 'Ferrari',
-      license_plate: '9689-MVB',
       category_id: sedanCategory.id,
     });
 
     const car4 = await carRepository.create({
-      ...carParams,
+      ...carsSeeds[3],
       brand: 'Audi',
-      license_plate: '1653-LKJ',
       category_id: sedanCategory.id,
     });
 
@@ -210,44 +189,40 @@ describe('ListCarUseCase', () => {
 
   it('should return available cars when all 3 filters are applied', async () => {
     const sedanCategory = await categoryRepository.create({
-      name: 'Sedan',
-      description: 'Four doors and a traditional trunk',
+      name: categoriesSeeds[0].name,
+      description: categoriesSeeds[0].description,
     });
 
     const suvCategory = await categoryRepository.create({
-      name: 'SUV',
-      description: 'Sport Utility Vehicle',
+      name: categoriesSeeds[1].name,
+      description: categoriesSeeds[1].description,
     });
 
     const car1 = await carRepository.create({
-      ...carParams,
+      ...carsSeeds[0],
       model: 'Enzo',
       brand: 'Ferrari',
-      license_plate: '1231-KSD',
       category_id: sedanCategory.id,
     });
 
     const car2 = await carRepository.create({
-      ...carParams,
+      ...carsSeeds[1],
       model: 'Enzo',
       brand: 'Ferrari',
-      license_plate: '9689-MVB',
       category_id: sedanCategory.id,
     });
 
     const car3 = await carRepository.create({
-      ...carParams,
+      ...carsSeeds[2],
       model: 'F8',
       brand: 'Ferrari',
-      license_plate: '9689-MVB',
       category_id: sedanCategory.id,
     });
 
     const car4 = await carRepository.create({
-      ...carParams,
+      ...carsSeeds[3],
       model: 'A8',
       brand: 'Audi',
-      license_plate: '1653-LKJ',
       category_id: suvCategory.id,
     });
 

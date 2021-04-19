@@ -57,6 +57,8 @@ export class AddSpecificationToCarUseCase {
       carExists.specifications = specifications;
     }
 
+    await this.carRepository.save(carExists);
+
     return carExists;
   }
 }
