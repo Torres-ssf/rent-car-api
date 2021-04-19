@@ -2,12 +2,15 @@ import 'reflect-metadata';
 
 import request from 'supertest';
 import { app } from '@shared/app';
-import { Connection, createConnection } from 'typeorm';
+import { Connection, createConnection, createQueryBuilder } from 'typeorm';
 import { getAdminAuthToken, getUserAuthToken } from '@modules/user/seeds';
 import { createDummyCategory } from '@modules/category/seeds';
 import { v4 } from 'uuid';
 import { createDummyCar } from '@modules/car/seeds';
 import { createDummySpecifications } from '@modules/specification/seeds';
+import { Specification } from '@modules/specification/models/Specification';
+import { Car } from '@modules/car/models/Car';
+import { TypeormSpecification } from '@modules/specification/entities/TypeormSpecification';
 
 describe('Add Specification to Car Endpoint', () => {
   let connection: Connection;
@@ -155,6 +158,73 @@ describe('Add Specification to Car Endpoint', () => {
         expect(res.body.message).toContain(
           'One or more specifications were not found for the given ids',
         );
+      });
+  });
+
+  it('should verify if car already have the given specifications', async () => {
+    const specIds = await createDummySpecifications(connection, 2);
+
+    const specification = (await connection
+      .createQueryBuilder(TypeormSpecification, 'specs')
+      .where('specs.id = :id', { id: specIds[0] })
+      .getOne()) as TypeormSpecification;
+
+    const carWithSpecId = await createDummyCar(connection, dummyCategoryId, [
+      specification,
+    ]);
+
+    await request(app)
+      .post(`/car/${carWithSpecId}/add-specification`)
+      .send({
+        specifications_ids: [...specIds],
+      })
+      .set('Authorization', `Bearer ${adminToken}`)
+      .expect(400)
+      .expect(res => {
+        expect(res.body.message).toContain(
+          `Car already have specification ${specification.name}`,
+        );
+      });
+  });
+
+  it('should add specifications to car', async () => {
+    const specIds = await createDummySpecifications(connection, 2);
+
+    const specifications = await connection
+      .createQueryBuilder(TypeormSpecification, 'specs')
+      .where('specs.id IN (:...specIds)', { specIds })
+      .getMany();
+
+    const car1Id = await createDummyCar(connection, dummyCategoryId);
+
+    const car2Id = await createDummyCar(connection, dummyCategoryId, [
+      specifications[0],
+    ]);
+
+    await request(app)
+      .post(`/car/${car1Id}/add-specification`)
+      .send({
+        specifications_ids: specIds,
+      })
+      .set('Authorization', `Bearer ${adminToken}`)
+      .expect(201)
+      .expect(res => {
+        expect(res.body.id).toBe(car1Id);
+        expect(res.body.specifications[0].id).toBe(specifications[0].id);
+        expect(res.body.specifications[1].id).toBe(specifications[1].id);
+      });
+
+    await request(app)
+      .post(`/car/${car2Id}/add-specification`)
+      .send({
+        specifications_ids: [specIds[1]],
+      })
+      .set('Authorization', `Bearer ${adminToken}`)
+      .expect(201)
+      .expect(res => {
+        expect(res.body.id).toBe(car2Id);
+        expect(res.body.specifications[0].id).toBe(specifications[0].id);
+        expect(res.body.specifications[1].id).toBe(specifications[1].id);
       });
   });
 });
