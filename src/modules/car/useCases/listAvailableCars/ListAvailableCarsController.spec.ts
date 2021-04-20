@@ -2,12 +2,13 @@ import 'reflect-metadata';
 
 import request from 'supertest';
 import { app } from '@shared/app';
-import { Connection, createConnection } from 'typeorm';
+import { Connection } from 'typeorm';
 import { getUserAuthToken } from '@modules/user/seeds';
 import { createDummyCategory } from '@modules/category/seeds';
 import { v4 } from 'uuid';
 import { createManyDummyCars } from '@modules/car/seeds';
 import { randomizeANumber } from '@shared/utils/randomizeANumber';
+import { getTypeormConnection } from '@shared/database';
 
 describe('List Available Cars Endpoint', () => {
   let connection: Connection;
@@ -17,7 +18,7 @@ describe('List Available Cars Endpoint', () => {
   let dummyCategoryId: string;
 
   beforeAll(async () => {
-    connection = await createConnection();
+    connection = await getTypeormConnection();
 
     await connection.runMigrations();
 

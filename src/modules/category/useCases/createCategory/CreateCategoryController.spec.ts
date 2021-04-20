@@ -2,9 +2,10 @@ import 'reflect-metadata';
 
 import request from 'supertest';
 import { app } from '@shared/app';
-import { Connection, createConnection } from 'typeorm';
+import { Connection } from 'typeorm';
 import { getAdminAuthToken, getUserAuthToken } from '@modules/user/seeds/';
 import { Category } from '@modules/category/models/Category';
+import { getTypeormConnection } from '@shared/database';
 
 describe('Create Category Endpoint', () => {
   let connection: Connection;
@@ -14,7 +15,7 @@ describe('Create Category Endpoint', () => {
   let adminToken: string;
 
   beforeAll(async () => {
-    connection = await createConnection();
+    connection = await getTypeormConnection();
 
     await connection.runMigrations();
 
