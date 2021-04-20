@@ -39,4 +39,24 @@ describe('Create Specification Endpoint', () => {
         expect(res.body.message).toBe('Email already taken');
       });
   });
+
+  it('should verify if there is another user created with the given driver_license', async () => {
+    const userParams = usersSeed[1];
+
+    await createDummyUser(connection, userParams);
+
+    await request(app)
+      .post('/user')
+      .send({
+        name: 'Fake User',
+        email: 'fake1@email.com',
+        password: userParams.password,
+        driver_license: userParams.driver_license,
+      })
+      .expect(res => {
+        expect(res.body.message).toBe(
+          'Driver license already being used by another user',
+        );
+      });
+  });
 });
