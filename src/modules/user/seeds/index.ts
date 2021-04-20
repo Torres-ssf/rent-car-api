@@ -64,6 +64,8 @@ export const createDummyUser = async (
   connection: Connection,
   userParams: CreateDummyUserParams,
 ): Promise<void> => {
+  const hashProvider = container.resolve<IHashProvider>('HashProvider');
+
   await connection
     .createQueryBuilder()
     .insert()
@@ -71,6 +73,7 @@ export const createDummyUser = async (
     .values({
       id: v4(),
       ...userParams,
+      password: await hashProvider.generateHash(userParams.password),
     })
     .execute();
 };
