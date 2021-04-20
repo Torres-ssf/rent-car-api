@@ -1,4 +1,3 @@
-import { AppError } from '@shared/errors/AppError';
 import { dataValidation } from '@shared/utils/dataValidation';
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
@@ -7,21 +6,16 @@ import { RegisterUserUseCase } from './RegisterUserUseCase';
 
 export class RegisterUserController {
   async handle(request: Request, response: Response): Promise<Response> {
-    try {
-      const createUserDTO = await dataValidation(CreateUserDTO, request.body);
+    const createUserDTO = await dataValidation(CreateUserDTO, request.body);
 
-      const registerUserUseCase = container.resolve(RegisterUserUseCase);
+    const registerUserUseCase = container.resolve(RegisterUserUseCase);
 
-      const {
-        password: removed,
-        ...newUser
-      } = await registerUserUseCase.execute(createUserDTO);
+    const {
+      password: removed,
+      admin: removed1,
+      ...newUser
+    } = await registerUserUseCase.execute(createUserDTO);
 
-      return response.status(201).json(newUser);
-    } catch (err) {
-      throw new AppError(
-        err.message || 'error occurred while trying to register new user',
-      );
-    }
+    return response.status(201).json(newUser);
   }
 }
