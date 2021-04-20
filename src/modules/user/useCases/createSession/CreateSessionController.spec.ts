@@ -4,6 +4,8 @@ import request from 'supertest';
 import { app } from '@shared/app';
 import { Connection } from 'typeorm';
 import { getTypeormConnection } from '@shared/database';
+import { createDummyUser } from '@modules/user/seeds';
+import usersSeeds from '../../seeds/users.json';
 
 describe('Create Session Endpoint', () => {
   let connection: Connection;
@@ -86,7 +88,24 @@ describe('Create Session Endpoint', () => {
         password: 'asASfdsf99',
       })
       .expect(res => {
-        expect(res.status).toBe(400);
+        expect(res.status).toBe(403);
+        expect(res.body.message).toContain('wrong email/password combination');
+      });
+  });
+
+  it('should ensure if given password is right password', async () => {
+    const userParams = usersSeeds[0];
+
+    await createDummyUser(connection, userParams);
+
+    await request(app)
+      .post('/session/signin')
+      .send({
+        email: userParams.email,
+        password: 'wrongPassword10',
+      })
+      .expect(res => {
+        expect(res.status).toBe(403);
         expect(res.body.message).toContain('wrong email/password combination');
       });
   });
