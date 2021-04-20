@@ -5,6 +5,8 @@ import { app } from '@shared/app';
 import { Connection } from 'typeorm';
 import { getTypeormConnection } from '@shared/database';
 import { createDummyUser } from '@modules/user/seeds';
+import { TypeormUser } from '@modules/user/entities/TypeormUser';
+import { User } from '@modules/user/models/User';
 import usersSeed from '../../seeds/users.json';
 
 describe('Create Specification Endpoint', () => {
@@ -114,5 +116,31 @@ describe('Create Specification Endpoint', () => {
         expect(res.body).not.toHaveProperty('password');
         expect(res.body).not.toHaveProperty('admin');
       });
+  });
+
+  it('should ensure that password is hashed before being saved', async () => {
+    const userParams = usersSeed[3];
+
+    await request(app)
+      .post('/user')
+      .send({
+        name: userParams.name,
+        email: userParams.email,
+        password: userParams.password,
+        driver_license: userParams.driver_license,
+      })
+      .expect(res => {
+        expect(res.status).toBe(201);
+        expect(res.body).not.toHaveProperty('password');
+        expect(res.body).not.toHaveProperty('admin');
+      });
+
+    const createdUser = (await connection
+      .createQueryBuilder()
+      .from(TypeormUser, 'user')
+      .where(`user.email = :email`, { email: userParams.email })
+      .execute()) as User[];
+
+    expect(createdUser[0].password).not.toBe(userParams.password);
   });
 });
