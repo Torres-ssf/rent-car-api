@@ -1,16 +1,15 @@
 import 'reflect-metadata';
-
 import request from 'supertest';
 import { app } from '@shared/app';
-import { Connection, createConnection, createQueryBuilder } from 'typeorm';
+import { Connection } from 'typeorm';
 import { getAdminAuthToken, getUserAuthToken } from '@modules/user/seeds';
 import { createDummyCategory } from '@modules/category/seeds';
 import { v4 } from 'uuid';
 import { createDummyCar } from '@modules/car/seeds';
 import { createDummySpecifications } from '@modules/specification/seeds';
-import { Specification } from '@modules/specification/models/Specification';
-import { Car } from '@modules/car/models/Car';
+
 import { TypeormSpecification } from '@modules/specification/entities/TypeormSpecification';
+import { getTypeormConnection } from '@shared/database';
 
 describe('Add Specification to Car Endpoint', () => {
   let connection: Connection;
@@ -24,7 +23,7 @@ describe('Add Specification to Car Endpoint', () => {
   let dummyCarId: string;
 
   beforeAll(async () => {
-    connection = await createConnection();
+    connection = await getTypeormConnection();
 
     await connection.runMigrations();
 

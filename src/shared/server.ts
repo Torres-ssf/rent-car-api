@@ -1,5 +1,12 @@
 import { app } from './app';
+import { getTypeormConnection } from './database';
 
-app.listen(3333, () => {
-  console.log('App launched at 3333 🚀');
-});
+const server = async () => {
+  await getTypeormConnection();
+
+  app.listen(3333, () => {
+    console.log('App launched at 3333 🚀');
+  });
+};
+
+server();

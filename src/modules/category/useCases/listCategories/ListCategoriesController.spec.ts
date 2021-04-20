@@ -2,10 +2,11 @@ import 'reflect-metadata';
 
 import request from 'supertest';
 import { app } from '@shared/app';
-import { Connection, createConnection } from 'typeorm';
+import { Connection } from 'typeorm';
 import { User } from '@modules/user/models/User';
 import { getUserAuthToken } from '@modules/user/seeds/';
 import { createCategories } from '@modules/category/seeds';
+import { getTypeormConnection } from '@shared/database';
 
 describe('List Categories Endpoint', () => {
   let connection: Connection;
@@ -13,7 +14,7 @@ describe('List Categories Endpoint', () => {
   let userToken: string;
 
   beforeAll(async () => {
-    connection = await createConnection();
+    connection = await getTypeormConnection();
 
     await connection.runMigrations();
 

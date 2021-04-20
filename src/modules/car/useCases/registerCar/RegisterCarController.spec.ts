@@ -2,11 +2,12 @@ import 'reflect-metadata';
 
 import request from 'supertest';
 import { app } from '@shared/app';
-import { Connection, createConnection } from 'typeorm';
+import { Connection } from 'typeorm';
 import { getAdminAuthToken, getUserAuthToken } from '@modules/user/seeds';
 import { createDummyCategory } from '@modules/category/seeds';
 import { Car } from '@modules/car/models/Car';
 import { v4 } from 'uuid';
+import { getTypeormConnection } from '@shared/database';
 import carSeeds from '../../seeds/cars.json';
 
 describe('Register Car Endpoint', () => {
@@ -19,7 +20,7 @@ describe('Register Car Endpoint', () => {
   let dummyCategoryId: string;
 
   beforeAll(async () => {
-    connection = await createConnection();
+    connection = await getTypeormConnection();
 
     await connection.runMigrations();
 

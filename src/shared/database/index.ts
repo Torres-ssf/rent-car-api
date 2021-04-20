@@ -1,20 +1,19 @@
-import { appEnv } from '@config/environment';
-import { createConnection, getConnectionOptions } from 'typeorm';
+import { Connection, createConnection, getConnectionOptions } from 'typeorm';
 
-interface IOptions {
-  database: string;
-}
+export const getTypeormConnection = async (): Promise<Connection> => {
+  const options = await getConnectionOptions();
 
-if (appEnv !== 'test') {
-  createConnection();
-} else {
-  getConnectionOptions().then(options => {
-    const newOptions = options as IOptions;
-
-    newOptions.database = 'rent_api_test_db';
-
-    createConnection({
-      ...options,
+  if (process.env.NODE_ENV !== 'docker') {
+    Object.assign(options, {
+      host: 'localhost',
     });
-  });
-}
+  }
+
+  if (process.env.NODE_ENV === 'test') {
+    Object.assign(options, {
+      database: 'rent_api_test_db',
+    });
+  }
+
+  return createConnection(options);
+};
