@@ -22,6 +22,44 @@ describe('Create Specification Endpoint', () => {
     await connection.close();
   });
 
+  it('should validate all endpoint body params', async () => {
+    await request(app)
+      .post('/user')
+      .send({
+        name: 12,
+        email: 'notEmail',
+        password: undefined,
+        driver_license: '',
+      })
+      .expect(res => {
+        expect(res.body.message).toContain('name must be a string');
+        expect(res.body.message).toContain('email must be an email');
+        expect(res.body.message).toContain(
+          'password must be longer than or equal to 8 characters',
+        );
+        expect(res.body.message).toContain(
+          'driver_license should not be empty',
+        );
+      });
+
+    await request(app)
+      .post('/user')
+      .send({
+        name: '',
+        email: 3123,
+        password: '1233123312',
+        driver_license: 3456456,
+      })
+      .expect(res => {
+        expect(res.body.message).toContain('name should not be empty');
+        expect(res.body.message).toContain('email must be an email');
+        expect(res.body.message).toContain(
+          'Password should have at least one number, one lower letter, one upper letter and no empty spaces',
+        );
+        expect(res.body.message).toContain('driver_license must be a string');
+      });
+  });
+
   it('should verify if there is another user created with the given email', async () => {
     const userParams = usersSeed[0];
 
