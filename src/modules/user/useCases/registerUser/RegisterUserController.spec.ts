@@ -97,4 +97,22 @@ describe('Create Specification Endpoint', () => {
         );
       });
   });
+
+  it('should not return the user password and admin in the return data', async () => {
+    const userParams = usersSeed[2];
+
+    await request(app)
+      .post('/user')
+      .send({
+        name: userParams.name,
+        email: userParams.email,
+        password: userParams.password,
+        driver_license: userParams.driver_license,
+      })
+      .expect(res => {
+        expect(res.status).toBe(201);
+        expect(res.body).not.toHaveProperty('password');
+        expect(res.body).not.toHaveProperty('admin');
+      });
+  });
 });
