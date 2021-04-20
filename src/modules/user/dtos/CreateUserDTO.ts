@@ -5,7 +5,6 @@ import {
   Matches,
   MaxLength,
   MinLength,
-  IsNumberString,
 } from 'class-validator';
 
 export class CreateUserDTO {
@@ -28,6 +27,6 @@ export class CreateUserDTO {
   password: string;
 
   @IsNotEmpty()
-  @IsNumberString()
+  @Transform(({ value }) => value.trim())
   driver_license: string;
 }
