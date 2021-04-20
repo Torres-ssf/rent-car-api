@@ -7,6 +7,11 @@ import { TypeormUser } from '../entities/TypeormUser';
 import { User } from '../models/User';
 import { IHashProvider } from '../../../shared/container/providers/HashProvider/models/IHashProvider';
 
+type CreateDummyUserParams = Pick<
+  User,
+  'name' | 'email' | 'password' | 'admin' | 'driver_license'
+>;
+
 export const getAdminAuthToken = async (
   connection: Connection,
 ): Promise<string> => {
@@ -57,24 +62,15 @@ export const getUserAuthToken = async (
 
 export const createDummyUser = async (
   connection: Connection,
-): Promise<User> => {
-  const hashProvider = container.resolve('HashProvider');
-
-  const user = await connection
+  userParams: CreateDummyUserParams,
+): Promise<void> => {
+  await connection
     .createQueryBuilder()
     .insert()
     .into(TypeormUser)
     .values({
       id: v4(),
-      name: 'Dummy User',
-      email: 'dummy@email.com',
-      driver_license: v4(),
-      admin: false,
-      password: '.Aa234as',
+      ...userParams,
     })
     .execute();
-
-  console.log(user);
-
-  return new User();
 };
