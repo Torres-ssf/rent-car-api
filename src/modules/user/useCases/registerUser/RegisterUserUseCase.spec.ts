@@ -9,7 +9,7 @@ describe('RegisterUserUseCase', () => {
 
   let userRepository: FakeUserRepository;
 
-  let hashProvoider: FakeHashProvider;
+  let hashProvider: FakeHashProvider;
 
   const userParams = {
     name: 'Paul Airon',
@@ -21,12 +21,9 @@ describe('RegisterUserUseCase', () => {
   beforeEach(() => {
     userRepository = new FakeUserRepository();
 
-    hashProvoider = new FakeHashProvider();
+    hashProvider = new FakeHashProvider();
 
-    registerUserUseCase = new RegisterUserUseCase(
-      userRepository,
-      hashProvoider,
-    );
+    registerUserUseCase = new RegisterUserUseCase(userRepository, hashProvider);
   });
 
   it('should be able to register a new user', async () => {
@@ -55,8 +52,8 @@ describe('RegisterUserUseCase', () => {
     ).rejects.toHaveProperty('message', 'Email already taken');
   });
 
-  it('should hash password before assing to user object', async () => {
-    const spy = jest.spyOn(hashProvoider, 'generateHash');
+  it('should hash password before assign to user object', async () => {
+    const spy = jest.spyOn(hashProvider, 'generateHash');
 
     const res = await registerUserUseCase.execute({
       name: 'Paul',
