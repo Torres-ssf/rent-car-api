@@ -2,6 +2,7 @@ import { Transform } from 'class-transformer';
 import {
   IsEmail,
   IsNotEmpty,
+  IsString,
   Matches,
   MaxLength,
   MinLength,
@@ -9,13 +10,14 @@ import {
 
 export class CreateUserDTO {
   @IsNotEmpty()
-  @MinLength(3)
-  @MaxLength(80)
-  @Transform(({ value }) => value.trim())
+  @IsString()
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   name: string;
 
   @IsEmail()
-  @Transform(({ value }) => value.trim().toLowerCase())
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.toLocaleLowerCase() : value,
+  )
   email: string;
 
   @MinLength(8)
@@ -27,6 +29,7 @@ export class CreateUserDTO {
   password: string;
 
   @IsNotEmpty()
-  @Transform(({ value }) => value.trim())
+  @IsString()
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   driver_license: string;
 }
