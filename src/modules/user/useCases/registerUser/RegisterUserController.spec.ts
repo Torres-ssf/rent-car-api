@@ -9,7 +9,7 @@ import { TypeormUser } from '@modules/user/entities/TypeormUser';
 import { User } from '@modules/user/models/User';
 import usersSeed from '../../seeds/users.json';
 
-describe('Create Specification Endpoint', () => {
+describe('Register User Endpoint', () => {
   let connection: Connection;
 
   beforeAll(async () => {
