@@ -3,7 +3,9 @@ import { sign } from 'jsonwebtoken';
 import { container } from 'tsyringe';
 import { Connection } from 'typeorm';
 import { v4 } from 'uuid';
-import { IHashProvider } from '../providers/HashProvider/models/IHashProvider';
+import { TypeormUser } from '../entities/TypeormUser';
+import { User } from '../models/User';
+import { IHashProvider } from '../../../shared/container/providers/HashProvider/models/IHashProvider';
 
 export const getAdminAuthToken = async (
   connection: Connection,
@@ -51,4 +53,28 @@ export const getUserAuthToken = async (
   });
 
   return adminToken;
+};
+
+export const createDummyUser = async (
+  connection: Connection,
+): Promise<User> => {
+  const hashProvider = container.resolve('HashProvider');
+
+  const user = await connection
+    .createQueryBuilder()
+    .insert()
+    .into(TypeormUser)
+    .values({
+      id: v4(),
+      name: 'Dummy User',
+      email: 'dummy@email.com',
+      driver_license: v4(),
+      admin: false,
+      password: '.Aa234as',
+    })
+    .execute();
+
+  console.log(user);
+
+  return new User();
 };

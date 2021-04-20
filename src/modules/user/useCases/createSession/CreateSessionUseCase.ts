@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import auth from '@config/auth';
 import { AppError } from '@shared/errors/AppError';
 import { User } from '@modules/user/models/User';
-import { IHashProvider } from '../../providers/HashProvider/models/IHashProvider';
+import { IHashProvider } from '@shared/container/providers/HashProvider/models/IHashProvider';
 import { IUserRepository } from '../../repositories/IUserRepository';
 import { CreateSessionDTO } from '../../dtos/CreateSessionDTO';
 

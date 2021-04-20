@@ -20,8 +20,10 @@ export class User {
   updated_at: Date;
 
   constructor() {
-    if (!this.id) {
-      this.id = v4();
-    }
+    const now = new Date();
+
+    this.id = v4();
+    this.created_at = now;
+    this.updated_at = now;
   }
 }

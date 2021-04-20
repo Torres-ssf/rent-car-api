@@ -2,7 +2,7 @@ import 'reflect-metadata';
 
 import { FakeUserRepository } from '../../repositories/fakes/FakeUserRepository';
 import { RegisterUserUseCase } from './RegisterUserUseCase';
-import { FakeHashProvider } from '../../providers/HashProvider/fakes/FakeHashProvider';
+import { FakeHashProvider } from '../../../../shared/container/providers/HashProvider/fakes/FakeHashProvider';
 
 describe('RegisterUserUseCase', () => {
   let registerUserUseCase: RegisterUserUseCase;
