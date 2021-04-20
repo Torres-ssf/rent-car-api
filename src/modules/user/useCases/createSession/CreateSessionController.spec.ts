@@ -67,7 +67,7 @@ describe('Create Session Endpoint', () => {
       .post('/session/signin')
       .send({
         email: 'patrick@',
-        password: 'asAS1212',
+        password: 'asAS 1212',
       })
       .expect(res => {
         expect(res.status).toBe(400);
@@ -75,6 +75,19 @@ describe('Create Session Endpoint', () => {
         expect(res.body.message).toContain(
           'Password should have at least one number, one lower letter, one upper letter and no empty spaces',
         );
+      });
+  });
+
+  it('should check if a user exists for the given email', async () => {
+    await request(app)
+      .post('/session/signin')
+      .send({
+        email: 'nonexistentuser@email.com',
+        password: 'asASfdsf99',
+      })
+      .expect(res => {
+        expect(res.status).toBe(400);
+        expect(res.body.message).toContain('wrong email/password combination');
       });
   });
 });
