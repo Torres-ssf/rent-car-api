@@ -48,4 +48,24 @@ describe('UpdateUserAvatarUseCase', () => {
       newAvatar,
     );
   });
+
+  it('should ensure user avatar is updated when user has no avatar', async () => {
+    const userParams = usersSeeds[1];
+
+    const newUser = await userRepository.create(userParams);
+
+    const avatarPath = 'my-new-avatar.jpeg';
+
+    await expect(
+      updateUserAvatarUseCase.execute({
+        user_id: newUser.id,
+        user_avatar: avatarPath,
+      }),
+    ).resolves.toHaveProperty('avatar', avatarPath);
+
+    await expect(userRepository.findById(newUser.id)).resolves.toHaveProperty(
+      'avatar',
+      avatarPath,
+    );
+  });
 });
