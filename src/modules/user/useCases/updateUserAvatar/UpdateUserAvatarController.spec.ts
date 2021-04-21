@@ -7,14 +7,19 @@ import { getTypeormConnection } from '@shared/database';
 import auth from '@config/auth';
 import { v4 } from 'uuid';
 import fs from 'fs';
+import { getUserAuthToken } from '@modules/user/seeds';
 
 describe('Register User Endpoint', () => {
   let connection: Connection;
+
+  let userToken: string;
 
   beforeAll(async () => {
     connection = await getTypeormConnection();
 
     await connection.runMigrations();
+
+    userToken = await getUserAuthToken(connection);
   });
 
   afterAll(async () => {
@@ -48,7 +53,9 @@ describe('Register User Endpoint', () => {
       expiresIn,
     });
 
-    const avatarImage = fs.createReadStream('src/shared/asset/avatar.png');
+    const avatarImage = fs.createReadStream(
+      'src/shared/asset/avatar_image.png',
+    );
 
     await request(app)
       .patch('/user/avatar')
@@ -61,5 +68,22 @@ describe('Register User Endpoint', () => {
           'No user was found for the given id',
         ),
       );
+  });
+
+  it('should ensure avatar file is saved for the given user', async () => {
+    const avatarImage = fs.createReadStream(
+      'src/shared/asset/avatar_image.png',
+    );
+
+    const res = await request(app)
+      .patch('/user/avatar')
+      .set('Authorization', `Bearer ${userToken}`)
+      .attach('avatar', avatarImage);
+
+    expect(res.body.avatar).toMatch(/avatar_image.png$/);
+
+    await expect(
+      fs.promises.stat(`tmp/avatar/${res.body.avatar}`),
+    ).resolves.toBeTruthy();
   });
 });
