@@ -22,7 +22,7 @@ export class UpdateUserAvatarUseCase {
     const userExists = await this.userRepository.findById(user_id);
 
     if (!userExists) {
-      throw new AppError('User does not exists', 401);
+      throw new AppError('No user was found for the given id', 401);
     }
 
     if (userExists.avatar) {
