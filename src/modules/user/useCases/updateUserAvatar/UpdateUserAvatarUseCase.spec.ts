@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import { v4 } from 'uuid';
+import usersSeeds from '../../seeds/users.json';
 
 import { FakeUserRepository } from '../../repositories/fakes/FakeUserRepository';
 import { UpdateUserAvatarUseCase } from './UpdateUserAvatarUseCase';
@@ -22,5 +23,29 @@ describe('UpdateUserAvatarUseCase', () => {
         user_avatar: 'my_avatar.jpge',
       }),
     ).rejects.toHaveProperty('message', 'No user was found for the given id');
+  });
+
+  it('should update user avatar path if user already have an avatar registered', async () => {
+    const userParams = usersSeeds[0];
+
+    const newUser = await userRepository.create(userParams);
+
+    newUser.avatar = 'myImage.jpeg';
+
+    await userRepository.save(newUser);
+
+    const newAvatar = 'my_new_avatar';
+
+    await expect(
+      updateUserAvatarUseCase.execute({
+        user_id: newUser.id,
+        user_avatar: newAvatar,
+      }),
+    ).resolves.toHaveProperty('avatar', newAvatar);
+
+    await expect(userRepository.findById(newUser.id)).resolves.toHaveProperty(
+      'avatar',
+      newAvatar,
+    );
   });
 });
