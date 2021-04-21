@@ -25,6 +25,7 @@ export class UpdateUserAvatarController {
 
       throw new AppError(
         err.message || 'error occurred while trying to update user avatar',
+        err.statusCode ? err.statusCode : 500,
       );
     }
   }
