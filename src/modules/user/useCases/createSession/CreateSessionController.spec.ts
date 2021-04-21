@@ -1,10 +1,11 @@
 import 'reflect-metadata';
-
+import { verify } from 'jsonwebtoken';
 import request from 'supertest';
 import { app } from '@shared/app';
 import { Connection } from 'typeorm';
 import { getTypeormConnection } from '@shared/database';
 import { createDummyUser } from '@modules/user/seeds';
+import auth from '@config/auth';
 import usersSeeds from '../../seeds/users.json';
 
 describe('Create Session Endpoint', () => {
@@ -107,6 +108,29 @@ describe('Create Session Endpoint', () => {
       .expect(res => {
         expect(res.status).toBe(403);
         expect(res.body.message).toContain('wrong email/password combination');
+      });
+  });
+
+  it('should ensure jwt token is returned in the response', async () => {
+    const userParams = usersSeeds[1];
+
+    const { secret } = auth.jwt;
+
+    await createDummyUser(connection, userParams);
+
+    await request(app)
+      .post('/session/signin')
+      .send({
+        email: userParams.email,
+        password: userParams.password,
+      })
+      .expect(res => {
+        expect(res.status).toBe(201);
+        expect(res.body).toHaveProperty('token');
+
+        const { sub } = verify(res.body.token, secret) as any;
+
+        expect(sub).toBe(res.body.user.id);
       });
   });
 });
