@@ -14,13 +14,13 @@ export class CreateSessionController {
     const createSessionUseCase = container.resolve(CreateSessionUseCase);
 
     const {
-      user: { password: removed, ...user },
+      user: { password: removed, admin: removed1, ...user },
       token,
     } = await createSessionUseCase.execute({
       email,
       password,
     });
 
-    return response.json({ user, token });
+    return response.status(201).json({ user, token });
   }
 }

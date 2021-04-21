@@ -133,4 +133,28 @@ describe('Create Session Endpoint', () => {
         expect(sub).toBe(res.body.user.id);
       });
   });
+
+  it('should user data is returned without sensitive information', async () => {
+    const userParams = usersSeeds[2];
+
+    await createDummyUser(connection, userParams);
+
+    await request(app)
+      .post('/session/signin')
+      .send({
+        email: userParams.email,
+        password: userParams.password,
+      })
+      .expect(res => {
+        expect(res.status).toBe(201);
+
+        expect(res.body).toHaveProperty('user');
+
+        expect(res.body.user.name).toBe(userParams.name);
+        expect(res.body.user.email).toBe(userParams.email);
+
+        expect(res.body.user).not.toHaveProperty('password');
+        expect(res.body.user).not.toHaveProperty('admin');
+      });
+  });
 });
