@@ -1,3 +1,4 @@
+import { UserMap } from '@modules/user/mapper/UserMap';
 import { dataValidation } from '@shared/utils/dataValidation';
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
@@ -10,12 +11,10 @@ export class RegisterUserController {
 
     const registerUserUseCase = container.resolve(RegisterUserUseCase);
 
-    const {
-      password: removed,
-      admin: removed1,
-      ...newUser
-    } = await registerUserUseCase.execute(createUserDTO);
+    const newUser = await registerUserUseCase.execute(createUserDTO);
 
-    return response.status(201).json(newUser);
+    const userResp = UserMap.toUserResponseDTO(newUser);
+
+    return response.status(201).json(userResp);
   }
 }

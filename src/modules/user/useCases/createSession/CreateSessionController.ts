@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import { dataValidation } from '@shared/utils/dataValidation';
+import { UserMap } from '@modules/user/mapper/UserMap';
 import { CreateSessionUseCase } from './CreateSessionUseCase';
 import { CreateSessionDTO } from '../../dtos/CreateSessionDTO';
 
@@ -13,14 +14,13 @@ export class CreateSessionController {
 
     const createSessionUseCase = container.resolve(CreateSessionUseCase);
 
-    const {
-      user: { password: removed, admin: removed1, ...user },
-      token,
-    } = await createSessionUseCase.execute({
+    const { user, token } = await createSessionUseCase.execute({
       email,
       password,
     });
 
-    return response.status(201).json({ user, token });
+    const userResp = UserMap.toUserResponseDTO(user);
+
+    return response.status(201).json({ user: userResp, token });
   }
 }

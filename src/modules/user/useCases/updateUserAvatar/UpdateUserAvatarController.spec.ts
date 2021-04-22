@@ -82,6 +82,9 @@ describe('Register User Endpoint', () => {
 
     expect(res.body.avatar).toMatch(/avatar_image.png$/);
 
+    expect(res.body).not.toHaveProperty('password');
+    expect(res.body).not.toHaveProperty('admin');
+
     await expect(
       fs.promises.stat(`tmp/avatar/${res.body.avatar}`),
     ).resolves.toBeTruthy();
