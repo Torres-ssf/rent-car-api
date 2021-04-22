@@ -3,7 +3,7 @@ import { verify } from 'jsonwebtoken';
 import { AppError } from '@shared/errors/AppError';
 import auth from '@config/auth';
 import { User } from '../../models/User';
-import { FakeHashProvider } from '../../providers/HashProvider/fakes/FakeHashProvider';
+import { FakeHashProvider } from '../../../../shared/container/providers/HashProvider/fakes/FakeHashProvider';
 import { FakeUserRepository } from '../../repositories/fakes/FakeUserRepository';
 import { CreateSessionUseCase } from './CreateSessionUseCase';
 import usersSeed from '../../seeds/users.json';
@@ -26,7 +26,7 @@ describe('CreateSessionUseCase', () => {
     );
   });
 
-  it('should return an error if no user is found for the given password', async () => {
+  it('should return an error if no user is found for the given email', async () => {
     const user = usersSeed[0];
 
     await expect(

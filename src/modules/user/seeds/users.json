@@ -1,62 +1,44 @@
 [
   {
-    "id": "297ba55b-26f4-4b55-9c68-c38b24baa6a8",
     "name": "Sergio",
     "email": "sergio@email.com",
     "password": "1234ASDcx",
-    "image": null,
     "admin": false,
-    "created_at": "2021-02-10T12:27:56.701Z",
-    "updated_at": "2021-02-10T12:27:56.701Z"
+    "driver_license": "33d51169-45b5-4600-83d1-67f2d0644081"
   },
   {
-    "id": "1462bb59-9a16-4963-92e8-49c8f0a85f6d",
     "name": "Paul",
     "email": "paul@email.com",
     "password": "1234ASDcx",
-    "image": null,
     "admin": false,
-    "created_at": "2021-02-02T12:27:56.701Z",
-    "updated_at": "2021-02-02T12:27:56.701Z"
+    "driver_license": "6d750cc1-6849-4baf-9ec7-35e970b24a23"
   },
   {
-    "id": "07224cb6-61b5-4408-b35d-0ab906104af3",
-    "name": "David",
-    "email": "david@email.com",
+    "name": "Vilela",
+    "email": "vilela@email.com",
     "password": "1234ASDcx",
-    "image": null,
     "admin": false,
-    "created_at": "2021-02-03T12:27:56.701Z",
-    "updated_at": "2021-02-03T12:27:56.701Z"
+    "driver_license": "de4d6325-80d5-42f2-846f-1a858436a17d"
   },
   {
-    "id": "82841f9c-1d86-4a84-a9ab-ecd760857802",
     "name": "Peter",
     "email": "peter@email.com",
     "password": "1234ASDcx",
-    "image": null,
     "admin": false,
-    "created_at": "2021-02-04T12:27:56.701Z",
-    "updated_at": "2021-02-04T12:27:56.701Z"
+    "driver_license": "0c1bb89d-966e-46e5-bc48-75ca92968a8d"
   },
   {
-    "id": "e5d23434-18e8-41c8-8427-3477056e8b38",
     "name": "Mark",
     "email": "mark@email.com",
     "password": "1234ASDcx",
-    "image": null,
     "admin": false,
-    "created_at": "2021-02-05T12:27:56.701Z",
-    "updated_at": "2021-02-05T12:27:56.701Z"
+    "driver_license": "b7b2340e-e01a-48c0-a8f1-49d8a63ecdc8"
   },
   {
-    "id": "618c5526-8fa8-4812-9a25-22047618a3fa",
     "name": "Juan",
     "email": "juan@email.com",
     "password": "1234ASDcx",
-    "image": null,
     "admin": false,
-    "created_at": "2021-02-06T12:27:56.701Z",
-    "updated_at": "2021-02-06T12:27:56.701Z"
+    "driver_license": "8a6ef4af-0170-4e7e-9247-f295a8fddf8a"
   }
 ]

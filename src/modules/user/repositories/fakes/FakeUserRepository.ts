@@ -13,8 +13,6 @@ export class FakeUserRepository implements IUserRepository {
   }: CreateUserDTO): Promise<User> {
     const newUser = new User();
 
-    const dateNow = new Date();
-
     Object.assign(newUser, {
       name,
       email,
@@ -22,8 +20,6 @@ export class FakeUserRepository implements IUserRepository {
       avatar: null,
       admin: false,
       driver_license,
-      created_at: dateNow,
-      updated_at: dateNow,
     });
 
     this.users.push(newUser);

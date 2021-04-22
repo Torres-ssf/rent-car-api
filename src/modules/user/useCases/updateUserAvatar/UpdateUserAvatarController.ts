@@ -1,3 +1,4 @@
+import { UserMap } from '@modules/user/mapper/UserMap';
 import { AppError } from '@shared/errors/AppError';
 import { deleteMultipleFiles } from '@shared/utils/deleteMultipleFiles';
 import { Request, Response } from 'express';
@@ -19,13 +20,13 @@ export class UpdateUserAvatarController {
         user_avatar: avatar_file,
       });
 
-      return response.json(updatedUser);
+      const userResp = UserMap.toUserResponseDTO(updatedUser);
+
+      return response.json(userResp);
     } catch (err) {
       await deleteMultipleFiles([`./tmp/avatar/${avatar_file}`]);
 
-      throw new AppError(
-        err.message || 'error occurred while trying to update user avatar',
-      );
+      throw new AppError(err.message, err.statusCode);
     }
   }
 }

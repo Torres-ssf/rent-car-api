@@ -1,4 +1,3 @@
-import { TypeormSpecification } from '@modules/specification/entities/TypeormSpecification';
 import { Specification } from '@modules/specification/models/Specification';
 import { container } from 'tsyringe';
 import { Connection } from 'typeorm';

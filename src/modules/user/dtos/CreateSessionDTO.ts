@@ -3,7 +3,9 @@ import { IsEmail, Matches, MaxLength, MinLength } from 'class-validator';
 
 export class CreateSessionDTO {
   @IsEmail()
-  @Transform(({ value }) => value.trim().toLowerCase())
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.trim().toLowerCase() : value,
+  )
   email: string;
 
   @MinLength(8)
