@@ -85,5 +85,43 @@ describe('Register User Endpoint', () => {
     await expect(
       fs.promises.stat(`tmp/avatar/${res.body.avatar}`),
     ).resolves.toBeTruthy();
+
+    await fs.promises.unlink(`tmp/avatar/${res.body.avatar}`);
+  });
+
+  it('should ensure avatar file is updated for user that already had an avatar saved before', async () => {
+    const avatarImage1 = fs.createReadStream(
+      'src/shared/asset/avatar_image.png',
+    );
+
+    const avatarImage2 = fs.createReadStream(
+      'src/shared/asset/avatar_image2.png',
+    );
+
+    const res1 = await request(app)
+      .patch('/user/avatar')
+      .set('Authorization', `Bearer ${userToken}`)
+      .attach('avatar', avatarImage1);
+
+    await expect(
+      fs.promises.stat(`tmp/avatar/${res1.body.avatar}`),
+    ).resolves.toBeTruthy();
+
+    const res2 = await request(app)
+      .patch('/user/avatar')
+      .set('Authorization', `Bearer ${userToken}`)
+      .attach('avatar', avatarImage2);
+
+    expect(res1.body.avatar).not.toMatch(res2.body.avatar);
+
+    await expect(
+      fs.promises.stat(`tmp/avatar/${res2.body.avatar}`),
+    ).resolves.toBeTruthy();
+
+    await expect(
+      fs.promises.stat(`tmp/avatar/${res1.body.avatar}`),
+    ).rejects.toBeTruthy();
+
+    await fs.promises.unlink(`tmp/avatar/${res2.body.avatar}`);
   });
 });
