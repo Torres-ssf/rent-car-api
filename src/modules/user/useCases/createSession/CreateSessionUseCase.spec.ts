@@ -26,7 +26,7 @@ describe('CreateSessionUseCase', () => {
     );
   });
 
-  it('should return an error if no user is found for the given password', async () => {
+  it('should return an error if no user is found for the given email', async () => {
     const user = usersSeed[0];
 
     await expect(
