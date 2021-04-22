@@ -23,10 +23,7 @@ export class UpdateUserAvatarController {
     } catch (err) {
       await deleteMultipleFiles([`./tmp/avatar/${avatar_file}`]);
 
-      throw new AppError(
-        err.message || 'error occurred while trying to update user avatar',
-        err.statusCode ? err.statusCode : 500,
-      );
+      throw new AppError(err.message, err.statusCode);
     }
   }
 }
