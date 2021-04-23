@@ -33,7 +33,7 @@ export class CreateRentalUseCase {
     const user = await this.userRepository.findById(user_id);
 
     if (!user) {
-      throw new AppError('No user was found for the given id');
+      throw new AppError('No user was found for the given id', 401);
     }
 
     const openRentalForUser = await this.rentalRepository.findOpenRentalForUser(
