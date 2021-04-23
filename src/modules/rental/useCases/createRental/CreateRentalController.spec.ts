@@ -142,12 +142,28 @@ describe('Create Rental', () => {
       .post(`/rental/${newCarId}`)
       .set('Authorization', `Bearer ${userToken}`)
       .send({
-        start_date: '2021-02-11',
+        start_date: '2021-02-10',
         expected_return_date: '2021-02-16',
       })
       .expect(res => {
         expect(400);
         expect(res.body.message).toContain('Car is not available');
+      });
+  });
+
+  it('should ensure start date cannot be in the past', async () => {
+    global.Date.now = jest.fn(() => new Date(2021, 1, 10).getTime());
+
+    await request(app)
+      .post(`/rental/${carId}`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({
+        start_date: '2021-02-09',
+        expected_return_date: '2021-02-16',
+      })
+      .expect(res => {
+        expect(400);
+        expect(res.body.message).toContain('Start date cannot be a past date');
       });
   });
 });
