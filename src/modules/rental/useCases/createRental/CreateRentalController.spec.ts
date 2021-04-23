@@ -10,9 +10,16 @@ import { v4 } from 'uuid';
 import { getUserAuthToken } from '@modules/user/seeds';
 import { createDummyCar } from '@modules/car/seeds';
 import { createDummyCategory } from '@modules/category/seeds';
+import { IDateProvider } from '@shared/container/providers/DateProvider/models/IDateProvider';
+import { container } from 'tsyringe';
+import { parseISO } from 'date-fns';
+import { Status } from '@modules/rental/enums/Status';
+import { randomizeANumber } from '@shared/utils/randomizeANumber';
 
 describe('Create Rental', () => {
   let connection: Connection;
+
+  let dateProvider: IDateProvider;
 
   let userToken: string;
 
@@ -24,6 +31,8 @@ describe('Create Rental', () => {
     connection = await getTypeormConnection();
 
     await connection.runMigrations();
+
+    dateProvider = container.resolve<IDateProvider>('DateProvider');
 
     userToken = await getUserAuthToken(connection);
 
@@ -66,7 +75,7 @@ describe('Create Rental', () => {
         expected_return_date: 45,
       })
       .expect(res => {
-        expect(400);
+        expect(res.status).toBe(400);
         expect(res.body.message).toContain('start_date must be a date string');
         expect(res.body.message).toContain(
           'expected_return_date must be a date string',
@@ -81,7 +90,7 @@ describe('Create Rental', () => {
         expected_return_date: '',
       })
       .expect(res => {
-        expect(400);
+        expect(res.status).toBe(400);
         expect(res.body.message).toContain('start_date must be a date string');
         expect(res.body.message).toContain(
           'expected_return_date must be a date string',
@@ -105,7 +114,7 @@ describe('Create Rental', () => {
         expected_return_date: '2021-04-07',
       })
       .expect(res => {
-        expect(401);
+        expect(res.status).toBe(401);
         expect(res.body.message).toContain(
           'No user was found for the given id',
         );
@@ -121,7 +130,7 @@ describe('Create Rental', () => {
         expected_return_date: '2021-04-07',
       })
       .expect(res => {
-        expect(400);
+        expect(res.status).toBe(400);
         expect(res.body.message).toContain('No car found for the given id');
       });
   });
@@ -146,7 +155,7 @@ describe('Create Rental', () => {
         expected_return_date: '2021-02-16',
       })
       .expect(res => {
-        expect(400);
+        expect(res.status).toBe(400);
         expect(res.body.message).toContain('Car is not available');
       });
   });
@@ -162,7 +171,7 @@ describe('Create Rental', () => {
         expected_return_date: '2021-02-16',
       })
       .expect(res => {
-        expect(400);
+        expect(res.status).toBe(400);
         expect(res.body.message).toContain('Start date cannot be a past date');
       });
   });
@@ -178,7 +187,7 @@ describe('Create Rental', () => {
         expected_return_date: '2021-02-16',
       })
       .expect(res => {
-        expect(400);
+        expect(res.status).toBe(400);
         expect(res.body.message).toContain(
           'Start date cannot be a future date',
         );
@@ -196,12 +205,12 @@ describe('Create Rental', () => {
         expected_return_date: '2021-02-09',
       })
       .expect(res => {
-        expect(400);
+        expect(res.status).toBe(400);
         expect(res.body.message).toContain('Return date cannot be a past date');
       });
   });
 
-  it('should ensure start_date and expected_return_date are not in same day ', async () => {
+  it('should ensure start_date and expected_return_date are not in same day', async () => {
     global.Date.now = jest.fn(() => new Date(2021, 1, 10).getTime());
 
     await request(app)
@@ -212,10 +221,64 @@ describe('Create Rental', () => {
         expected_return_date: '2021-02-10',
       })
       .expect(res => {
-        expect(400);
+        expect(res.status).toBe(400);
         expect(res.body.message).toContain(
           'Return date cannot be at the same day as the start date',
         );
       });
+  });
+
+  it('should ensure rental can be created with given params', async () => {
+    const startDate = '2021-02-10';
+
+    const endDate = '2021-02-14';
+
+    const newCarId = v4();
+
+    const carDailyValue = 250;
+
+    const carDailyFine = 50;
+
+    await connection.query(
+      `INSERT INTO
+        car( id, model, brand, max_speed, horse_power,
+          zero_to_one_hundred, license_plate, daily_value, fine_amount,
+          available, category_id )
+        VALUES('${newCarId}', 'A8', 'Audi', 350, 335, 6.8, '${v4()}', ${carDailyValue},
+          ${carDailyFine}, true, '${categoryId}') `,
+    );
+
+    global.Date.now = jest.fn(() => new Date(2021, 1, 10).getTime());
+
+    await request(app)
+      .post(`/rental/${newCarId}`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({
+        start_date: startDate,
+        expected_return_date: endDate,
+      })
+      .expect(res => {
+        expect(res.status).toBe(201);
+        expect(
+          dateProvider.isSameDay(
+            parseISO(res.body.start_date),
+            parseISO(startDate),
+          ),
+        ).toBeTruthy();
+        expect(
+          dateProvider.isSameDay(
+            parseISO(res.body.expected_return_date),
+            parseISO(endDate),
+          ),
+        ).toBeTruthy();
+        expect(res.body.car_id).toBe(newCarId);
+        expect(res.body.car_daily_value).toBe(carDailyValue);
+        expect(res.body.car_daily_fine).toBe(carDailyFine);
+        expect(res.body.status).toBe(Status.Open);
+        expect(res.body.returned_date).toBe(null);
+        expect(res.body.total).toBe(null);
+      });
+
+    await connection.query(`DELETE FROM rental`);
   });
 });
