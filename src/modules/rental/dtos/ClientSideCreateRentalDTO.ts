@@ -9,11 +9,11 @@ export class ClientSideCreateRentalDTO {
   @IsUUID('4')
   car_id: string;
 
+  @IsDate({ message: 'start_date must be a date string' })
   @Transform(({ value }) => parseISO(value))
-  @IsDate()
   start_date: Date;
 
+  @IsDate({ message: 'expected_return_date must be a date string' })
   @Transform(({ value }) => parseISO(value))
-  @IsDate()
   expected_return_date: Date;
 }
