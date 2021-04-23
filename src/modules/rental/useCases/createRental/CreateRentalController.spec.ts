@@ -151,7 +151,7 @@ describe('Create Rental', () => {
       });
   });
 
-  it('should ensure start date cannot be in the past', async () => {
+  it('should ensure start_date cannot be in the past', async () => {
     global.Date.now = jest.fn(() => new Date(2021, 1, 10).getTime());
 
     await request(app)
@@ -167,7 +167,7 @@ describe('Create Rental', () => {
       });
   });
 
-  it('should ensure start date cannot be in the future', async () => {
+  it('should ensure start_date cannot be in the future', async () => {
     global.Date.now = jest.fn(() => new Date(2021, 1, 10).getTime());
 
     await request(app)
@@ -182,6 +182,22 @@ describe('Create Rental', () => {
         expect(res.body.message).toContain(
           'Start date cannot be a future date',
         );
+      });
+  });
+
+  it('should ensure expected_return_date cannot be in the past', async () => {
+    global.Date.now = jest.fn(() => new Date(2021, 1, 10).getTime());
+
+    await request(app)
+      .post(`/rental/${carId}`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({
+        start_date: '2021-02-10',
+        expected_return_date: '2021-02-09',
+      })
+      .expect(res => {
+        expect(400);
+        expect(res.body.message).toContain('Return date cannot be a past date');
       });
   });
 });
