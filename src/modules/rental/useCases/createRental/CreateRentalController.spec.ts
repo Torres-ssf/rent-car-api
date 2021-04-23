@@ -281,4 +281,40 @@ describe('Create Rental', () => {
 
     await connection.query(`DELETE FROM rental`);
   });
+
+  it('should ensure rental total value is properly calculated by the number of days', async () => {
+    const randomNumberOfDays = randomizeANumber(1, 6);
+
+    const newCarId = v4();
+
+    const carDailyValue = randomizeANumber(125, 250);
+
+    const carDailyFine = randomizeANumber(25, 50);
+
+    await connection.query(
+      `INSERT INTO
+        car( id, model, brand, max_speed, horse_power,
+          zero_to_one_hundred, license_plate, daily_value, fine_amount,
+          available, category_id )
+        VALUES('${newCarId}', 'A8', 'Audi', 350, 335, 6.8, '${v4()}', ${carDailyValue},
+          ${carDailyFine}, true, '${categoryId}') `,
+    );
+
+    global.Date.now = jest.fn(() => new Date(2021, 1, 10).getTime());
+
+    await request(app)
+      .post(`/rental/${newCarId}`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({
+        start_date: '2021-02-10',
+        expected_return_date: `2021-02-1${randomNumberOfDays}`,
+      })
+      .expect(res => {
+        expect(res.status).toBe(201);
+        expect(res.body.car_id).toBe(newCarId);
+        expect(res.body.estimated_total).toBe(
+          carDailyValue * randomNumberOfDays,
+        );
+      });
+  });
 });
