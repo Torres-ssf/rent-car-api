@@ -51,7 +51,7 @@ export class CreateRentalUseCase {
     }
 
     if (!carExists.available) {
-      throw new AppError('Given car is not available');
+      throw new AppError('Car is not available');
     }
 
     if (this.dateProvider.isBefore(start_date, Date.now())) {
@@ -59,7 +59,7 @@ export class CreateRentalUseCase {
     }
 
     if (!this.dateProvider.isSameDay(start_date, Date.now())) {
-      throw new AppError('Start date cannot a future date');
+      throw new AppError('Start date cannot be a future date');
     }
 
     if (this.dateProvider.isBefore(expected_return_date, Date.now())) {

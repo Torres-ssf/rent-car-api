@@ -1,7 +1,6 @@
 import 'reflect-metadata';
 
 import jwt from 'jsonwebtoken';
-import fs from 'fs';
 import request from 'supertest';
 import { app } from '@shared/app';
 import { Connection } from 'typeorm';
@@ -9,11 +8,17 @@ import { getTypeormConnection } from '@shared/database';
 import auth from '@config/auth';
 import { v4 } from 'uuid';
 import { getUserAuthToken } from '@modules/user/seeds';
+import { createDummyCar } from '@modules/car/seeds';
+import { createDummyCategory } from '@modules/category/seeds';
 
 describe('Create Rental', () => {
   let connection: Connection;
 
   let userToken: string;
+
+  let categoryId: string;
+
+  let carId: string;
 
   beforeAll(async () => {
     connection = await getTypeormConnection();
@@ -21,6 +26,10 @@ describe('Create Rental', () => {
     await connection.runMigrations();
 
     userToken = await getUserAuthToken(connection);
+
+    categoryId = await createDummyCategory(connection);
+
+    carId = await createDummyCar(connection, categoryId);
   });
 
   afterAll(async () => {
@@ -114,6 +123,31 @@ describe('Create Rental', () => {
       .expect(res => {
         expect(400);
         expect(res.body.message).toContain('No car found for the given id');
+      });
+  });
+
+  it('should ensure car is available for rental', async () => {
+    const newCarId = v4();
+
+    await connection.query(
+      `INSERT INTO car( id, model, brand, max_speed, horse_power,
+        zero_to_one_hundred, license_plate, daily_value, fine_amount,
+        available, category_id )
+        VALUES('${newCarId}', 'A8', 'Audi', 350, 335, 6.8, '${v4()}', 150, 50, false, '${categoryId}') `,
+    );
+
+    global.Date.now = jest.fn(() => new Date(2021, 1, 10).getTime());
+
+    await request(app)
+      .post(`/rental/${newCarId}`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({
+        start_date: '2021-02-11',
+        expected_return_date: '2021-02-16',
+      })
+      .expect(res => {
+        expect(400);
+        expect(res.body.message).toContain('Car is not available');
       });
   });
 });
