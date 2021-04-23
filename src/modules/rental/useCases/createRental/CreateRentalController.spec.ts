@@ -79,4 +79,27 @@ describe('Create Rental', () => {
         );
       });
   });
+
+  it('should ensure user is found for the given id', async () => {
+    const { secret, expiresIn } = auth.jwt;
+
+    const token = jwt.sign({}, secret, {
+      subject: v4(),
+      expiresIn,
+    });
+
+    await request(app)
+      .post(`/rental/${v4()}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        start_date: '2021-04-04',
+        expected_return_date: '2021-04-07',
+      })
+      .expect(res => {
+        expect(401);
+        expect(res.body.message).toContain(
+          'No user was found for the given id',
+        );
+      });
+  });
 });
