@@ -121,6 +121,60 @@ describe('Create Rental', () => {
       });
   });
 
+  it('should ensure user does not have another open rental', async () => {
+    const newCarId = v4();
+
+    const userID = v4();
+
+    const { secret, expiresIn } = auth.jwt;
+
+    const token = jwt.sign({}, secret, {
+      subject: userID,
+      expiresIn,
+    });
+
+    await connection.query(
+      `INSERT INTO
+        "user"(id, name, email, password, avatar, admin,
+        created_at, updated_at, driver_license )
+      VALUES('${userID}', 'John Doe', '${v4()}@email.com', '1231234234',
+        NULL, false, 'now()', 'now()', '${v4()}') `,
+    );
+
+    await connection.query(
+      `INSERT INTO
+        car( id, model, brand, max_speed, horse_power,
+          zero_to_one_hundred, license_plate, daily_value, fine_amount,
+          available, category_id )
+        VALUES('${newCarId}', 'A8', 'Audi', 350, 335, 6.8, '${v4()}', 250,
+         50, true, '${categoryId}') `,
+    );
+
+    await connection.query(
+      `INSERT INTO
+        rental( id, car_id, user_id, start_date, expected_return_date,
+          status, estimated_total, car_daily_value, car_daily_fine )
+        VALUES('${v4()}', '${newCarId}', '${userID}', '2021-02-10', '2021-02-14',
+          'OPEN', 1000, 250, 50)`,
+    );
+
+    global.Date.now = jest.fn(() => new Date(2021, 1, 10).getTime());
+
+    await request(app)
+      .post(`/rental/${carId}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        start_date: '2021-02-10',
+        expected_return_date: '2021-02-14',
+      })
+      .expect(res => {
+        expect(res.status).toBe(400);
+        expect(res.body.message).toBe(
+          'There is an open rental for the given user',
+        );
+      });
+  });
+
   it('should ensure car is found for the given id', async () => {
     await request(app)
       .post(`/rental/${v4()}`)
