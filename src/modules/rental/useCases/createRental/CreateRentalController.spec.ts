@@ -102,4 +102,18 @@ describe('Create Rental', () => {
         );
       });
   });
+
+  it('should ensure car is found for the given id', async () => {
+    await request(app)
+      .post(`/rental/${v4()}`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({
+        start_date: '2021-04-04',
+        expected_return_date: '2021-04-07',
+      })
+      .expect(res => {
+        expect(400);
+        expect(res.body.message).toContain('No car found for the given id');
+      });
+  });
 });
