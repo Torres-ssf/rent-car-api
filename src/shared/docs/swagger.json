@@ -502,6 +502,156 @@
         }
       }
     },
+    "/rental/{car_id}": {
+      "post": {
+        "tags": ["Rental"],
+        "summary": "Create rental data",
+        "description": "Create rental data into the serve. In other words, this endpoint is used for users to rent cars.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "car_id",
+            "in": "path",
+            "description": "Id from the car to be rented",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Body with params to create rental data. All 2 params: start_date, and expected_return_date are required.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "start_date": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2021-04-17T13:46:15.615Z"
+                  },
+                  "expected_return_date": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2021-04-20T13:46:15.615Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The created rental data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Rental"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error while creating new rental data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/definitions/Error"
+                    },
+                    {
+                      "$ref": "#/definitions/ErrorParam"
+                    }
+                  ]
+                },
+                "examples": {
+                  "openRental": {
+                    "value": {
+                      "message": "There is an open rental for the given user",
+                      "error": "Bad Request"
+                    },
+                    "summary": "User has an open rent on going"
+                  },
+                  "noCarFound": {
+                    "value": {
+                      "message": "No car found for the given id",
+                      "error": "Bad Request"
+                    },
+                    "summary": "No car found for the id"
+                  },
+                  "carNotAvailable": {
+                    "value": {
+                      "message": "Car is not available",
+                      "error": "Bad Request"
+                    },
+                    "summary": "Car is not available"
+                  },
+                  "startDateOnPast": {
+                    "value": {
+                      "message": "Start date cannot be a past date",
+                      "error": "Bad Request"
+                    },
+                    "summary": "Start date cannot be a past date"
+                  },
+                  "startDateOnFuture": {
+                    "value": {
+                      "message": "Start date cannot be a future date",
+                      "error": "Bad Request"
+                    },
+                    "summary": "Start date cannot be a future date"
+                  },
+                  "returnDateOnFuture": {
+                    "value": {
+                      "message": "Return date cannot be a past date",
+                      "error": "Bad Request"
+                    },
+                    "summary": "Return date cannot be a past date"
+                  },
+                  "datesSameDay": {
+                    "value": {
+                      "message": "Return date cannot be at the same day as the start date",
+                      "error": "Bad Request"
+                    },
+                    "summary": "Dates cannot be at the same day"
+                  },
+                  "paramError": {
+                    "value": {
+                      "message": [
+                        "start_date must be a date string",
+                        "expected_return_date must be a date string"
+                      ],
+                      "error": "Bad Request"
+                    },
+                    "summary": "Param validation error"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "allOf": [
+              {
+                "$ref": "#/components/responses/Unauthorized"
+              },
+              {
+                "$ref": "#/components/responses/UnauthorizedUser"
+              }
+            ]
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
     "/category": {
       "post": {
         "tags": ["Category"],
@@ -860,7 +1010,7 @@
             "type": "string",
             "format": "date",
             "nullable": true,
-            "example": "2021-04-17T13:46:15.615Z"
+            "example": null
           },
           "status": {
             "type": "string",
@@ -886,7 +1036,7 @@
             "type": "number",
             "format": "float",
             "nullable": true,
-            "example": 1500.50
+            "example": null
           },
           "created_at": {
             "type": "string",
@@ -1071,7 +1221,6 @@
         }
       },
       "UnauthorizedUser": {
-        "description": "Unauthorized, no user found",
         "content": {
           "application/json": {
             "schema": {
