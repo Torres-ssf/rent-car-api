@@ -168,7 +168,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Session created. The receiving data has information about the logged user and the authentication token",
             "content": {
               "application/json": {
@@ -200,6 +200,301 @@
                 }
               }
             }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/car": {
+      "post": {
+        "tags": ["Car"],
+        "summary": "Create new car",
+        "description": "Create a new car into the server",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "Body with params to create user object. All 4 params: name, email, password, and driver_license are required",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/requestBodies/createCarBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The created car",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Car"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error while creating new car",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/definitions/Error"
+                    },
+                    {
+                      "$ref": "#/definitions/ErrorParam"
+                    }
+                  ]
+                },
+                "examples": {
+                  "existentLicense": {
+                    "value": {
+                      "message": "License plate already in use",
+                      "error": "Bad Request"
+                    },
+                    "summary": "License plate already exists"
+                  },
+                  "nonexistentCategory": {
+                    "value": {
+                      "message": "Category does not exists",
+                      "error": "Bad Request"
+                    },
+                    "summary": "Category does not exists"
+                  },
+                  "paramError": {
+                    "value": {
+                      "message": [
+                        "model should not be empty",
+                        "brand should not be empty",
+                        "max_speed must be a number conforming to the specified constraints",
+                        "max_speed must be a positive number",
+                        "horse_power must be a number conforming to the specified constraints",
+                        "horse_power must be a positive number",
+                        "zero_to_one_hundred must be a number conforming to the specified constraints",
+                        "zero_to_one_hundred must be a positive number",
+                        "daily_value must be a number conforming to the specified constraints",
+                        "daily_value must be a positive number",
+                        "license_plate should not be empty",
+                        "fine_amount must be a number conforming to the specified constraints",
+                        "fine_amount must be a positive number",
+                        "category_id must be a UUID"
+                      ],
+                      "error": "Bad Request"
+                    },
+                    "summary": "Param validation error"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/car/available": {
+      "get": {
+        "tags": ["Car"],
+        "summary": "List available cars",
+        "description": "List all available car saved into the database. This request accepts 3 optional query params to fetch cars based at model, brand, and category id.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "model",
+            "in": "query",
+            "description": "Optional param for car model",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "brand",
+            "in": "query",
+            "description": "Optional param for car brand",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category_id",
+            "in": "query",
+            "description": "Optional param for category id",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List all available cars",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Car"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/car/{id}/add-specification": {
+      "post": {
+        "tags": ["Car"],
+        "summary": "Add specification to car",
+        "description": "Add an existent specification to an existent car",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Car id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Body with param to add specifications to car. The specifications_ids array is required",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "specifications_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uuid"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The car with the added specification(s)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Car"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "specifications": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Specification"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error while adding specification to car",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/definitions/Error"
+                    },
+                    {
+                      "$ref": "#/definitions/ErrorParam"
+                    }
+                  ]
+                },
+                "examples": {
+                  "nonexistentCar": {
+                    "value": {
+                      "message": "No car found for the given car id",
+                      "error": "Bad Request"
+                    },
+                    "summary": "No car found for the given car id"
+                  },
+                  "specNotFound": {
+                    "value": {
+                      "message": "No specifications were found for the given ids",
+                      "error": "Bad Request"
+                    },
+                    "summary": "No specifications found"
+                  },
+                  "oneOrMoreSpecNotFound": {
+                    "value": {
+                      "message": "One or more specifications were not found for the given ids",
+                      "error": "Bad Request"
+                    },
+                    "summary": "One or more specifications were not found"
+                  },
+                  "carAlreadyHaveSpec": {
+                    "value": {
+                      "message": "Car already have specification ${specification.name}",
+                      "error": "Bad Request"
+                    },
+                    "summary": "Car already have specification"
+                  },
+                  "paramError": {
+                    "value": {
+                      "message": [
+                        "each value in specifications_ids must be a UUID"
+                      ],
+                      "error": "Bad Request"
+                    },
+                    "summary": "Param validation error"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
           },
           "500": {
             "$ref": "#/components/responses/InternalServerError"
@@ -478,6 +773,133 @@
           }
         }
       },
+      "Car": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "model": {
+            "type": "string",
+            "example": "Enzo"
+          },
+          "brand": {
+            "type": "string",
+            "example": "Ferrari"
+          },
+          "max_speed": {
+            "type": "number",
+            "format": "float",
+            "example": 360.5
+          },
+          "horse_power": {
+            "type": "number",
+            "format": "float",
+            "example": 780
+          },
+          "zero_to_one_hundred": {
+            "type": "number",
+            "format": "float",
+            "example": 3.4
+          },
+          "license_plate": {
+            "type": "string",
+            "example": "MSH-3746"
+          },
+          "daily_value": {
+            "type": "number",
+            "format": "float",
+            "example": 250
+          },
+          "fine_amount": {
+            "type": "number",
+            "format": "float",
+            "example": 50
+          },
+          "available": {
+            "type": "boolean"
+          },
+          "category_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date",
+            "example": "2021-04-17T13:46:15.615Z"
+          }
+        }
+      },
+      "Rental": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "car_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "example": "2021-04-17T13:46:15.615Z"
+          },
+          "expected_return_date": {
+            "type": "string",
+            "format": "date",
+            "example": "2021-04-17T13:46:15.615Z"
+          },
+          "returned_date": {
+            "type": "string",
+            "format": "date",
+            "nullable": true,
+            "example": "2021-04-17T13:46:15.615Z"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["OPEN", "CLOSE"],
+            "example": "OPEN"
+          },
+          "car_daily_value": {
+            "type": "number",
+            "format": "float",
+            "example": 250
+          },
+          "car_daily_fine": {
+            "type": "number",
+            "format": "float",
+            "example": 50
+          },
+          "estimated_total": {
+            "type": "number",
+            "format": "float",
+            "example": 1100.50
+          },
+          "total": {
+            "type": "number",
+            "format": "float",
+            "nullable": true,
+            "example": 1500.50
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date",
+            "example": "2021-04-17T13:46:15.615Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date",
+            "example": "2021-04-17T13:46:15.615Z"
+          }
+        }
+      },
       "Category": {
         "type": "object",
         "properties": {
@@ -557,6 +979,52 @@
           "driver_license": {
             "type": "string",
             "example": "312412341"
+          }
+        }
+      },
+      "createCarBody": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "example": "Enzo"
+          },
+          "brand": {
+            "type": "string",
+            "example": "Ferrari"
+          },
+          "license_plate": {
+            "type": "string",
+            "example": "MSH-3746"
+          },
+          "max_speed": {
+            "type": "number",
+            "format": "float",
+            "example": 360.5
+          },
+          "horse_power": {
+            "type": "number",
+            "format": "float",
+            "example": 780
+          },
+          "zero_to_one_hundred": {
+            "type": "number",
+            "format": "float",
+            "example": 3.4
+          },
+          "daily_value": {
+            "type": "number",
+            "format": "float",
+            "example": 250
+          },
+          "fine_amount": {
+            "type": "number",
+            "format": "float",
+            "example": 50
+          },
+          "category_id": {
+            "type": "string",
+            "format": "uuid"
           }
         }
       }
