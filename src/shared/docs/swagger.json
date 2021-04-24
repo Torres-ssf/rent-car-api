@@ -111,6 +111,126 @@
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/specification": {
+      "post": {
+        "tags": ["Specification"],
+        "summary": "Create new specification",
+        "description": "Create a new specification into the server. This endpoint is exclusive for admins",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/requestBodies/createCategory"
+              },
+              "example": {
+                "name": "Electric Car",
+                "description": "An electric car is a car which is propelled by one or more electric motors."
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The created specification",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Specification"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error while creating new specification",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/definitions/Error"
+                    },
+                    {
+                      "$ref": "#/definitions/ErrorParam"
+                    }
+                  ]
+                },
+                "examples": {
+                  "existentCategory": {
+                    "value": {
+                      "message": "Specification with name ${name} already exists",
+                      "error": "Bad Request"
+                    },
+                    "summary": "Specification already exists"
+                  },
+                  "paramError": {
+                    "value": {
+                      "message": [
+                        "name should not be empty",
+                        "description should not be empty"
+                      ],
+                      "error": "Bad Request"
+                    },
+                    "summary": "Param validation error"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "allOf": [
+              {
+                "$ref": "#/components/responses/Unauthorized"
+              },
+              {
+                "$ref": "#/components/responses/UnauthorizedAdmin"
+              }
+            ]
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Specification"],
+        "summary": "List specification",
+        "description": "List all specification saved into the database.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List all created specification",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Specification"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
           }
         }
       }
@@ -132,6 +252,28 @@
           "description": {
             "type": "string",
             "example": "A sedan has four doors and a traditional trunk."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date",
+            "example": "2021-04-17T13:46:15.615Z"
+          }
+        }
+      },
+      "Specification": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "example": "Electric Engine."
+          },
+          "description": {
+            "type": "string",
+            "example": "An electric car is a car which is propelled by one or more electric motors."
           },
           "created_at": {
             "type": "string",
