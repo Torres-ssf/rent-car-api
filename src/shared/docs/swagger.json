@@ -1,0 +1,255 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Rent Car API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/category": {
+      "post": {
+        "tags": ["Category"],
+        "summary": "Create new category",
+        "description": "Create a new category into the server. This endpoint is exclusive for admins",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/requestBodies/createCategory"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The created category",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Category"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error while creating new category",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/definitions/Error"
+                    },
+                    {
+                      "$ref": "#/definitions/ErrorParam"
+                    }
+                  ]
+                },
+                "examples": {
+                  "existentCategory": {
+                    "value": {
+                      "message": "Category with name ${name} already exists",
+                      "error": "Bad Request"
+                    },
+                    "summary": "Category already exists"
+                  },
+                  "paramError": {
+                    "value": {
+                      "message": [
+                        "name should not be empty",
+                        "description should not be empty"
+                      ],
+                      "error": "Bad Request"
+                    },
+                    "summary": "Param validation error"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "allOf": [
+              {
+                "$ref": "#/components/responses/Unauthorized"
+              },
+              {
+                "$ref": "#/components/responses/UnauthorizedAdmin"
+              }
+            ]
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Category"],
+        "summary": "List categories",
+        "description": "List all categories saved into the database.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List all created categories",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Category"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Category": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "example": "Sedan"
+          },
+          "description": {
+            "type": "string",
+            "example": "A sedan has four doors and a traditional trunk."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date",
+            "example": "2021-04-17T13:46:15.615Z"
+          }
+        }
+      }
+    },
+    "requestBodies": {
+      "createCategory": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Sedan"
+          },
+          "description": {
+            "type": "string",
+            "example": "A sedan has four doors and a traditional trunk."
+          }
+        }
+      }
+    },
+    "responses": {
+      "Unauthorized": {
+        "description": "Unauthorized, either missing the auth token or an invalid token",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            },
+            "examples": {
+              "missingToken": {
+                "value": {
+                  "message": "JWT token is missing",
+                  "error": "Unauthorized"
+                },
+                "summary": "JWT token not provided"
+              },
+              "invalidToken": {
+                "value": {
+                  "message": "Invalid JWT token",
+                  "error": "Unauthorized"
+                },
+                "summary": "Invalid JWT token"
+              }
+            }
+          }
+        }
+      },
+      "UnauthorizedAdmin": {
+        "description": "Unauthorized, user needs to be an admin",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            },
+            "examples": {
+              "adminRequired": {
+                "value": {
+                  "message": "An admin is required for this operation",
+                  "error": "Unauthorized"
+                },
+                "summary": "User is not an admin"
+              }
+            }
+          }
+        }
+      },
+      "InternalServerError": {
+        "description": "Internal Server Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            },
+            "example": {
+              "message": "${error.message}",
+              "error": "Internal Server Error"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "definitions": {
+    "Error": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string"
+        }
+      }
+    },
+    "ErrorParam": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "error": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
