@@ -63,7 +63,7 @@ describe('Create Specification Endpoint', () => {
         description: 'This is a dummy spec',
       })
       .set('Authorization', `Bearer ${userToken}`)
-      .expect(401)
+      .expect(403)
       .expect(res =>
         expect(res.body).toHaveProperty(
           'message',

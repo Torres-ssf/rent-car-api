@@ -66,7 +66,7 @@ describe('Add Specification to Car Endpoint', () => {
       .post('/car/12341234/add-specification')
       .send({})
       .set('Authorization', `Bearer ${userToken}`)
-      .expect(401)
+      .expect(403)
       .expect(res =>
         expect(res.body).toHaveProperty(
           'message',

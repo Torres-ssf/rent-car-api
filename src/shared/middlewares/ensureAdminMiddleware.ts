@@ -15,7 +15,7 @@ export const ensureAdminMiddleware = async (
   const user = await userRepository.findById(id);
 
   if (!user || !user.admin) {
-    throw new AppError('An admin is required for this operation', 401);
+    throw new AppError('An admin is required for this operation', 403);
   }
 
   next();

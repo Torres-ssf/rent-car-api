@@ -61,7 +61,7 @@ describe('Register Car Endpoint', () => {
       .post('/car')
       .send({})
       .set('Authorization', `Bearer ${userToken}`)
-      .expect(401)
+      .expect(403)
       .expect(res =>
         expect(res.body).toHaveProperty(
           'message',

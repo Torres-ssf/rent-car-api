@@ -89,7 +89,7 @@ describe('Create Session Endpoint', () => {
         password: 'asASfdsf99',
       })
       .expect(res => {
-        expect(res.status).toBe(403);
+        expect(res.status).toBe(401);
         expect(res.body.message).toContain('wrong email/password combination');
       });
   });
@@ -106,7 +106,7 @@ describe('Create Session Endpoint', () => {
         password: 'wrongPassword10',
       })
       .expect(res => {
-        expect(res.status).toBe(403);
+        expect(res.status).toBe(401);
         expect(res.body.message).toContain('wrong email/password combination');
       });
   });
