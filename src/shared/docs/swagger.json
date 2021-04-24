@@ -5,6 +5,208 @@
     "version": "1.0.0"
   },
   "paths": {
+    "/user": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Create new user",
+        "description": "Create a new user into the server",
+        "requestBody": {
+          "description": "Body with params to create user object. All 4 params: name, email, password, and driver_license are required",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/requestBodies/createUserBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The created user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/UserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error while creating new user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/definitions/Error"
+                    },
+                    {
+                      "$ref": "#/definitions/ErrorParam"
+                    }
+                  ]
+                },
+                "examples": {
+                  "existentUser": {
+                    "value": {
+                      "message": "Email already taken",
+                      "error": "Bad Request"
+                    },
+                    "summary": "Email already in use by another user"
+                  },
+                  "existentLicense": {
+                    "value": {
+                      "message": "Driver license already being used by another user",
+                      "error": "Bad Request"
+                    },
+                    "summary": "Driver license already in use"
+                  },
+                  "paramError": {
+                    "value": {
+                      "message": [
+                        "name should not be empty",
+                        "email must be an email",
+                        "Password should have at least one number, one lower letter, one upper letter and no empty spaces",
+                        "password must be longer than or equal to 8 characters",
+                        "driver_license should not be empty"
+                      ],
+                      "error": "Bad Request"
+                    },
+                    "summary": "Param validation error"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/user/avatar": {
+      "patch": {
+        "tags": ["User"],
+        "summary": "Update user avatar",
+        "description": "Create a new user avatar or updates to a new one",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "Avatar image to be upload.",
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "avatar": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": ["avatar"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/UserResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "allOf": [
+              {
+                "$ref": "#/components/responses/Unauthorized"
+              },
+              {
+                "$ref": "#/components/responses/UnauthorizedUser"
+              }
+            ]
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/session/signin": {
+      "post": {
+        "tags": ["Session"],
+        "summary": "Create new session",
+        "description": "It is through this endpoint that users get authentication",
+        "requestBody": {
+          "description": "Body params to create a new session. All 2 params: email, and password are required",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "john@email.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "example": "aA123423"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Session created. The receiving data has information about the logged user and the authentication token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "$ref": "#/definitions/UserResponse"
+                    },
+                    "token": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MTkyODI3ODksImV4cCI6MTYxOTI4NjM4OSwic3ViIjoiZjRlY2Y5OTItZDExYS00NjNjLTk4MzAtMThiNDRlYmU4NDkxIn0.jWfXgm-_wiCqYpRyEVWTyxQ-xZhG3Pb9s0mxcyQWp_Y"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, wrong user/password combination",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/definitions/Error"
+                },
+                "example": {
+                  "message": "wrong email/password combination",
+                  "error": "Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
     "/category": {
       "post": {
         "tags": ["Category"],
@@ -16,6 +218,8 @@
           }
         ],
         "requestBody": {
+          "description": "Body params to create category object. All 2 params: name, and description are required",
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -72,14 +276,10 @@
             }
           },
           "401": {
-            "allOf": [
-              {
-                "$ref": "#/components/responses/Unauthorized"
-              },
-              {
-                "$ref": "#/components/responses/UnauthorizedAdmin"
-              }
-            ]
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
           },
           "500": {
             "$ref": "#/components/responses/InternalServerError"
@@ -129,6 +329,8 @@
           }
         ],
         "requestBody": {
+          "description": "Body params to create specification object. All 2 params: name, and description are required",
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -189,14 +391,10 @@
             }
           },
           "401": {
-            "allOf": [
-              {
-                "$ref": "#/components/responses/Unauthorized"
-              },
-              {
-                "$ref": "#/components/responses/UnauthorizedAdmin"
-              }
-            ]
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
           },
           "500": {
             "$ref": "#/components/responses/InternalServerError"
@@ -238,6 +436,48 @@
   },
   "components": {
     "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "driver_license": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "format": "password"
+          },
+          "avatar": {
+            "type": "string",
+            "nullable": true,
+            "example": "my-avatar.jpeg"
+          },
+          "admin": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date",
+            "example": "2021-04-17T13:46:15.615Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date",
+            "example": "2021-04-17T13:46:15.615Z"
+          }
+        }
+      },
       "Category": {
         "type": "object",
         "properties": {
@@ -296,6 +536,29 @@
             "example": "A sedan has four doors and a traditional trunk."
           }
         }
+      },
+      "createUserBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "john@email.com"
+          },
+          "password": {
+            "type": "string",
+            "format": "password",
+            "example": ".aA1234567"
+          },
+          "driver_license": {
+            "type": "string",
+            "example": "312412341"
+          }
+        }
       }
     },
     "responses": {
@@ -325,20 +588,34 @@
           }
         }
       },
-      "UnauthorizedAdmin": {
-        "description": "Unauthorized, user needs to be an admin",
+      "Forbidden": {
+        "description": "Forbidden, user needs to be an admin",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/definitions/Error"
+            },
+            "example": {
+              "message": "An admin is required for this operation",
+              "error": "Forbidden"
+            }
+          }
+        }
+      },
+      "UnauthorizedUser": {
+        "description": "Unauthorized, no user found",
         "content": {
           "application/json": {
             "schema": {
               "$ref": "#/definitions/Error"
             },
             "examples": {
-              "adminRequired": {
+              "noUserFound": {
                 "value": {
-                  "message": "An admin is required for this operation",
+                  "message": "No user was found for the given id",
                   "error": "Unauthorized"
                 },
-                "summary": "User is not an admin"
+                "summary": "No user found for the given id"
               }
             }
           }
@@ -368,6 +645,33 @@
     }
   },
   "definitions": {
+    "UserResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string",
+          "example": "John Doe"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "example": "john@email.com"
+        },
+        "driver_license": {
+          "type": "string",
+          "example": "8456456"
+        },
+        "avatar": {
+          "type": "string",
+          "nullable": true,
+          "example": null
+        }
+      }
+    },
     "Error": {
       "type": "object",
       "properties": {
