@@ -7,9 +7,11 @@
     "start:dev": "tsnd --inspect -r tsconfig-paths/register --transpile-only --respawn --ignore-watch node_modules src/shared/server.ts",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "typeorm:docker": "docker exec -it rent_api yarn typeorm",
-    "test": "NODE_ENV=test jest --runInBand --detectOpenHandles"
+    "test": "NODE_ENV=test jest --runInBand --detectOpenHandles",
+    "seed:admin": "ts-node -r tsconfig-paths/register src/shared/database/seed/admin.ts"
   },
   "dependencies": {
+    "@types/swagger-ui-express": "^4.1.2",
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.3.2",
     "class-validator": "^0.13.1",
@@ -20,6 +22,7 @@
     "multer": "^1.4.2",
     "pg": "^8.5.1",
     "reflect-metadata": "^0.1.13",
+    "swagger-ui-express": "^4.1.6",
     "tsyringe": "^4.4.0",
     "typeorm": "^0.2.31",
     "uuid": "^8.3.2"

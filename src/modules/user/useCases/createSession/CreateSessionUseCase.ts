@@ -27,7 +27,7 @@ export class CreateSessionUseCase {
     const user = await this.usersRepository.findByEmail(email);
 
     if (!user) {
-      throw new AppError('wrong email/password combination', 403);
+      throw new AppError('wrong email/password combination', 401);
     }
 
     const passwordMatch = await this.hashProvider.compare({
@@ -36,7 +36,7 @@ export class CreateSessionUseCase {
     });
 
     if (!passwordMatch) {
-      throw new AppError('wrong email/password combination', 403);
+      throw new AppError('wrong email/password combination', 401);
     }
 
     const { secret, expiresIn } = auth.jwt;

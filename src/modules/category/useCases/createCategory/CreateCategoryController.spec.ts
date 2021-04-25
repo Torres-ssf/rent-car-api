@@ -63,7 +63,7 @@ describe('Create Category Endpoint', () => {
         description: 'Sports cars category',
       })
       .set('Authorization', `Bearer ${userToken}`)
-      .expect(401)
+      .expect(403)
       .expect(res =>
         expect(res.body).toHaveProperty(
           'message',
